@@ -1,0 +1,112 @@
+<template>
+  <div>
+    <!--<v-container fluid>
+      <v-row>
+        <v-col id="textDiv" :style="`height: ${height}px; overflow-y: auto`">
+          <TEI v-if="element" :element="element" />
+        </v-col>
+      </v-row>
+    </v-container> 
+    <template>
+      <div v-for="item in w_id_list" :key="item.id">{{item.text}}</div>
+    </template> -->
+    <v-container fluid>
+      <v-row>
+        <v-col v-for="item in w_id_list" :key="item.id" @click="clickText(item.id)">
+          {{item.text}}
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+const convert = require('xml-js')
+//const { scroller } = require('vue-scrollto/src/scrollTo')
+
+export default {
+  layout: 'noFooter',
+  data() {
+    return {
+      element: null,
+      text: "",
+      w_id_list: null,
+      //height: window.innerHeight - 64,
+    }
+  },
+  computed: {
+  },
+  watch: {
+  },
+  async mounted() {
+    const res = await axios.get("/TEI/BG_1_TEI_final.xml")
+
+    const parser = new window.DOMParser()
+    const xmlData = parser.parseFromString(res.data, 'text/xml')
+
+    const df = JSON.parse(
+      convert.xml2json(xmlData.querySelector('text').outerHTML, {
+        compact: false,
+        spaces: 4,
+      })
+    )
+
+    // idの一覧を取得する
+    const ws = xmlData.querySelectorAll('w')
+
+    const wids = []
+    for (const w of ws) {
+      const id = w.getAttribute('xml:id')
+      wids.push(id)
+    }
+
+    console.log(wids)
+
+    const w_id_list = []
+    //const words = []
+
+    for (const wid of wids) {
+      //console.log(wid)
+      const w_id = {}
+      w_id["id"] = wid
+      const wordText = xmlData.querySelector(`w[*|id='${wid}']`)
+      //console.log(wordText.getAttribute("lemma"))
+      const word = wordText.textContent.trim()
+      //words.push(wordText)
+      w_id["text"] = word
+      w_id_list.push(w_id)
+    }
+
+    console.log(w_id_list)
+
+    //this.text = words.join(' ')
+    this.w_id_list = w_id_list
+
+    this.element = df
+    //console.log(typeof df)
+
+  },
+  methods: {
+    clickText(value){
+      console.log(value)
+    }
+    /*scroll(id) {
+      if (!id) {
+        return
+      }
+      try {
+        const scrollTo = scroller()
+        scrollTo('#' + id, 500, {
+          offset: -100,
+          container: '#textDiv',
+          y: true,
+        })
+      } catch (e) {
+        console.log({ e })
+      }
+    }, */
+  },
+}
+</script>

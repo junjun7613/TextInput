@@ -159,7 +159,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   
                   <milestone unit="section" n="4"/><w
                   xml:id="w_1_1_4_1" lemma="qui" lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
-                  >qua </w><w xml:id="w_1_1_4_2" lemma="de"
+                  >Qua </w><w xml:id="w_1_1_4_2" lemma="de"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/97932">de </w><w xml:id="w_1_1_4_3"
                   lemma="causa" lemmaRef="http://lila-erc.eu/data/id/lemma/93253">causa </w><w
                   xml:id="w_1_1_4_4" lemma="heluetii" lemmaRef="https://lila-erc.eu/data/id/lemma/140330">Heluetii </w><w xml:id="w_1_1_4_5"
@@ -167,7 +167,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121488">reliquos </w><w
                   xml:id="w_1_1_4_7" lemma="galli"
                   lemmaRef="https://lila-erc.eu/data/id/lemma/7759"
-                  >gallos </w><w xml:id="w_1_1_4_8" lemma="uirtus"
+                  >Gallos </w><w xml:id="w_1_1_4_8" lemma="uirtus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/130356"
                   >uirtute </w><w xml:id="w_1_1_4_9" lemma="praecedo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/118708">praecedunt </w><w
@@ -208,14 +208,14 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   
                   <milestone unit="section" n="5"/><w
                   xml:id="w_1_1_5_1" lemma="is" lemmaRef="http://lila-erc.eu/data/id/lemma/109083"
-                  >eorum </w><w xml:id="w_1_1_5_2" lemma="unus"
+                  >Eorum </w><w xml:id="w_1_1_5_2" lemma="unus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/85636">una </w><w xml:id="w_1_1_5_3"
                   lemma="pars" lemmaRef="http://lila-erc.eu/data/id/lemma/116084">pars </w><w
                   xml:id="w_1_1_5_4" lemma=",">, </w><w xml:id="w_1_1_5_5" lemma="quam"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/74492">quam </w><w xml:id="w_1_1_5_6"
                   lemma="galli"
                   lemmaRef="https://lila-erc.eu/data/id/lemma/7759"
-                  >gallos </w><w xml:id="w_1_1_5_7" lemma="obtineo"
+                  >Gallos </w><w xml:id="w_1_1_5_7" lemma="obtineo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/114504">obtinere </w><w
                   xml:id="w_1_1_5_8" lemma="dico"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/99302"
@@ -354,16 +354,16 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/109083">Is </w><w xml:id="w_1_2_1_11"
                   lemma="m"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/111165 http://lila-erc.eu/data/id/lemma/12707 http://lila-erc.eu/data/id/lemma/62971"
-                  >m </w><w xml:id="w_1_2_1_12" lemma=".">. </w><w xml:id="w_1_2_1_13"
-                  lemma="messalum">messala </w><w xml:id="w_1_2_1_14" lemma=",">, </w><w
+                  >M </w><w xml:id="w_1_2_1_12" lemma=".">. </w><w xml:id="w_1_2_1_13"
+                  lemma="messalum">Messala </w><w xml:id="w_1_2_1_14" lemma=",">, </w><w
                   xml:id="w_1_2_1_15" lemma="et"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
                   >et </w><w xml:id="w_1_2_1_16" lemma="p"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/115565 http://lila-erc.eu/data/id/lemma/17160"
-                  >p </w><w xml:id="w_1_2_1_17" lemma=".">. </w><w xml:id="w_1_2_1_18" lemma="m"
+                  >P </w><w xml:id="w_1_2_1_17" lemma=".">. </w><w xml:id="w_1_2_1_18" lemma="m"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/111165 http://lila-erc.eu/data/id/lemma/12707 http://lila-erc.eu/data/id/lemma/62971"
-                  >m </w><w xml:id="w_1_2_1_19" lemma=".">. </w><w xml:id="w_1_2_1_20" lemma="pison"
-                  >pisone </w><w xml:id="w_1_2_1_21" lemma="consulus">consulibus </w><objectName xml:id="obj_1_2_1_22"><w
+                  >M </w><w xml:id="w_1_2_1_19" lemma=".">. </w><w xml:id="w_1_2_1_20" lemma="pison"
+                  >Pisone </w><w xml:id="w_1_2_1_21" lemma="consulus">consulibus </w><objectName xml:id="obj_1_2_1_22"><w
                   xml:id="w_1_2_1_22" lemma="regnum"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121683">regni </w></objectName><w
                   xml:id="w_1_2_1_23" lemma="cupiditas"

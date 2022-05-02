@@ -1,5 +1,12 @@
 <template>
   <div>
+    <v-container fluid>
+      <v-row>
+        <v-col id="textDiv" :style="`height: 600px; overflow-y: auto`">
+          <TEI v-if="element" :element="element" />
+        </v-col>
+      </v-row>
+    </v-container> 
     <!--<v-container fluid>
       <v-row>
         <v-col id="textDiv" :style="`height: ${height}px; overflow-y: auto`">
@@ -10,7 +17,7 @@
     <template>
       <div v-for="item in w_id_list" :key="item.id">{{item.text}}</div>
     </template> -->
-    <v-container fluid>
+    <v-container fluid v-if="false">
       <v-row>
         <v-col v-for="item in w_id_list" :key="item.id" @click="clickText(item.id)">
           {{item.text}}

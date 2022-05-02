@@ -20,7 +20,21 @@
       </span>
     </template>
     <template v-else-if="element.name === 'persName'">
+      <span style="color: blue" @click="clickEntity(element.attributes['xml:id'])">
+        <template v-for="(e, key) in element.elements">
+          <TEI :key="key" :element="e"></TEI>
+        </template>
+      </span>
+    </template>
+    <template v-else-if="element.name === 'orgName'">
       <span style="color: red" @click="clickEntity(element.attributes['xml:id'])">
+        <template v-for="(e, key) in element.elements">
+          <TEI :key="key" :element="e"></TEI>
+        </template>
+      </span>
+    </template>
+    <template v-else-if="element.name === 'placeName'">
+      <span style="color: green" @click="clickEntity(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>

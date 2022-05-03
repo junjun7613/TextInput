@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-row>
         <v-col id="textDiv" :style="`height: 600px; overflow-y: auto`">
-          <TEI v-if="element" :element="element" />
+          <TEI v-if="element" :element="element" @parent-func="getWId"/>
         </v-col>
       </v-row>
     </v-container> 
@@ -24,6 +24,7 @@
         </v-col>
       </v-row>
     </v-container>
+    {{WId}}
   </div>
 </template>
 
@@ -40,18 +41,26 @@ export default {
       element: null,
       text: "",
       w_id_list: null,
+      xmlData: null,
+      WId: "",
       //height: window.innerHeight - 64,
     }
   },
   computed: {
   },
   watch: {
+    data: function(){
+      console.log(this.WId)
+    } 
   },
   async mounted() {
     const res = await axios.get("/TEI/BG_1_TEI_final.xml")
+    console.log(typeof res)
+    this.xmlData = res
 
     const parser = new window.DOMParser()
     const xmlData = parser.parseFromString(res.data, 'text/xml')
+    //this.xmlData = xmlData
 
     const df = JSON.parse(
       convert.xml2json(xmlData.querySelector('text').outerHTML, {
@@ -98,7 +107,7 @@ export default {
   methods: {
     clickText(value){
       console.log(value)
-    }
+    },
     /*scroll(id) {
       if (!id) {
         return
@@ -114,6 +123,10 @@ export default {
         console.log({ e })
       }
     }, */
+    getWId(value){
+      console.log(value)
+      this.WId = value;
+    }
   },
 }
 </script>

@@ -50,9 +50,17 @@
 
 <script>
 import TEI from '~/components/TEI.vue'
+import axios from 'axios'
+//var fs = require('fs');
+import * as fs from 'fs';
+var DOMParser = require("xmldom").DOMParser;
+import * as xmldom from 'xmldom'
 
 export default {
-  props: ['element'],
+  //props: ['element','xmlData'],
+  props: {
+    element: Object
+  },
   data() {
     return {
       selectedElements: [],
@@ -62,10 +70,15 @@ export default {
   methods:{
     clickW(id){
       console.log("w", {id})
+
+      this.$emit('parent-func',id)
     },
     clickEntity(id){
       console.log("entity", {id})
+
+      this.$emit('parent-func',id)
     },
+    /*
     mouseDown(id){
       console.log("md", id)
       this.flg = true
@@ -83,7 +96,7 @@ export default {
       this.flg = false
       console.log("mu", id)
       console.log(this.selectedElements)
-    }
+    }*/
   }
 }
 </script>

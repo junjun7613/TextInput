@@ -53,8 +53,8 @@ import TEI from '~/components/TEI.vue'
 import axios from 'axios'
 //var fs = require('fs');
 import * as fs from 'fs';
-var DOMParser = require("xmldom").DOMParser;
-import * as xmldom from 'xmldom'
+//var DOMParser = require("xmldom").DOMParser;
+//import * as xmldom from 'xmldom'
 
 export default {
   //props: ['element','xmlData'],
@@ -72,6 +72,9 @@ export default {
       console.log("w", {id})
 
       this.$emit('parent-func',id)
+
+      //選択したIDを変数に格納
+      this.ex_text = "click w:" + id
     },
     clickEntity(id){
       console.log("entity", {id})
@@ -97,6 +100,16 @@ export default {
       console.log("mu", id)
       console.log(this.selectedElements)
     }*/
+  },
+  computed: {
+    ex_text: {
+      get() {
+        return this.$store.getters.getExText
+      },
+      set(value) {
+        this.$store.commit('setExText', value)
+      }
+    }
   }
 }
 </script>

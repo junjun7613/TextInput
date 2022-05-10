@@ -1,12 +1,13 @@
 <template>
   <div>
-    <v-container fluid>
-      <v-row>
-        <v-col id="textDiv" :style="`height: 600px; overflow-y: auto`">
+    <p>{{ex_text}}</p>
+    <div fluid>
+      <div>
+        <div id="textDiv" :style="`height: 600px; overflow-y: auto`">
           <TEI v-if="element" :element="element" @parent-func="getWId"/>
-        </v-col>
-      </v-row>
-    </v-container> 
+        </div>
+      </div>
+    </div> 
     <!--<v-container fluid>
       <v-row>
         <v-col id="textDiv" :style="`height: ${height}px; overflow-y: auto`">
@@ -47,6 +48,14 @@ export default {
     }
   },
   computed: {
+    ex_text: {
+      get() {
+        return this.$store.getters.getExText
+      },
+      set(value) {
+        this.$store.commit('setExText', value)
+      }
+    }
   },
   watch: {
     data: function(){
@@ -127,6 +136,6 @@ export default {
       console.log(value)
       this.WId = value;
     }
-  },
+  }
 }
 </script>

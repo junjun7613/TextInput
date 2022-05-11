@@ -80,6 +80,8 @@ export default {
       console.log("entity", {id})
 
       this.$emit('parent-func',id)
+
+      this.ex_text = "click e:" + id
     },
     /*
     mouseDown(id){

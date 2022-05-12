@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span :data-original="element.name" :id="element.attributes ? element.attributes['xml:id'] : ''">
     <template v-if="element.text">
       {{ element.text }}
     </template>  

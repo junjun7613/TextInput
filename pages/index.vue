@@ -88,6 +88,45 @@ export default {
     const xmlData = parser.parseFromString(res.data, 'text/xml')
     //this.xmlData = xmlData
 
+    // テスト
+    const ids = ["w_1_1_2_12", "w_1_1_2_13"]
+
+    let element_name = "persName"
+    let element_prefix = "pers"
+    let element_id = ids[0].replace("w_", `${element_prefix}_`)
+    if(ids.length > 1){
+      const last_id = ids[ids.length - 1]
+      const last_id_spl = last_id.split("_")
+      element_id += "-" + last_id_spl[last_id_spl.length - 1]
+    }
+
+    let elementAdded = null
+    for(let i = 0; i < ids.length; i++){
+      const id = ids[i]
+      const wordElement = xmlData.querySelector(`[*|id="${id}"]`)
+
+      if(i == 0){
+        elementAdded = document.createElement(element_name)
+        elementAdded.setAttribute("xml:id", element_id)
+        //対象のw要素の前に挿入
+        wordElement.parentNode.insertBefore(elementAdded, wordElement)
+      }
+
+      //対象のw要素をpersNameの子要素として挿入
+      elementAdded.appendChild(wordElement)
+    }
+
+    /*
+    const wordElement = xmlData.querySelector(`[*|id="w_1_1_2_12"]`)
+    console.log({wordElement})
+
+    const persName = document.createElement('persName')
+    //対象のw要素の前に挿入
+    wordElement.parentNode.insertBefore(persName, wordElement)
+    //対象のw要素をpersNameの子要素として挿入
+    persName.appendChild(wordElement)
+    */
+
     const df = JSON.parse(
       convert.xml2json(xmlData.querySelector('text').outerHTML, {
         compact: false,

@@ -1,15 +1,29 @@
 export const state = () => ({
-  ex_text: ''
+  ex_text: '',
+  selected_word_start_id: "",
+  selected_word_end_id: ""
 })
 
 export const mutations = {
   setExText(state, data) {
     state.ex_text = data
+  },
+  setSelectedWordStartId(state, data) {
+    state.selected_word_start_id = data
+  },
+  setSelectedWordEndId(state, data) {
+    state.selected_word_end_id = data
   }
 }
 
 export const getters = {
   getExText(state) {
     return state.ex_text
+  },
+  getSelectedWordStartId(state) {
+    return state.selected_word_start_id
+  },
+  getSelectedWordEndId(state) {
+    return state.selected_word_end_id
   }
 }

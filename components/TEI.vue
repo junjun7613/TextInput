@@ -13,7 +13,7 @@
     </template>
     <template v-else-if="element.name === 'w'">
       <!-- @mouseup="mouseUp(element.attributes['xml:id'])" @mousemove="mouseMove(element.attributes['xml:id'])" @mousedown="mouseDown(element.attributes['xml:id'])"  -->
-      <span @click="clickW(element.attributes['xml:id'])">
+      <span @mouseup="mouseUp" @mousedown="mouseDown" :id="element.attributes['xml:id']" @click2="/*clickW(element.attributes['xml:id'])*/">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>
@@ -68,6 +68,12 @@ export default {
     }
   },
   methods:{
+    mouseUp(event){
+      this.selected_word_end_id = event.target.parentNode.id
+    },
+    mouseDown(event){
+      this.selected_word_start_id = event.target.parentNode.id
+    },
     clickW(id){
       console.log("w", {id})
 
@@ -82,26 +88,7 @@ export default {
       this.$emit('parent-func',id)
 
       this.ex_text = "click e:" + id
-    },
-    /*
-    mouseDown(id){
-      console.log("md", id)
-      this.flg = true
-      this.selectedElements = []
-    },
-    mouseMove(id){
-      if(this.flg){
-        console.log("mm", id)
-        if(this.selectedElements.indexOf(id) === -1){
-          this.selectedElements.push(id)
-        }
-      }
-    },
-    mouseUp(id){
-      this.flg = false
-      console.log("mu", id)
-      console.log(this.selectedElements)
-    }*/
+    }
   },
   computed: {
     ex_text: {
@@ -110,6 +97,22 @@ export default {
       },
       set(value) {
         this.$store.commit('setExText', value)
+      }
+    },
+    selected_word_start_id: {
+      get() {
+        return this.$store.getters.getSelectedWordStartId
+      },
+      set(value) {
+        this.$store.commit('setSelectedWordStartId', value)
+      }
+    },
+    selected_word_end_id: {
+      get() {
+        return this.$store.getters.getSelectedWordEndId
+      },
+      set(value) {
+        this.$store.commit('setSelectedWordEndId', value)
       }
     }
   }

@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>{{ex_text}}</p>
+    <p>selected words: {{selected_word_start_id}} - {{selected_word_end_id}}</p>
     <div fluid>
       <div>
         <div id="textDiv" :style="`height: 600px; overflow-y: auto`">
@@ -54,6 +55,22 @@ export default {
       },
       set(value) {
         this.$store.commit('setExText', value)
+      }
+    },
+    selected_word_start_id: {
+      get() {
+        return this.$store.getters.getSelectedWordStartId
+      },
+      set(value) {
+        this.$store.commit('setSelectedWordStartId', value)
+      }
+    },
+    selected_word_end_id: {
+      get() {
+        return this.$store.getters.getSelectedWordEndId
+      },
+      set(value) {
+        this.$store.commit('setSelectedWordEndId', value)
       }
     }
   },

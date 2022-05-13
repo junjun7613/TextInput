@@ -27,6 +27,15 @@
       </v-row>
     </v-container>
     {{WId}}
+    <select id="listbox" v-model="selected">
+      <option value="pers">Person</option>
+      <option value="place">Place</option>
+      <option value="org">Organization</option>
+      <option value="object">Object</option>
+    </select>
+    <!--<div>selected: {{selected}}</div>-->
+    <button @click="selectEntity">select</button>
+    {{xmlData}}
   </div>
 </template>
 
@@ -45,6 +54,9 @@ export default {
       w_id_list: null,
       xmlData: null,
       WId: "",
+      selected: "",
+      selectedEntity: "",
+      wids: [],
       //height: window.innerHeight - 64,
     }
   },
@@ -116,6 +128,7 @@ export default {
       elementAdded.appendChild(wordElement)
     }
 
+
     /*
     const wordElement = xmlData.querySelector(`[*|id="w_1_1_2_12"]`)
     console.log({wordElement})
@@ -126,9 +139,10 @@ export default {
     //対象のw要素をpersNameの子要素として挿入
     persName.appendChild(wordElement)
     */
+    this.xmlData = xmlData
 
     const df = JSON.parse(
-      convert.xml2json(xmlData.querySelector('text').outerHTML, {
+      convert.xml2json(this.xmlData.querySelector('text').outerHTML, {
         compact: false,
         spaces: 4,
       })
@@ -144,6 +158,7 @@ export default {
     }
 
     console.log(wids)
+    this.wids = wids
 
     const w_id_list = []
     //const words = []
@@ -191,6 +206,27 @@ export default {
     getWId(value){
       console.log(value)
       this.WId = value;
+    },
+    selectEntity(){
+
+      const selected = this.selected
+      this.selectedEntity = selected
+
+      const xmlData = this.xmlData
+      const wids = this.wids
+      console.log(wids)
+
+      const idStart = this.$store.getters.getSelectedWordStartId
+      //console.log(typeof idStart)
+      const indexStart = wids.indexOf(idStart)
+      const idEnd = this.$store.getters.getSelectedWordEndId
+      const indexEnd = wids.indexOf(idEnd)
+
+      console.log(this.selectedEntity)
+      console.log(indexStart)
+      console.log(indexEnd)
+      console.log(xmlData)
+
     }
   }
 }

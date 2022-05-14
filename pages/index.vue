@@ -35,7 +35,7 @@
     </select>
     <!--<div>selected: {{selected}}</div>-->
     <button @click="selectEntity">select</button>
-    {{xmlData}}
+    {{ids}}
   </div>
 </template>
 
@@ -57,6 +57,7 @@ export default {
       selected: "",
       selectedEntity: "",
       wids: [],
+      ids: null,
       //height: window.innerHeight - 64,
     }
   },
@@ -102,6 +103,9 @@ export default {
 
     // テスト
     const ids = ["w_1_1_2_12", "w_1_1_2_13"]
+    //const ids = this.ids
+    console.log(ids)
+
 
     let element_name = "persName"
     let element_prefix = "pers"
@@ -226,6 +230,17 @@ export default {
       console.log(indexStart)
       console.log(indexEnd)
       console.log(xmlData)
+
+      const ids = []
+      const start = indexStart
+      const end = indexEnd
+      const indexList = new Array(end - start + 1).fill(null).map((_, i) => i + start)
+      //console.log(indexList)
+      for (const index of indexList){
+        //console.log(wids[index])
+        ids.push(wids[index])
+      }
+      this.ids = ids
 
     }
   }

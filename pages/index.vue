@@ -41,6 +41,7 @@
 
 <script>
 import axios from 'axios'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
 
 const convert = require('xml-js')
 //const { scroller } = require('vue-scrollto/src/scrollTo')
@@ -58,6 +59,8 @@ export default {
       selectedEntity: "",
       wids: [],
       ids: null,
+      firestoreId: '001',
+      firestoreName: 'test'
       //height: window.innerHeight - 64,
     }
   },
@@ -241,6 +244,13 @@ export default {
         ids.push(wids[index])
       }
       this.ids = ids
+
+      const db = getFirestore()
+      const docRef = addDoc(collection(db, 'tasks'), {
+        id: this.firestoreId,
+        name: this.firestoreName
+      })
+      console.log('Document written with ID: ', docRef.id)
 
     }
   }

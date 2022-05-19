@@ -13,7 +13,7 @@
     </template>
     <template v-else-if="element.name === 'w'">
       <!-- @mouseup="mouseUp(element.attributes['xml:id'])" @mousemove="mouseMove(element.attributes['xml:id'])" @mousedown="mouseDown(element.attributes['xml:id'])"  -->
-      <span @mouseup="mouseUp" @mousedown="mouseDown" :id="element.attributes['xml:id']" @click2="/*clickW(element.attributes['xml:id'])*/">
+      <span @mouseup="mouseUp" @mousedown="mouseDown" :id="element.attributes['xml:id']" @click2="/*clickW(element.attributes['xml:id'])*/" @click="clickW(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>

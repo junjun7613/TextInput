@@ -29,12 +29,41 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/composition-api',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: "AIzaSyCCKw1iPxxNOfutCteexQ3Uk4MLtv_V13U",
+          authDomain: "textinput-857ed.firebaseapp.com",
+          databaseURL: "https://textinput-857ed-default-rtdb.firebaseio.com",
+          projectId: "textinput-857ed",
+          storageBucket: "textinput-857ed.appspot.com",
+          messagingSenderId: "723300397096",
+          appId: "1:723300397096:web:7ff45d7c7a706dfd22851d",
+          measurementId: "G-24LGDGW96V"
+        },
+        services: {
+          auth: {
+            persistence: 'local', // default
+            initialize: {
+              onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+              onAuthStateChangedAction: 'onAuthStateChangedAction',
+              subscribeManually: false
+            },
+            ssr: false, // default
+          },
+          firestore: true,
+          storage: true
+        }
+      }
+    ]
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

@@ -54,6 +54,7 @@ export default {
       text: "",
       w_id_list: null,
       xmlData: null,
+      //df: null,
       WId: "",
       selected: "",
       selectedEntity: "",
@@ -155,6 +156,8 @@ export default {
       })
     )
 
+    //this.df = df
+
     // idの一覧を取得する
     const ws = xmlData.querySelectorAll('w')
 
@@ -247,8 +250,9 @@ export default {
 
       const db = getFirestore()
       const docRef = addDoc(collection(db, 'tasks'), {
-        id: this.firestoreId,
-        name: this.firestoreName
+        //id: this.firestoreId,
+        //name: this.firestoreName,
+        words: this.w_id_list
       })
       console.log('Document written with ID: ', docRef.id)
 

@@ -80,14 +80,16 @@ export default {
       this.$emit('parent-func',id)
 
       //選択したIDを変数に格納
-      this.ex_text = "click w:" + id
+      //this.ex_text = "click w:" + id
+      this.ex_text = id
     },
     clickEntity(id){
       console.log("entity", {id})
 
       this.$emit('parent-func',id)
 
-      this.ex_text = "click e:" + id
+      //this.ex_text = "click e:" + id
+      this.ex_text = id
     }
   },
   computed: {

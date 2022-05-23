@@ -40,7 +40,8 @@
       <option value="object">Object</option>
     </select>
     <!--<div>selected: {{selected}}</div>-->
-    <button @click="selectEntity">select</button>
+    <button @click="selectEntity">Add</button>
+    <button @click="deleteEntity">Delete</button>
     {{ ids }}
   </div>
 </template>
@@ -295,6 +296,13 @@ export default {
       }
       return xmlData;
     },
+
+    deleteEntity(){
+      console.log(this.ex_text)
+    },
+    deleteTest(xmlData, idOfEntity){
+      const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
+    }
   },
 };
 </script>

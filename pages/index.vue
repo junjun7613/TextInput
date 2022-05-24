@@ -51,6 +51,7 @@ import axios from "axios";
 import {
   doc,
   getDoc,
+  setDoc,
   getFirestore,
   collection,
   addDoc,
@@ -114,7 +115,7 @@ export default {
   async mounted() {
     const db = getFirestore();
 
-    const documentId = "VG34DNwDkzFVlk47u7jS";
+    const documentId = "one";
     this.documentId = documentId;
 
     const docRef = doc(db, "tasks", documentId);
@@ -126,6 +127,10 @@ export default {
     } else {
       const res = await axios.get("/TEI/BG_1_TEI_final.xml");
       xmlStr = res.data;
+      console.log(xmlStr)
+
+      //const docData = {xml:xmlStr};
+      //await setDoc(doc(db, "tasks", "one"), docData);
     }
 
     const parser = new window.DOMParser();
@@ -257,6 +262,7 @@ export default {
       //console.log(xmlString)
 
       const docRef = doc(db, "tasks", this.documentId);
+      //const docRef = doc(db, "tasks", "one");
       await updateDoc(docRef, {
         xml: xmlString,
       });
@@ -297,12 +303,64 @@ export default {
       return xmlData;
     },
 
-    deleteEntity(){
-      console.log(this.ex_text)
-    },
-    deleteTest(xmlData, idOfEntity){
-      const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
+    async deleteEntity(){
+
+      let xmlData = this.xmlData
+      let idOfEntity = this.ex_text
+
+      const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
+      console.log(wordElement)
+
+      const childNodes = wordElement.childNodes
+      console.log(childNodes)
+
+      for (let i = 0; i < childNodes.length; i++){
+      //for (let childNode of childNodes){
+        wordElement.parentNode.insertBefore(childNodes.item(i), wordElement);
+        //wordElement.parentNode.insertBefore(childNode, wordElement);
+      }
+
+      wordElement.parentNode.removeChild(wordElement);
+
+      console.log(xmlData)
+
+      this.xmlData = xmlData
+
+      const db = getFirestore();
+
+      // 文字列に変換して、firestoreに保存
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+
+      //console.log(xmlString)
+
+      const docRef = doc(db, "tasks", this.documentId);
+      await updateDoc(docRef, {
+        xml: xmlString,
+      });
+
+      console.log("Document written with ID: ", docRef.id);
+
+      //const deleteElement = this.deleteTest(xmlData, idOfEntity);
     }
+    /*
+    //テストの削除用関数
+    deleteTest(xmlData, idOfEntity){
+        const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
+        console.log(wordElement)
+
+        const childNodes = wordElement.childNodes
+        console.log(childNodes)
+
+        //for (let i = 0; i < childNodes.length; i++){
+        for (let childNode of childNodes){
+          //wordElement.parentNode.insertBefore(childNodes.item(i), wordElement);
+          wordElement.parentNode.insertBefore(childNode, wordElement);
+        }
+
+        console.log(wordElement.parentNode)
+      }
+      */
   },
 };
 </script>

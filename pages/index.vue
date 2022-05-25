@@ -43,6 +43,7 @@
     <button @click="selectEntity">Add</button>
     <button @click="deleteEntity">Delete</button>
     {{ ids }}
+    <p>{{ updateAnnounce }}</p>
   </div>
 </template>
 
@@ -78,6 +79,7 @@ export default {
       ids: null,
       firestoreId: "001",
       firestoreName: "test",
+      updateAnnounce: "",
       //height: window.innerHeight - 64,
     };
   },
@@ -116,6 +118,7 @@ export default {
     const db = getFirestore();
 
     const documentId = "one";
+    //const documentId = "aaa";
     this.documentId = documentId;
 
     const docRef = doc(db, "tasks", documentId);
@@ -267,7 +270,10 @@ export default {
         xml: xmlString,
       });
 
-      console.log("Document written with ID: ", docRef.id);
+      const updateAnnounce = "Document written with ID: " + docRef.id
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce)
+      this.updateAnnounce = updateAnnounce
     },
     //テストの更新用関数
     updateTest(xmlData, ids, selected) {
@@ -305,6 +311,32 @@ export default {
 
     async deleteEntity(){
 
+      const xmlData = this.deleteTest();
+      this.xmlData = xmlData
+
+      console.log(xmlData)
+
+      const db = getFirestore();
+
+      // 文字列に変換して、firestoreに保存
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+
+      //console.log(xmlString)
+
+      const docRef = doc(db, "tasks", this.documentId);
+      await updateDoc(docRef, {
+        xml: xmlString,
+      });
+
+      const updateAnnounce = "Document written with ID: " + docRef.id
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce)
+      this.updateAnnounce = updateAnnounce
+
+      //const deleteElement = this.deleteTest(xmlData, idOfEntity);
+    },
+    deleteTest(){
       let xmlData = this.xmlData
       let idOfEntity = this.ex_text
 
@@ -320,47 +352,11 @@ export default {
         //wordElement.parentNode.insertBefore(childNode, wordElement);
       }
 
+      console.log(wordElement.parentNode)
       wordElement.parentNode.removeChild(wordElement);
 
-      console.log(xmlData)
-
-      this.xmlData = xmlData
-
-      const db = getFirestore();
-
-      // 文字列に変換して、firestoreに保存
-      var xmlSerializer = new XMLSerializer();
-      var xmlString = xmlSerializer.serializeToString(xmlData);
-
-      //console.log(xmlString)
-
-      const docRef = doc(db, "tasks", this.documentId);
-      await updateDoc(docRef, {
-        xml: xmlString,
-      });
-
-      console.log("Document written with ID: ", docRef.id);
-
-      //const deleteElement = this.deleteTest(xmlData, idOfEntity);
+      return xmlData;
     }
-    /*
-    //テストの削除用関数
-    deleteTest(xmlData, idOfEntity){
-        const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
-        console.log(wordElement)
-
-        const childNodes = wordElement.childNodes
-        console.log(childNodes)
-
-        //for (let i = 0; i < childNodes.length; i++){
-        for (let childNode of childNodes){
-          //wordElement.parentNode.insertBefore(childNodes.item(i), wordElement);
-          wordElement.parentNode.insertBefore(childNode, wordElement);
-        }
-
-        console.log(wordElement.parentNode)
-      }
-      */
   },
 };
 </script>

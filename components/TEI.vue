@@ -40,6 +40,13 @@
         </template>
       </span>
     </template>
+    <template v-else-if="element.name === 'objectName'">
+      <span style="color: purple" @click="clickEntity(element.attributes['xml:id'])">
+        <template v-for="(e, key) in element.elements">
+          <TEI :key="key" :element="e"></TEI>
+        </template>
+      </span>
+    </template>
     <template v-else>
       <template v-for="(e, key) in element.elements">
         <TEI :key="key" :element="e"></TEI>

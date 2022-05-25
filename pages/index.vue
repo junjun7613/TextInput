@@ -40,17 +40,23 @@
       <option value="object">Object</option>
     </select>
     <!--<div>selected: {{selected}}</div>-->
-    <button @click="show">Add</button>
+    <button @click="showAttributeSetter">Add</button>
     <button @click="deleteEntity">Delete</button>
-    <modal name="modal-content">
+    <button @click="showTextModifier">Modify</button>
+    <modal name="attributeSetter">
         <select id="attributeOptions" v-model="selectedAttribute">
           <option value="target">referencesEntity</option>
         </select>
         <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
         <button @click="selectEntity">追加</button>
-        <button @click="hide">モーダルを閉じる</button>
+        <button @click="hideAttributeSetter">モーダルを閉じる</button>
         {{selectedAttribute}}
         {{selectedAttributeValue}}
+    </modal>
+    <modal name="textModifier">
+        <p>{{textContent}}</p>
+        <button @click="modifyText">変更</button>
+        <button @click="hideTextModifier">モーダルを閉じる</button>
     </modal>
     {{ ids }}
     <p>{{ updateAnnounce }}</p>
@@ -87,6 +93,7 @@ export default {
       selectedAttribute: "",
       selectedAttributeValue: "",
       //selectedEntity: "",
+      textContent: "",
       wids: [],
       ids: null,
       firestoreId: "001",
@@ -373,11 +380,30 @@ export default {
 
       return xmlData;
     },
-    show() {
-      this.$modal.show("modal-content");
+    async modifyText(){},
+    modifyTest(){
+      let xmlData = this.xmlData
+      let idOfEntity = this.ex_text
+
+      const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
+      const textContent = wordElement.textContent
+
+      return textContent;
     },
-    hide() {
-      this.$modal.hide("modal-content");
+    showAttributeSetter() {
+      this.$modal.show("attributeSetter");
+    },
+    hideAttributeSetter() {
+      this.$modal.hide("attributeSetter");
+    },
+    showTextModifier() {
+      this.$modal.show("textModifier");
+      const textContent = this.modifyTest();
+      console.log(textContent)
+      this.textContent = textContent
+    },
+    hideTextModifier() {
+      this.$modal.hide("textModifier");
     }
   },
 };

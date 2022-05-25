@@ -40,8 +40,18 @@
       <option value="object">Object</option>
     </select>
     <!--<div>selected: {{selected}}</div>-->
-    <button @click="selectEntity">Add</button>
+    <button @click="show">Add</button>
     <button @click="deleteEntity">Delete</button>
+    <modal name="modal-content">
+        <select id="attributeOptions" v-model="selectedAttribute">
+          <option value="target">referencesEntity</option>
+        </select>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
+        <button @click="selectEntity">追加</button>
+        <button @click="hide">モーダルを閉じる</button>
+        {{selectedAttribute}}
+        {{selectedAttributeValue}}
+    </modal>
     {{ ids }}
     <p>{{ updateAnnounce }}</p>
   </div>
@@ -74,6 +84,8 @@ export default {
       //df: null,
       WId: "",
       selected: "",
+      selectedAttribute: "",
+      selectedAttributeValue: "",
       //selectedEntity: "",
       wids: [],
       ids: null,
@@ -223,6 +235,8 @@ export default {
     async selectEntity() {
       const selected = this.selected;
       //this.selectedEntity = selected;
+      const selectedAttribute = this.selectedAttribute
+      const selectedAttributeValue = this.selectedAttributeValue
 
       let xmlData = this.xmlData;
       const wids = this.wids;
@@ -255,7 +269,7 @@ export default {
       const db = getFirestore();
 
       //更新
-      xmlData = this.updateTest(xmlData, ids, selected);
+      xmlData = this.updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue);
       this.xmlData = xmlData;
 
       // 文字列に変換して、firestoreに保存
@@ -276,7 +290,7 @@ export default {
       this.updateAnnounce = updateAnnounce
     },
     //テストの更新用関数
-    updateTest(xmlData, ids, selected) {
+    updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue) {
       // テスト
       //const ids = ["w_1_1_2_12", "w_1_1_2_13"];
       //const ids = this.ids
@@ -299,6 +313,8 @@ export default {
         if (i == 0) {
           elementAdded = xmlData.createElement(element_name);
           elementAdded.setAttribute("xml:id", element_id);
+          elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
+    
           //対象のw要素の前に挿入
           wordElement.parentNode.insertBefore(elementAdded, wordElement);
         }
@@ -356,6 +372,12 @@ export default {
       wordElement.parentNode.removeChild(wordElement);
 
       return xmlData;
+    },
+    show() {
+      this.$modal.show("modal-content");
+    },
+    hide() {
+      this.$modal.hide("modal-content");
     }
   },
 };

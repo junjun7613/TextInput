@@ -20,28 +20,28 @@
       </span>
     </template>
     <template v-else-if="element.name === 'persName'">
-      <span style="color: blue" @click="clickEntity(element.attributes['xml:id'])">
+      <span style="color: blue;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>
       </span>
     </template>
     <template v-else-if="element.name === 'orgName'">
-      <span style="color: red" @click="clickEntity(element.attributes['xml:id'])">
+      <span style="color: red;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>
       </span>
     </template>
     <template v-else-if="element.name === 'placeName'">
-      <span style="color: green" @click="clickEntity(element.attributes['xml:id'])">
+      <span style="color: green;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>
       </span>
     </template>
     <template v-else-if="element.name === 'objectName'">
-      <span style="color: purple" @click="clickEntity(element.attributes['xml:id'])">
+      <span style="color: purple;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>

@@ -53,9 +53,16 @@
         {{selectedAttribute}}
         {{selectedAttributeValue}}
     </modal>
-    <modal name="textModifier">
-        <p>{{textContent}}</p>
+    <modal name="textModifier" :resizable="true" :scrollable="true">
+        <p>Value: {{textContent}}</p>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="modifiedText">
         <button @click="modifyText">変更</button>
+        <p>Word Lemma: {{wordLemma}}</p>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="modifiedWordLemma">
+        <button @click="modifyWordLemma">変更</button>
+        Word URI: <p v-for="wordUri of wordUriList"><a v-bind:href="`${wordUri}`">{{wordUri}}</a></p>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="modifiedWordUri">
+        <button @click="modifyWordUri">変更</button>
         <button @click="hideTextModifier">モーダルを閉じる</button>
     </modal>
     {{ ids }}
@@ -92,8 +99,13 @@ export default {
       selected: "",
       selectedAttribute: "",
       selectedAttributeValue: "",
+      modifiedText: "",
+      modifiedWordLemma: "",
+      modifiedWordUri: "",
       //selectedEntity: "",
       textContent: "",
+      wordLemma: "",
+      wordUriList: "",
       wids: [],
       ids: null,
       firestoreId: "001",
@@ -381,14 +393,80 @@ export default {
       return xmlData;
     },
     async modifyText(){},
-    modifyTest(){
+    async modifyWordLemma(){
+
+      const xmlData = this.modifyWordLemmaTest();
+      this.xmlData = xmlData
+
+      const db = getFirestore();
+
+      // 文字列に変換して、firestoreに保存
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+
+      //console.log(xmlString)
+
+      const docRef = doc(db, "tasks", this.documentId);
+      await updateDoc(docRef, {
+        xml: xmlString,
+      });
+
+      const updateAnnounce = "Document written with ID: " + docRef.id
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce)
+      this.updateAnnounce = updateAnnounce
+    },
+    async modifyWordUri(){
+
+      const xmlData = this.modifyWordUriTest();
+      this.xmlData = xmlData
+
+      const db = getFirestore();
+
+      // 文字列に変換して、firestoreに保存
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+
+      //console.log(xmlString)
+
+      const docRef = doc(db, "tasks", this.documentId);
+      await updateDoc(docRef, {
+        xml: xmlString,
+      });
+
+      const updateAnnounce = "Document written with ID: " + docRef.id
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce)
+      this.updateAnnounce = updateAnnounce
+    },
+    modifyTextTest(){},
+    modifyWordLemmaTest(){
+      //let xmlData = this.xmlData
+      //let idOfEntity = this.ex_text
       let xmlData = this.xmlData
-      let idOfEntity = this.ex_text
+      let modifiedWordLemma = this.modifiedWordLemma
+      let idOfEntity = this.selected_word_start_id
 
       const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
-      const textContent = wordElement.textContent
+      wordElement.removeAttribute("lemma");
 
-      return textContent;
+      wordElement.setAttribute("lemma", modifiedWordLemma);
+
+      //return wordElement
+      return xmlData
+    },
+    modifyWordUriTest(){
+      let xmlData = this.xmlData
+      let modifiedWordUri = this.modifiedWordUri
+      let idOfEntity = this.selected_word_start_id
+
+      const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
+      wordElement.removeAttribute("lemmaRef");
+
+      wordElement.setAttribute("lemmaRef", modifiedWordUri);
+
+      //return wordElement
+      return xmlData
     },
     showAttributeSetter() {
       this.$modal.show("attributeSetter");
@@ -398,9 +476,23 @@ export default {
     },
     showTextModifier() {
       this.$modal.show("textModifier");
-      const textContent = this.modifyTest();
-      console.log(textContent)
+      //const textContent = this.modifyTest();
+      let xmlData = this.xmlData
+      //let idOfEntity = this.ex_text
+      let idOfEntity = this.selected_word_start_id
+
+      const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
+
+      const textContent = wordElement.textContent
+      const wordLemma = wordElement.getAttribute("lemma")
+      const wordUri = wordElement.getAttribute("lemmaRef")
+
+      const wordUriList = wordUri.split(' ');
+
+      //console.log(textContent)
       this.textContent = textContent
+      this.wordLemma = wordLemma
+      this.wordUriList = wordUriList
     },
     hideTextModifier() {
       this.$modal.hide("textModifier");

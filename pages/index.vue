@@ -105,7 +105,7 @@ export default {
       //selectedEntity: "",
       textContent: "",
       wordLemma: "",
-      wordUriList: "",
+      wordUriList: [],
       wids: [],
       ids: null,
       firestoreId: "001",
@@ -392,7 +392,28 @@ export default {
 
       return xmlData;
     },
-    async modifyText(){},
+    async modifyText(){
+      const xmlData = this.modifyTextTest();
+      this.xmlData = xmlData
+
+      const db = getFirestore();
+
+      // 文字列に変換して、firestoreに保存
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+
+      //console.log(xmlString)
+
+      const docRef = doc(db, "tasks", this.documentId);
+      await updateDoc(docRef, {
+        xml: xmlString,
+      });
+
+      const updateAnnounce = "Document written with ID: " + docRef.id
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce)
+      this.updateAnnounce = updateAnnounce
+    },
     async modifyWordLemma(){
 
       const xmlData = this.modifyWordLemmaTest();
@@ -439,7 +460,20 @@ export default {
       console.log(updateAnnounce)
       this.updateAnnounce = updateAnnounce
     },
-    modifyTextTest(){},
+    modifyTextTest(){
+      let xmlData = this.xmlData
+      let idOfEntity = this.selected_word_start_id
+      let textContent = this.textContent
+      let modifiedText = this.modifiedText
+
+      const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
+      
+      const text = wordElement.childNodes[0];
+      text.nodeValue = modifiedText;
+
+      //return wordElement;
+      return xmlData;
+    },
     modifyWordLemmaTest(){
       //let xmlData = this.xmlData
       //let idOfEntity = this.ex_text
@@ -487,12 +521,14 @@ export default {
       const wordLemma = wordElement.getAttribute("lemma")
       const wordUri = wordElement.getAttribute("lemmaRef")
 
-      const wordUriList = wordUri.split(' ');
+      console.log(wordUri)
 
+      const wordUriList = wordUri.split(' ');
+      
       //console.log(textContent)
-      this.textContent = textContent
-      this.wordLemma = wordLemma
-      this.wordUriList = wordUriList
+      this.textContent = textContent;
+      this.wordUriList = wordUriList;
+      this.wordLemma = wordLemma;
     },
     hideTextModifier() {
       this.$modal.hide("textModifier");

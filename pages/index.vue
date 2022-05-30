@@ -149,6 +149,7 @@ export default {
     const db = getFirestore();
 
     const documentId = "one";
+    //const documentId = "two";
     //const documentId = "aaa";
     this.documentId = documentId;
 
@@ -160,6 +161,7 @@ export default {
       xmlStr = docSnap.data().xml;
     } else {
       const res = await axios.get("/TEI/BG_1_TEI_final.xml");
+      //const res = await axios.get("/TEI/BG_1_TEI.xml");
       xmlStr = res.data;
       console.log(xmlStr)
 
@@ -299,6 +301,7 @@ export default {
 
       const docRef = doc(db, "tasks", this.documentId);
       //const docRef = doc(db, "tasks", "one");
+      //const docRef = doc(db, "tasks", "two");
       await updateDoc(docRef, {
         xml: xmlString,
       });

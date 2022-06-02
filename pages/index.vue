@@ -140,11 +140,13 @@ export default {
       },
     },
   },
+  /*
   watch: {
     data: function () {
       console.log(this.WId);
     },
   },
+  */
   async mounted() {
     const db = getFirestore();
 
@@ -185,7 +187,15 @@ export default {
     */
   },
   watch: {
-    xmlData: function () {
+    xmlData: function(){
+      console.log("xmlData changed!!");
+      this.updateXml()
+    },
+  },
+  methods: {
+    updateXml(){
+      //function () {
+      
       const xmlData = this.xmlData;
       const df = JSON.parse(
         convert.xml2json(xmlData.querySelector("text").outerHTML, {
@@ -228,9 +238,8 @@ export default {
 
       this.element = df;
       //console.log(typeof df)
+      //}
     },
-  },
-  methods: {
     clickText(value) {
       console.log(value);
     },
@@ -259,7 +268,8 @@ export default {
       const selectedAttribute = this.selectedAttribute
       const selectedAttributeValue = this.selectedAttributeValue
 
-      let xmlData = this.xmlData;
+      let xmlData = this.copyDeep(this.xmlData);
+      //let xmlData = this.xmlData;
       const wids = this.wids;
       console.log(wids);
 
@@ -290,6 +300,7 @@ export default {
       const db = getFirestore();
 
       //更新
+      
       xmlData = this.updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue);
       this.xmlData = xmlData;
 
@@ -329,6 +340,7 @@ export default {
 
       let elementAdded = null;
       for (let i = 0; i < ids.length; i++) {
+        console.log({i})
         const id = ids[i];
         const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
 
@@ -344,15 +356,34 @@ export default {
         //対象のw要素をpersNameの子要素として挿入
         elementAdded.appendChild(wordElement);
       }
+
+      console.log({elementAdded})
+
       return xmlData;
     },
-
+    copyDeep(xmlData){
+      //文字列に変換して、それをxml要素に再変換（deep copy）
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+      const parser = new window.DOMParser();
+      return parser.parseFromString(xmlString, "text/xml");
+    },
     async deleteEntity(){
+      let copiedXmlData = this.copyDeep(this.xmlData);
+      copiedXmlData = this.deleteTest(copiedXmlData);
+      this.xmlData = copiedXmlData
 
-      const xmlData = this.deleteTest();
-      this.xmlData = xmlData
+      const xmlData = copiedXmlData;
+      /*
+      // 文字列に変換して、firestoreに保存
+      var xmlSerializer = new XMLSerializer();
+      var xmlString = xmlSerializer.serializeToString(xmlData);
+      console.log("after", xmlString.length)
 
-      console.log(xmlData)
+      
+      */
+
+      //return
 
       const db = getFirestore();
 
@@ -374,19 +405,26 @@ export default {
 
       //const deleteElement = this.deleteTest(xmlData, idOfEntity);
     },
-    deleteTest(){
-      let xmlData = this.xmlData
+    deleteTest(xmlData){
       let idOfEntity = this.ex_text
+      console.log({idOfEntity})
 
       const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
-      console.log(wordElement)
+      console.log("wordElement", wordElement)
+      //console.log(wordElement.length)
 
       const childNodes = wordElement.childNodes
-      console.log(childNodes)
+      
+      //deep copy
+      const copiedChildNodes = []
+      for(let childNode of childNodes){
+        copiedChildNodes.push(childNode)
+      }
 
-      for (let i = 0; i < childNodes.length; i++){
+      for (let i = 0; i < copiedChildNodes.length; i++){
+        const copiedChildNode = copiedChildNodes[i]
       //for (let childNode of childNodes){
-        wordElement.parentNode.insertBefore(childNodes.item(i), wordElement);
+        wordElement.parentNode.insertBefore(copiedChildNode, wordElement);
         //wordElement.parentNode.insertBefore(childNode, wordElement);
       }
 
@@ -465,6 +503,7 @@ export default {
     },
     modifyTextTest(){
       let xmlData = this.xmlData
+      xmlData = this.copyDeep(xmlData);
       let idOfEntity = this.selected_word_start_id
       let textContent = this.textContent
       let modifiedText = this.modifiedText

@@ -15,13 +15,15 @@
         <select id="attributeOptions" v-model="selectedAttribute">
           <option value="subject">subject</option>
           <option value="predicate">hasPredicate</option>
+          <option value="whom">whom</option>
+          <option value="associatedObject">associatedObject</option>
         </select>
         <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
         <button @click="selectEntity">追加</button>
         <br/><br/>
-        <button>登録</button>
+        <button @click="uploadJsonTriples">登録</button>
         <br/>
-        <button @click="hideAttributeSetter">モーダルを閉じる</button>
+        <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
         {{selectedAttribute}}
         <!--{{selectedAttributeValue}}-->
       </div>
@@ -58,7 +60,8 @@
     
     <button @click="showAttributeSetter">Add</button>
     <br/>
-    {{jsonTriples}}
+    <!--{{jsonTriples}}-->
+
     <!--
     <modal name="attributeSetter">
         <select id="attributeOptions" v-model="selectedAttribute">
@@ -124,6 +127,7 @@ export default {
       selected: "",
       selectedAttribute: "",
       selectedAttributeValue: "",
+      selectedEntity: "",
       modifiedText: "",
       modifiedWordLemma: "",
       modifiedWordUri: "",
@@ -294,7 +298,9 @@ export default {
       const selectedAttribute = this.selectedAttribute
       const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples
-      const selectedEntity = this.ex_text
+      const ex_text = this.ex_text
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
 
       console.log(selectedAttribute)
       console.log(selectedAttributeValue)
@@ -322,6 +328,10 @@ export default {
 
       console.log(jsonTriples)
       this.jsonTriples = jsonTriples
+
+      this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.selectedAttribute = "";
 
       //console.log(/*this.selectedEntity*/ selected);
 
@@ -391,6 +401,14 @@ export default {
 
       */
 
+    },
+    uploadJsonTriples(){
+      const jsonTriples = this.jsonTriples
+      console.log(jsonTriples);
+
+      this.jsonTriples = {};
+
+      this.show = !this.show;
     },
 
     //テストの更新用関数
@@ -668,10 +686,12 @@ export default {
       this.jsonTriples = jsonTriples;
 
     },
+    /*
     hideAttributeSetter() {
       //this.$modal.hide("attributeSetter");
       this.show = !this.show;
     },
+    */
     /*
     showTextModifier() {
       this.$modal.show("textModifier");

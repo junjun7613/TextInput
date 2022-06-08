@@ -14,9 +14,13 @@
       <div v-show="show" id="attributeSetter" style="width:30%">
         <select id="attributeOptions" v-model="selectedAttribute">
           <option value="subject">subject</option>
-          <option value="predicate">hasPredicate</option>
           <option value="whom">whom</option>
-          <option value="associatedObject">associatedObject</option>
+          <option value="associatedPerson">associatedPerson</option>
+          <option value="hasPredicate">hasPredicate</option>
+          <option value="hasProperty">hasProperty</option>
+          <option value="associatedConcept">associatedConcept</option>
+          <option value="associatedPhysicalObject">associatedPhysicalObject</option>
+          <option value="description">description</option>
         </select>
         <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
         <button @click="selectEntity">追加</button>

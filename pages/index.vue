@@ -565,7 +565,14 @@ export default {
 
       console.log(wordUri)
 
-      const wordUriList = wordUri.split(' ');
+      const wordUriList = [];
+
+      if (wordUri == null){
+        wordUriList.push("none");
+      }else{
+        wordUriList = wordUri.split(' ');
+      }
+      
       
       //console.log(textContent)
       this.textContent = textContent;

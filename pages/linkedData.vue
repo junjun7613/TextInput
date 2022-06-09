@@ -12,24 +12,35 @@
         </div>
       </div>
       <div v-show="show" id="attributeSetter" style="width:30%">
-        <select id="attributeOptions" v-model="selectedAttribute">
+        <div>
+        <select id="attributeOptions" v-model="personAttribute">
           <option value="subject">subject</option>
           <option value="whom">whom</option>
           <option value="associatedPerson">associatedPerson</option>
+        </select>
+        <button @click="selectEntity">追加</button>
+        </div>
+        <br/>
+        <div>
+        <select id="attributeOptions" v-model="lemmaAttribute">
           <option value="hasPredicate">hasPredicate</option>
           <option value="hasProperty">hasProperty</option>
           <option value="associatedConcept">associatedConcept</option>
           <option value="associatedPhysicalObject">associatedPhysicalObject</option>
-          <option value="description">description</option>
         </select>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
-        <button @click="selectEntity">追加</button>
+        <button @click="putLemmaAttribute">追加</button>
+        </div>
+        <br/>
+        <div>
+          Description
+          <input type="text" class="form-control" aria-label="リンク先" v-model="descriptionAttributeValue">
+          <button @click="putDescription">追加</button>
+        </div>
         <br/><br/>
         <button @click="uploadJsonTriples">登録</button>
         <br/>
         <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
-        {{selectedAttribute}}
-        <!--{{selectedAttributeValue}}-->
+        
       </div>
       </div>
     </div>
@@ -129,8 +140,9 @@ export default {
       //df: null,
       WId: "",
       selected: "",
-      selectedAttribute: "",
-      selectedAttributeValue: "",
+      personAttribute: "",
+      lemmaAttribute: "",
+      descriptionAttributeValue: "",
       selectedEntity: "",
       modifiedText: "",
       modifiedWordLemma: "",
@@ -144,7 +156,8 @@ export default {
       firestoreId: "001",
       firestoreName: "test",
       updateAnnounce: "",
-      jsonTriples: {}
+      jsonTriples: {},
+      uuid: ""
       //height: window.innerHeight - 64,
     };
   },
@@ -299,43 +312,34 @@ export default {
     async selectEntity() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
-      const selectedAttribute = this.selectedAttribute
-      const selectedAttributeValue = this.selectedAttributeValue
+      const selectedAttribute = this.personAttribute
+      //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples
       const ex_text = this.ex_text
       this.selectedEntity = ex_text;
       const selectedEntity = this.selectedEntity;
+      const uuid = this.uuid
 
       console.log(selectedAttribute)
-      console.log(selectedAttributeValue)
+      //console.log(selectedAttributeValue)
       console.log(selectedEntity)
       
-      if (selectedAttributeValue && !selectedEntity){
-        if (!jsonTriples[selectedAttribute]){
-          const list = []
-          list.push(selectedAttributeValue)
-          jsonTriples[selectedAttribute] = list;
-        }else{
-          jsonTriples[selectedAttribute].push(selectedAttributeValue);
-        }       
-      }else if (!selectedAttributeValue && selectedEntity){
-        if (!jsonTriples[selectedAttribute]){
-          const list = []
-          list.push(selectedEntity)
-          jsonTriples[selectedAttribute] = list;
-        }else{
-          jsonTriples[selectedAttribute].push(selectedEntity);
-        }     
+      
+      if (!jsonTriples[selectedAttribute]){
+        const list = []
+        list.push(selectedEntity + "_" + uuid)
+        jsonTriples[selectedAttribute] = list;
       }else{
-        ;
-      }
+        jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+      }       
+      
 
       console.log(jsonTriples)
       this.jsonTriples = jsonTriples
 
-      this.selectedAttributeValue = "";
+      //this.selectedAttributeValue = "";
       this.selectedEntity = "";
-      this.selectedAttribute = "";
+      this.personAttribute = "";
 
       //console.log(/*this.selectedEntity*/ selected);
 
@@ -406,15 +410,70 @@ export default {
       */
 
     },
+    async putLemmaAttribute(){
+      const selectedAttribute = this.lemmaAttribute
+      //const selectedAttributeValue = this.selectedAttributeValue
+      const jsonTriples = this.jsonTriples
+      const ex_text = this.ex_text
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+      
+
+      console.log(selectedAttribute)
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity)
+      
+      
+      if (!jsonTriples[selectedAttribute]){
+        const list = []
+        list.push(selectedEntity)
+        jsonTriples[selectedAttribute] = list;
+      }else{
+        jsonTriples[selectedAttribute].push(selectedEntity);
+      }       
+      
+
+      console.log(jsonTriples)
+      this.jsonTriples = jsonTriples
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.lemmaAttribute = "";
+    },
+    async putDescription(){
+      //const selected = this.selected;
+      //this.selectedEntity = selected;
+      const description = this.descriptionAttributeValue
+
+      const jsonTriples = this.jsonTriples
+      
+
+      console.log(description)
+      
+      
+      if (!jsonTriples["description"]){
+        jsonTriples["description"] = description;
+      }else{
+        ;
+      }       
+
+      console.log(jsonTriples)
+      this.jsonTriples = jsonTriples
+
+      //this.selectedAttributeValue = "";
+      this.descriptionAttributeValue = "";
+    },
     uploadJsonTriples(){
       const jsonTriples = this.jsonTriples
       console.log(jsonTriples);
 
       this.jsonTriples = {};
+      this.uuid = "";
 
       this.show = !this.show;
     },
 
+    /*
     //テストの更新用関数
     updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue) {
       // テスト
@@ -454,6 +513,7 @@ export default {
 
       return xmlData;
     },
+    */
     copyDeep(xmlData){
       //文字列に変換して、それをxml要素に再変換（deep copy）
       var xmlSerializer = new XMLSerializer();
@@ -664,6 +724,7 @@ export default {
 
       const uuid = uuidv4();
       console.log(uuid)
+      this.uuid = uuid;
 
       const ids = [];
       const start = indexStart;

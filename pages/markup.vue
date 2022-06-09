@@ -48,6 +48,12 @@
           <option value="target">referencesEntity</option>
         </select>
         <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
+        <!--
+        <select id="attributeOptions" v-model="referenceEiT">
+          <option value="corresp">referencesEntityInContext</option>
+        </select>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="referenceEiTValue">
+        -->
         <button @click="selectEntity">追加</button>
         <button @click="hideAttributeSetter">モーダルを閉じる</button>
         {{selectedAttribute}}
@@ -99,6 +105,8 @@ export default {
       selected: "",
       selectedAttribute: "",
       selectedAttributeValue: "",
+      referenceEiT:"",
+      referenceEiTValue: "",
       modifiedText: "",
       modifiedWordLemma: "",
       modifiedWordUri: "",
@@ -267,6 +275,8 @@ export default {
       //this.selectedEntity = selected;
       const selectedAttribute = this.selectedAttribute
       const selectedAttributeValue = this.selectedAttributeValue
+      //const referenceEiT = this.referenceEiT
+      //const referenceEiTValue = this.referenceEiTValue
 
       let xmlData = this.copyDeep(this.xmlData);
       //let xmlData = this.xmlData;
@@ -300,10 +310,12 @@ export default {
       const db = getFirestore();
 
       //更新
-      
       xmlData = this.updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue);
+      //xmlData = this.updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue, referenceEiT, referenceEiTValue);
       this.xmlData = xmlData;
+      console.log(xmlData)
 
+     
       // 文字列に変換して、firestoreに保存
       var xmlSerializer = new XMLSerializer();
       var xmlString = xmlSerializer.serializeToString(xmlData);
@@ -321,9 +333,12 @@ export default {
       //console.log("Document written with ID: ", docRef.id);
       console.log(updateAnnounce)
       this.updateAnnounce = updateAnnounce
+
+    
     },
     //テストの更新用関数
     updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue) {
+    //updateTest(xmlData, ids, selected, selectedAttribute, selectedAttributeValue, referenceEiT, referenceEiTValue) {
       // テスト
       //const ids = ["w_1_1_2_12", "w_1_1_2_13"];
       //const ids = this.ids
@@ -347,8 +362,21 @@ export default {
         if (i == 0) {
           elementAdded = xmlData.createElement(element_name);
           elementAdded.setAttribute("xml:id", element_id);
-          elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
-    
+
+          if (selectedAttributeValue !== ""){
+            elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
+          }else{
+            ;
+          }
+
+          /*
+          if (referenceEiTValue !== ""){
+            elementAdded.setAttribute(referenceEiT, referenceEiTValue);
+          }else{
+            ;
+          }
+          */
+
           //対象のw要素の前に挿入
           wordElement.parentNode.insertBefore(elementAdded, wordElement);
         }

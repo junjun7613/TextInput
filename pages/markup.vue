@@ -34,10 +34,11 @@
     </v-container>
     {{ WId }}
     <select id="listbox" v-model="selected">
-      <option value="pers">Person</option>
-      <option value="place">Place</option>
-      <option value="org">Organization</option>
-      <option value="object">Object</option>
+      <option value="persName">Person</option>
+      <option value="placeName">Place</option>
+      <option value="orgName">Organization</option>
+      <option value="objectName">Object</option>
+      <option value="date">Date</option>
     </select>
     <!--<div>selected: {{selected}}</div>-->
     <button @click="showAttributeSetter">Add</button>
@@ -317,7 +318,7 @@ export default {
       this.xmlData = xmlData;
       console.log(xmlData)
 
-     
+    
       // 文字列に変換して、firestoreに保存
       var xmlSerializer = new XMLSerializer();
       var xmlString = xmlSerializer.serializeToString(xmlData);
@@ -347,7 +348,8 @@ export default {
 
       //let element_name = "persName";
       let element_prefix = selected; //"pers";
-      let element_name = `${element_prefix}Name`;
+      //let element_name = `${element_prefix}Name`;
+      let element_name = element_prefix
       let element_id = ids[0].replace("w_", `${element_prefix}_`);
       if (ids.length > 1) {
         const last_id = ids[ids.length - 1];

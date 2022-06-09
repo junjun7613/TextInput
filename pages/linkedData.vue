@@ -20,6 +20,7 @@
           <option value="whom">whom</option>
           <option value="associatedPerson">associatedPerson</option>
         </select>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="personAttributeValue">
         <button @click="putPersonAttribute">追加</button>
         </div>
         <br/>
@@ -78,13 +79,23 @@
       </v-row>
     </v-container>
     {{ WId }}
+    Familial relationship
     <select id="listbox" v-model="selected">
-      <option value="relFamilial">Familial relationship</option>
+      <option value="father-child">father-child</option>
+      <option value="mother-child">mother-child</option>
+    </select>
+    <br/>
+    Social relationship
+    <select id="listbox" v-model="selected">
       <option value="relSocial">Social relationship</option>
+    </select>
+    <br/>
+    Contact
+    <select id="listbox" v-model="selected">
       <option value="relContact">Contact</option>
     </select>
     <!--<div>selected: {{selected}}</div>-->
-    
+    <br/>
     <button @click="showAttributeSetter">Add</button>
     <br/>
     <!--{{jsonTriples}}-->
@@ -153,6 +164,7 @@ export default {
       WId: "",
       selected: "",
       personAttribute: "",
+      personAttributeValue: "",
       objectAttribute: "",
       lemmaAttribute: "",
       descriptionAttributeValue: "",
@@ -326,6 +338,7 @@ export default {
       //const selected = this.selected;
       //this.selectedEntity = selected;
       const selectedAttribute = this.personAttribute
+      const selectedAttributeValue = this.personAttributeValue
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples
       const ex_text = this.ex_text
@@ -342,15 +355,21 @@ export default {
         const list = []
         const person = {}
         person.idInText = selectedEntity;
-        person.item = selectedEntity + "_" + uuid
+        person.entityReference = selectedEntity + "_" + uuid;
         //list.push(selectedEntity + "_" + uuid)
+        if(selectedAttributeValue !== ""){
+          person.entityInContext = selectedAttributeValue;
+        }
         list.push(person)
         jsonTriples[selectedAttribute] = list;
       }else{
         const person = {}
         person.idInText = selectedEntity;
-        person.item = selectedEntity + "_" + uuid
+        person.entityReference = selectedEntity + "_" + uuid
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        if(selectedAttributeValue !== ""){
+          person.entityInContext = selectedAttributeValue;
+        }
         jsonTriples[selectedAttribute].push(person);
       }       
       

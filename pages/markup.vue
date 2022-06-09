@@ -438,26 +438,31 @@ export default {
       console.log({idOfEntity})
 
       const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
-      console.log("wordElement", wordElement)
+      console.log("wordElement", wordElement.tagName)
       //console.log(wordElement.length)
 
-      const childNodes = wordElement.childNodes
-      
-      //deep copy
-      const copiedChildNodes = []
-      for(let childNode of childNodes){
-        copiedChildNodes.push(childNode)
-      }
+      if (wordElement.tagName !== "w"){
 
-      for (let i = 0; i < copiedChildNodes.length; i++){
-        const copiedChildNode = copiedChildNodes[i]
-      //for (let childNode of childNodes){
-        wordElement.parentNode.insertBefore(copiedChildNode, wordElement);
-        //wordElement.parentNode.insertBefore(childNode, wordElement);
-      }
+        const childNodes = wordElement.childNodes
+        
+        //deep copy
+        const copiedChildNodes = []
+        for(let childNode of childNodes){
+          copiedChildNodes.push(childNode)
+        }
 
-      console.log(wordElement.parentNode)
-      wordElement.parentNode.removeChild(wordElement);
+        for (let i = 0; i < copiedChildNodes.length; i++){
+          const copiedChildNode = copiedChildNodes[i]
+        //for (let childNode of childNodes){
+          wordElement.parentNode.insertBefore(copiedChildNode, wordElement);
+          //wordElement.parentNode.insertBefore(childNode, wordElement);
+        }
+
+        console.log(wordElement.parentNode)
+        wordElement.parentNode.removeChild(wordElement);
+      }else{
+        ;
+      }
 
       return xmlData;
     },

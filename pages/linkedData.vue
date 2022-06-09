@@ -13,20 +13,32 @@
       </div>
       <div v-show="show" id="attributeSetter" style="width:30%">
         <div>
+        subject/whom/associatedPerson
+        <br/>
         <select id="attributeOptions" v-model="personAttribute">
           <option value="subject">subject</option>
           <option value="whom">whom</option>
           <option value="associatedPerson">associatedPerson</option>
         </select>
-        <button @click="selectEntity">追加</button>
+        <button @click="putPersonAttribute">追加</button>
         </div>
         <br/>
         <div>
+        associatedConcept/associatedPhysicalObject
+        <br/>
+        <select id="attributeOptions" v-model="objectAttribute">
+          <option value="associatedConcept">associatedConcept</option>
+          <option value="associatedPhysicalObject">associatedPhysicalObject</option>
+        </select>
+        <button @click="putObjectAttribute">追加</button>
+        </div>
+        <br/>
+        <div>
+        hasPredicate/hasProperty
+        <br/>
         <select id="attributeOptions" v-model="lemmaAttribute">
           <option value="hasPredicate">hasPredicate</option>
           <option value="hasProperty">hasProperty</option>
-          <option value="associatedConcept">associatedConcept</option>
-          <option value="associatedPhysicalObject">associatedPhysicalObject</option>
         </select>
         <button @click="putLemmaAttribute">追加</button>
         </div>
@@ -141,6 +153,7 @@ export default {
       WId: "",
       selected: "",
       personAttribute: "",
+      objectAttribute: "",
       lemmaAttribute: "",
       descriptionAttributeValue: "",
       selectedEntity: "",
@@ -309,7 +322,7 @@ export default {
       console.log(value);
       this.WId = value;
     },
-    async selectEntity() {
+    async putPersonAttribute() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
       const selectedAttribute = this.personAttribute
@@ -327,10 +340,18 @@ export default {
       
       if (!jsonTriples[selectedAttribute]){
         const list = []
-        list.push(selectedEntity + "_" + uuid)
+        const person = {}
+        person.idInText = selectedEntity;
+        person.item = selectedEntity + "_" + uuid
+        //list.push(selectedEntity + "_" + uuid)
+        list.push(person)
         jsonTriples[selectedAttribute] = list;
       }else{
-        jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        const person = {}
+        person.idInText = selectedEntity;
+        person.item = selectedEntity + "_" + uuid
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        jsonTriples[selectedAttribute].push(person);
       }       
       
 
@@ -343,7 +364,8 @@ export default {
 
       //console.log(/*this.selectedEntity*/ selected);
 
-      let xmlData = this.copyDeep(this.xmlData);
+      //let xmlData = this.copyDeep(this.xmlData);
+
       //let xmlData = this.xmlData;
 /*
       const wids = this.wids;
@@ -410,6 +432,45 @@ export default {
       */
 
     },
+    async putObjectAttribute(){
+      const selectedAttribute = this.objectAttribute
+      //const selectedAttributeValue = this.selectedAttributeValue
+      const jsonTriples = this.jsonTriples
+      const ex_text = this.ex_text
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+      const uuid = this.uuid
+      
+
+      console.log(selectedAttribute)
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity)
+      
+      
+      if (!jsonTriples[selectedAttribute]){
+        const list = []
+        const object = {}
+        object.idInText = selectedEntity;
+        object.item = selectedEntity + "_" + uuid
+        //list.push(selectedEntity + "_" + uuid)
+        list.push(object)
+        jsonTriples[selectedAttribute] = list;
+      }else{
+        const object = {}
+        object.idInText = selectedEntity;
+        object.item = selectedEntity + "_" + uuid
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        jsonTriples[selectedAttribute].push(object);
+      }       
+      
+
+      console.log(jsonTriples)
+      this.jsonTriples = jsonTriples
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.objectAttribute = "";
+    },
     async putLemmaAttribute(){
       const selectedAttribute = this.lemmaAttribute
       //const selectedAttributeValue = this.selectedAttributeValue
@@ -417,7 +478,6 @@ export default {
       const ex_text = this.ex_text
       this.selectedEntity = ex_text;
       const selectedEntity = this.selectedEntity;
-      
 
       console.log(selectedAttribute)
       //console.log(selectedAttributeValue)

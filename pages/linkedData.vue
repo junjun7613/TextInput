@@ -542,9 +542,37 @@ export default {
       //this.selectedAttributeValue = "";
       this.descriptionAttributeValue = "";
     },
-    uploadJsonTriples(){
+    async uploadJsonTriples(){
       const jsonTriples = this.jsonTriples
-      console.log(jsonTriples);
+      console.log(jsonTriples.id);
+
+      const db = getFirestore();
+
+      //更新
+      /*
+      const docRef = doc(db, "lod", this.documentId);
+      //const docRef = doc(db, "tasks", "one");
+      //const docRef = doc(db, "tasks", "two");
+      await updateDoc(docRef, {
+        xml: xmlString,
+      });
+      */
+
+      const docRef = doc(db, "lod", jsonTriples.id);
+      await setDoc(docRef, {
+        jsonTriples
+      });
+
+    // 省略 
+    // (Cloud Firestoreのインスタンスを初期化してdbにセット)
+
+      
+
+      const updateAnnounce = "Document written with ID: " + jsonTriples.id
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce)
+      this.updateAnnounce = updateAnnounce
+
 
       this.jsonTriples = {};
       this.uuid = "";

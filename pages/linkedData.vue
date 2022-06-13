@@ -25,6 +25,19 @@
         </div>
         <br/>
         <div>
+        atPlace/fromPlace/toPlace/nearPlace
+        <br/>
+        <select id="attributeOptions" v-model="placeAttribute">
+          <option value="atPlace">atPlace</option>
+          <option value="fromPlace">fromPlace</option>
+          <option value="toPlace">toPlace</option>
+          <option value="nearPlace">nearPlace</option>
+        </select>
+        <input type="text" class="form-control" aria-label="リンク先" v-model="placeAttributeValue">
+        <button @click="putPlaceAttribute">追加</button>
+        </div>
+        <br/>
+        <div>
         associatedConcept/associatedPhysicalObject
         <br/>
         <select id="attributeOptions" v-model="objectAttribute">
@@ -165,6 +178,8 @@ export default {
       selected: "",
       personAttribute: "",
       personAttributeValue: "",
+      placeAttribute: "",
+      placeAttributeValue: "",
       objectAttribute: "",
       lemmaAttribute: "",
       descriptionAttributeValue: "",
@@ -451,6 +466,54 @@ export default {
       */
 
     },
+    async putPlaceAttribute() {
+      //const selected = this.selected;
+      //this.selectedEntity = selected;
+      const selectedAttribute = this.placeAttribute
+      const selectedAttributeValue = this.placeAttributeValue
+      //const selectedAttributeValue = this.selectedAttributeValue
+      const jsonTriples = this.jsonTriples
+      const ex_text = this.ex_text
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+      const uuid = this.uuid
+
+      console.log(selectedAttribute)
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity)
+      
+      
+      if (!jsonTriples[selectedAttribute]){
+        const list = []
+        const place = {}
+        place.idInText = selectedEntity;
+        place.entityReference = selectedEntity + "_" + uuid;
+        //list.push(selectedEntity + "_" + uuid)
+        if(selectedAttributeValue !== ""){
+          place.entityInContext = selectedAttributeValue;
+        }
+        list.push(place)
+        jsonTriples[selectedAttribute] = list;
+      }else{
+        const place = {}
+        place.idInText = selectedEntity;
+        place.entityReference = selectedEntity + "_" + uuid
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        if(selectedAttributeValue !== ""){
+          place.entityInContext = selectedAttributeValue;
+        }
+        jsonTriples[selectedAttribute].push(place);
+      }       
+      
+
+      console.log(jsonTriples)
+      this.jsonTriples = jsonTriples
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.placeAttribute = "";
+
+    },
     async putObjectAttribute(){
       const selectedAttribute = this.objectAttribute
       //const selectedAttributeValue = this.selectedAttributeValue
@@ -549,24 +612,16 @@ export default {
       const db = getFirestore();
 
       //更新
-      /*
-      const docRef = doc(db, "lod", this.documentId);
-      //const docRef = doc(db, "tasks", "one");
-      //const docRef = doc(db, "tasks", "two");
-      await updateDoc(docRef, {
-        xml: xmlString,
-      });
-      */
+      
 
       const docRef = doc(db, "lod", jsonTriples.id);
       await setDoc(docRef, {
         jsonTriples
       });
 
-    // 省略 
-    // (Cloud Firestoreのインスタンスを初期化してdbにセット)
 
-      
+      // 省略 
+      // (Cloud Firestoreのインスタンスを初期化してdbにセット)
 
       const updateAnnounce = "Document written with ID: " + jsonTriples.id
       //console.log("Document written with ID: ", docRef.id);

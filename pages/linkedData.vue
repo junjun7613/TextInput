@@ -576,6 +576,7 @@ export default {
 
     },
     async putObjectAttribute(){
+      const xmlData = this.xmlData
       const selectedAttribute = this.objectAttribute
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples
@@ -588,13 +589,38 @@ export default {
       console.log(selectedAttribute)
       //console.log(selectedAttributeValue)
       console.log(selectedEntity)
-      
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      const word_elements = wordText.childNodes
+      const lemma_ids = []
+
+      const getLemma = function(element){
+        try{
+          const lemma_id = element.getAttribute("lemmaRef")
+          return lemma_id;
+        }catch{
+          return false;
+        }
+      }
+
+      for (const lemma_element of word_elements){
+        const lemma_id = getLemma(lemma_element)
+        if (lemma_id !== false){
+          //const lemma_id = lemma_element.getAttribute("lemmaRef")
+          lemma_ids.push(lemma_id)
+        }else{
+          ;
+        }
+
+      }
+      console.log(lemma_ids)
       
       if (!jsonTriples[selectedAttribute]){
         const list = []
         const object = {}
         object.idInText = selectedEntity;
         object.item = selectedEntity + "_" + uuid
+        object.lemma = lemma_ids
         //list.push(selectedEntity + "_" + uuid)
         list.push(object)
         jsonTriples[selectedAttribute] = list;
@@ -602,6 +628,7 @@ export default {
         const object = {}
         object.idInText = selectedEntity;
         object.item = selectedEntity + "_" + uuid
+        object.lemma = lemma_ids
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
         jsonTriples[selectedAttribute].push(object);
       }       
@@ -615,6 +642,7 @@ export default {
       this.objectAttribute = "";
     },
     async putLemmaAttribute(){
+      const xmlData = this.xmlData
       const selectedAttribute = this.lemmaAttribute
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples
@@ -625,14 +653,40 @@ export default {
       console.log(selectedAttribute)
       //console.log(selectedAttributeValue)
       console.log(selectedEntity)
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      const lemma_ids = []
+
+      const getLemma = function(element){
+        try{
+          const lemma_id = element.getAttribute("lemmaRef")
+          return lemma_id;
+        }catch{
+          return false;
+        }
+      }
+
+      const lemma_id = getLemma(wordText)
+      if(lemma_id !== false){
+        lemma_ids.push(lemma_id)
+      }else{
+        ;
+      }
+      console.log(lemma_ids)
       
       
       if (!jsonTriples[selectedAttribute]){
         const list = []
-        list.push(selectedEntity)
+        const lemma = {}
+        lemma.wid = selectedEntity
+        lemma.lemmaRef = lemma_ids
+        list.push(lemma)
         jsonTriples[selectedAttribute] = list;
       }else{
-        jsonTriples[selectedAttribute].push(selectedEntity);
+        const lemma = {}
+        lemma.wid = selectedEntity
+        lemma.lemmaRef = lemma_ids
+        jsonTriples[selectedAttribute].push(lemma);
       }       
       
 

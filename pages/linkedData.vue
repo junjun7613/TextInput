@@ -92,20 +92,29 @@
       </v-row>
     </v-container>
     {{ WId }}
-    Familial relationship
+    Relationship
     <select id="listbox" v-model="selected">
-      <option value="father-child">father-child</option>
-      <option value="mother-child">mother-child</option>
+      <option value="FamilialRelationshipFactoid">Familial Relationship</option>
+      <option value="SocialRelationshipFactoid">Social Relationship</option>
     </select>
     <br/>
-    Social relationship
+    Event
     <select id="listbox" v-model="selected">
-      <option value="relSocial">Social relationship</option>
+      <option value="ContactFactoid">Contact</option>
+      <option value="ActionFactoid">Action</option>
     </select>
     <br/>
-    Contact
+    State of Affair
     <select id="listbox" v-model="selected">
-      <option value="relContact">Contact</option>
+      <option value="OfficeFactoid">Office</option>
+      <option value="TitleFactoid">Title</option>
+      <option value="SituationFactoid">Situation</option>
+    </select>
+    <!--<div>selected: {{selected}}</div>-->
+    <br/>
+    Geography
+    <select id="listbox" v-model="selected">
+      <option value="GeoFactoid">Geography</option>
     </select>
     <!--<div>selected: {{selected}}</div>-->
     <br/>

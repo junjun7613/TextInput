@@ -174,7 +174,7 @@ export default {
       xmlStr = docSnap.data().xml;
     } else {
       const res = await axios.get("/TEI/BG_1_TEI_final.xml");
-      //const res = await axios.get("/TEI/BG_1_TEI.xml");
+      //const res = await axios.get("/TEI/BG_1_TEI_final_copy.xml");
       xmlStr = res.data;
       console.log(xmlStr)
 

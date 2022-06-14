@@ -352,6 +352,7 @@ export default {
     async putPersonAttribute() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
+      const xmlData = this.xmlData
       const selectedAttribute = this.personAttribute
       const selectedAttributeValue = this.personAttributeValue
       //const selectedAttributeValue = this.selectedAttributeValue
@@ -364,6 +365,21 @@ export default {
       console.log(selectedAttribute)
       //console.log(selectedAttributeValue)
       console.log(selectedEntity)
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      console.log(wordText)
+
+      const getEntity = function(wordText){
+        try{
+          const entity = wordText.getAttribute("target")
+          return entity;
+        }catch{
+          return false;
+        }
+      }
+
+      const entity = getEntity(wordText)
+      console.log(entity)
       
       
       if (!jsonTriples[selectedAttribute]){
@@ -371,6 +387,11 @@ export default {
         const person = {}
         person.idInText = selectedEntity;
         person.entityReference = selectedEntity + "_" + uuid;
+        if (entity !== false){
+          person.entity = entity;
+        }else{
+          ;
+        }
         //list.push(selectedEntity + "_" + uuid)
         if(selectedAttributeValue !== ""){
           person.entityInContext = selectedAttributeValue;
@@ -381,6 +402,11 @@ export default {
         const person = {}
         person.idInText = selectedEntity;
         person.entityReference = selectedEntity + "_" + uuid
+        if (entity !== false){
+          person.entity = entity;
+        }else{
+          ;
+        }
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
         if(selectedAttributeValue !== ""){
           person.entityInContext = selectedAttributeValue;
@@ -469,6 +495,7 @@ export default {
     async putPlaceAttribute() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
+      const xmlData = this.xmlData
       const selectedAttribute = this.placeAttribute
       const selectedAttributeValue = this.placeAttributeValue
       //const selectedAttributeValue = this.selectedAttributeValue
@@ -481,6 +508,21 @@ export default {
       console.log(selectedAttribute)
       //console.log(selectedAttributeValue)
       console.log(selectedEntity)
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      console.log(wordText)
+
+      const getEntity = function(wordText){
+        try{
+          const entity = wordText.getAttribute("target")
+          return entity;
+        }catch{
+          return false;
+        }
+      }
+
+      const entity = getEntity(wordText)
+      console.log(entity)
       
       
       if (!jsonTriples[selectedAttribute]){
@@ -488,6 +530,11 @@ export default {
         const place = {}
         place.idInText = selectedEntity;
         place.entityReference = selectedEntity + "_" + uuid;
+        if (entity !== false){
+          place.entity = entity;
+        }else{
+          ;
+        }
         //list.push(selectedEntity + "_" + uuid)
         if(selectedAttributeValue !== ""){
           place.entityInContext = selectedAttributeValue;
@@ -498,6 +545,11 @@ export default {
         const place = {}
         place.idInText = selectedEntity;
         place.entityReference = selectedEntity + "_" + uuid
+        if (entity !== false){
+          place.entity = entity;
+        }else{
+          ;
+        }
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
         if(selectedAttributeValue !== ""){
           place.entityInContext = selectedAttributeValue;

@@ -13,10 +13,38 @@
     </template>
     <template v-else-if="element.name === 'w'">
       <!-- @mouseup="mouseUp(element.attributes['xml:id'])" @mousemove="mouseMove(element.attributes['xml:id'])" @mousedown="mouseDown(element.attributes['xml:id'])"  -->
-      <span @mouseup="mouseUp" @mousedown="mouseDown" :id="element.attributes['xml:id']" @click2="/*clickW(element.attributes['xml:id'])*/" @click="clickW(element.attributes['xml:id'])">
+      <span style="display: inline-block" @mouseup="mouseUp" @mousedown="mouseDown" :id="element.attributes['xml:id']" @click2="/*clickW(element.attributes['xml:id'])*/" @click="clickW(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
+          <!-- <WElement :key="key" :element="e"></WElement> -->
+          
           <TEI :key="key" :element="e"></TEI>
         </template>
+        &nbsp;
+        <div
+          v-if="isLod(element)"
+          style="margin-bottom: 4px; height: 8px; cursor: pointer"
+          :style="`background-color: ${/*getTypeColor(factoid.type)*/color}`"
+        ></div>
+        <v-tooltip
+          v-if="false"
+          
+          :key="`l-${key2}`"
+          bottom
+        >
+        <!-- v-for="(factoid, key2) in /*getSpanId(element)*/['aaa']" -->
+          <template #activator="{ on, attrs }">
+            <div
+              :id="factoid.id"
+              v-bind="attrs"
+              style="margin-bottom: 4px; height: 8px; cursor: pointer"
+              :style="`background-color: ${/*getTypeColor(factoid.type)*/color}`"
+              
+              v-on="on"
+            ></div>
+            <!-- @click="clickFactoid(factoid.id)" -->
+          </template>
+          <span>{{ factoid.note }}</span>
+        </v-tooltip>
       </span>
     </template>
     <template v-else-if="element.name === 'persName'">
@@ -70,7 +98,12 @@ import * as fs from 'fs';
 //var DOMParser = require("xmldom").DOMParser;
 //import * as xmldom from 'xmldom'
 
+import WElement from '~/components/WElement.vue'
+
 export default {
+  components: {
+    WElement
+  },
   //props: ['element','xmlData'],
   props: {
     element: Object
@@ -78,11 +111,14 @@ export default {
   data() {
     return {
       selectedElements: [],
-      flg: false
+      flg: false,
+      storedLod: null,
+      color: null
     }
   },
   methods:{
     mouseUp(event){
+      console.log(event.target.parentNode)
       this.selected_word_end_id = event.target.parentNode.id
     },
     mouseDown(event){
@@ -104,7 +140,35 @@ export default {
 
       //this.ex_text = "click e:" + id
       this.ex_text = id
-    }
+    },
+    isLod(element){
+      const stored_lods = this.stored_lods
+      if(element.attributes && element.attributes['xml:id']){
+        const wid = element.attributes['xml:id']
+        for(const stored_lod of stored_lods){
+          if(stored_lod.wids.includes(wid)){
+            this.storedLod = stored_lod
+
+            const type = stored_lod.type
+
+            let color = null
+            if (type === 'Contact') {
+              color = '#FFEE58' // yellow lighten-1
+            } else if (type === 'FamilialRelationship') {
+              color = '#42A5F5' // blue lighten-1
+            } else if (type === 'SocialRelationship') {
+              color = '#66BB6A' // green lighten-1
+            } else {
+              color = '#BDBDBD' // grey lighten-1
+            }
+            this.color = color
+
+            return true
+          }
+        }
+      }
+      return false
+    },
   },
   computed: {
     ex_text: {
@@ -130,7 +194,15 @@ export default {
       set(value) {
         this.$store.commit('setSelectedWordEndId', value)
       }
-    }
+    },
+    stored_lods: {
+      get() {
+        return this.$store.getters.getStoredLods;
+      },
+      set(value) {
+        this.$store.commit("setStoredLods", value);
+      },
+    } 
   }
 }
 </script>

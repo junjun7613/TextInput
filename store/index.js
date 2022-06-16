@@ -1,7 +1,8 @@
 export const state = () => ({
   ex_text: '',
   selected_word_start_id: "",
-  selected_word_end_id: ""
+  selected_word_end_id: "",
+  storedLods: []
 })
 
 export const mutations = {
@@ -13,6 +14,9 @@ export const mutations = {
   },
   setSelectedWordEndId(state, data) {
     state.selected_word_end_id = data
+  },
+  setStoredLods(state, data) {
+    state.storedLods = data
   }
 }
 
@@ -25,5 +29,8 @@ export const getters = {
   },
   getSelectedWordEndId(state) {
     return state.selected_word_end_id
+  },
+  getStoredLods(state) {
+    return state.storedLods
   }
 }

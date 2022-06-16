@@ -206,8 +206,23 @@ export default {
       firestoreName: "test",
       updateAnnounce: "",
       jsonTriples: {},
-      uuid: ""
+      uuid: "",
       //height: window.innerHeight - 64,
+      lods: [
+        {
+          "fid": "xxx-yyy-zzz",
+          "type": "SocialRelationship",
+          "wids": ["w_1_1_1_1", "w_1_1_1_2", "w_1_1_1_3", "w_1_1_1_4"],
+        },
+        /*
+        {
+          "wids": ["w_1_1_1_1", "w_1_1_1_2", "w_1_1_1_3"],
+        },
+        {
+          "wids": ["w_1_1_1_1", "w_1_1_1_2", "w_1_1_1_3"],
+        }
+        */
+      ]
     };
   },
   computed: {
@@ -235,6 +250,14 @@ export default {
         this.$store.commit("setSelectedWordEndId", value);
       },
     },
+    stored_lods: {
+      get() {
+        return this.$store.getters.getStoredLods;
+      },
+      set(value) {
+        this.$store.commit("setStoredLods", value);
+      },
+    },
   },
   /*
   watch: {
@@ -244,6 +267,8 @@ export default {
   },
   */
   async mounted() {
+    this.stored_lods = this.lods
+
     const db = getFirestore();
 
     const documentId = "one";

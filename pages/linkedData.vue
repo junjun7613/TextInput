@@ -162,6 +162,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   doc,
   getDoc,
+  getDocs,
   setDoc,
   getFirestore,
   collection,
@@ -208,21 +209,23 @@ export default {
       jsonTriples: {},
       uuid: "",
       //height: window.innerHeight - 64,
+      /*
       lods: [
         {
-          "fid": "xxx-yyy-zzz",
+          "id": "xxx-yyy-zzz",
           "type": "SocialRelationship",
           "wids": ["w_1_1_1_1", "w_1_1_1_2", "w_1_1_1_3", "w_1_1_1_4"],
         },
-        /*
+        
         {
           "wids": ["w_1_1_1_1", "w_1_1_1_2", "w_1_1_1_3"],
         },
         {
           "wids": ["w_1_1_1_1", "w_1_1_1_2", "w_1_1_1_3"],
         }
-        */
+        
       ]
+      */
     };
   },
   computed: {
@@ -267,9 +270,28 @@ export default {
   },
   */
   async mounted() {
-    this.stored_lods = this.lods
-
     const db = getFirestore();
+
+    const lods = [];
+    
+    const querySnapshot = await getDocs(collection(db, "lod"));
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      const lod = {};
+      const data = doc.data().jsonTriples
+      console.log(data.id);
+      for (const key in data){
+        lod[key] = data[key]
+      }
+      lods.push(lod)
+    });
+
+    console.log(lods)
+    
+
+    //this.stored_lods = this.lods
+    this.stored_lods = lods
+
 
     const documentId = "one";
     //const documentId = "two";

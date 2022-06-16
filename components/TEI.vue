@@ -98,11 +98,11 @@ import * as fs from 'fs';
 //var DOMParser = require("xmldom").DOMParser;
 //import * as xmldom from 'xmldom'
 
-import WElement from '~/components/WElement.vue'
+//import WElement from '~/components/WElement.vue'
 
 export default {
   components: {
-    WElement
+    //WElement
   },
   //props: ['element','xmlData'],
   props: {
@@ -152,11 +152,11 @@ export default {
             const type = stored_lod.type
 
             let color = null
-            if (type === 'Contact') {
+            if (type === 'ActionFactoid') {
               color = '#FFEE58' // yellow lighten-1
-            } else if (type === 'FamilialRelationship') {
+            } else if (type === 'SituationFactoid') {
               color = '#42A5F5' // blue lighten-1
-            } else if (type === 'SocialRelationship') {
+            } else if (type === 'GeoFactoid') {
               color = '#66BB6A' // green lighten-1
             } else {
               color = '#BDBDBD' // grey lighten-1

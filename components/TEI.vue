@@ -154,10 +154,20 @@ export default {
             let color = null
             if (type === 'ActionFactoid') {
               color = '#FFEE58' // yellow lighten-1
+            } else if (type === 'ContactFactoid') {
+              color = '#FFA726' // orange lighten-1
             } else if (type === 'SituationFactoid') {
               color = '#42A5F5' // blue lighten-1
+            } else if (type === 'OfficeFactoid') {
+              color = '#5C6BC0' // blue lighten-1
+            } else if (type === 'TitleFactoid') {
+              color = '#7E57C2' // blue lighten-1
+            } else if (type === 'SocialRelationshipFactoid') {
+              color = '#26A69A' // blue lighten-1
+            } else if (type === 'FamilialRelationshipFactoid') {
+              color = '#66BB6A' // blue lighten-1
             } else if (type === 'GeoFactoid') {
-              color = '#66BB6A' // green lighten-1
+              color = '#8D6E63' // green lighten-1
             } else {
               color = '#BDBDBD' // grey lighten-1
             }

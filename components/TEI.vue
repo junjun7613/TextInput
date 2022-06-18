@@ -68,8 +68,24 @@
         </template>
       </span>
     </template>
-    <template v-else-if="element.name === 'objectName'">
+  <!--
+    <template v-else-if="element.name === 'objectName'">   
       <span style="color: purple;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
+        <template v-for="(e, key) in element.elements">
+          <TEI :key="key" :element="e"></TEI>
+        </template>
+      </span>
+    </template>
+  -->
+    <template v-else-if="element.name === 'objectName' && element.attributes.type === 'concept'">   
+      <span style="color: purple;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
+        <template v-for="(e, key) in element.elements">
+          <TEI :key="key" :element="e"></TEI>
+        </template>
+      </span>
+    </template>
+    <template v-else-if="element.name === 'objectName' && element.attributes.type === 'physicalObject'">   
+      <span style="color: #B388FF;font-weight: bold;" @click="clickEntity(element.attributes['xml:id'])">
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"></TEI>
         </template>

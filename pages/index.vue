@@ -32,7 +32,8 @@ export default {
   watch: {},
   methods: {
     async getTTL() {
-      const c = "http://example.org/cartoons#";
+      const ex = "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
+      const roman = "http://www.example.com/roman-ontology/resource/";
 
       const writer = new N3.Writer({
         prefixes: { c },
@@ -52,9 +53,9 @@ export default {
         const jsonTriples = doc.data().jsonTriples;
 
         writer.addQuad(
-          namedNode(`${c}${jsonTriples.id}`),
+          namedNode(`${ex}${jsonTriples.id}`),
           namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          namedNode(`${c}${jsonTriples.type}`)
+          namedNode(`${ex}${jsonTriples.type}`)
         );
       });
 

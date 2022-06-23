@@ -14,6 +14,35 @@
             </div>
           </div>
           <div v-show="show" id="attributeSetter" style="width: 30%">
+            
+            <v-row dense>
+              <v-col v-for="(option, key) in attributeSetterOptions" :key="key" cols="6">
+                <v-select
+                  rounded
+                  outlined
+                  :label="option.label"
+                  id="attributeOptions"
+                  v-model="option.model"
+                  :items="option.items"
+                  hide-details
+                ></v-select>
+                <div v-if="option.input">
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="リンク先"
+                    v-model="option.input"
+                  />
+                </div>
+                <div v-else/>
+                <v-btn class="mt-2"
+                color="primary"
+                rounded
+                depressed @click="option.click">追加</v-btn>
+              </v-col>
+            </v-row>
+
+<!--
             <div>
               subject/whom/associatedPerson
               <br />
@@ -28,7 +57,10 @@
                 aria-label="リンク先"
                 v-model="personAttributeValue"
               />
-              <button @click="putPersonAttribute">追加</button>
+              <v-btn class="mt-2"
+          color="primary"
+          rounded
+          depressed @click="putPersonAttribute">追加</v-btn>
             </div>
             <br />
             <div>
@@ -46,7 +78,10 @@
                 aria-label="リンク先"
                 v-model="placeAttributeValue"
               />
-              <button @click="putPlaceAttribute">追加</button>
+              <v-btn class="mt-2"
+          color="primary"
+          rounded
+          depressed @click="putPlaceAttribute">追加</v-btn>
             </div>
             <br />
             <div>
@@ -58,7 +93,10 @@
                   associatedPhysicalObject
                 </option>
               </select>
-              <button @click="putObjectAttribute">追加</button>
+              <v-btn class="mt-2"
+          color="primary"
+          rounded
+          depressed @click="putObjectAttribute">追加</v-btn>
             </div>
             <br />
             <div>
@@ -68,8 +106,12 @@
                 <option value="hasPredicate">hasPredicate</option>
                 <option value="hasProperty">hasProperty</option>
               </select>
-              <button @click="putLemmaAttribute">追加</button>
+              <v-btn class="mt-2"
+          color="primary"
+          rounded
+          depressed @click="putLemmaAttribute">追加</v-btn>
             </div>
+-->
             <br />
             <div>
               Description
@@ -79,10 +121,18 @@
                 aria-label="リンク先"
                 v-model="descriptionAttributeValue"
               />
-              <button @click="putDescription">追加</button>
+              <v-btn class="mt-2"
+          color="primary"
+          rounded
+          depressed @click="putDescription">追加</v-btn>
             </div>
+
+
             <br /><br />
-            <button @click="uploadJsonTriples">登録</button>
+            <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="uploadJsonTriples">登録</v-btn>
             <br />
             <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
           </div>
@@ -203,6 +253,7 @@ export default {
       //df: null,
       WId: "",
       selected: "",
+      //attributeValue: "",
       personAttribute: "",
       personAttributeValue: "",
       placeAttribute: "",
@@ -303,6 +354,58 @@ export default {
           value: "GeoFactoid",
         },
       ],
+      subjects: [
+        {
+          text: "subject",
+          value: "subject",
+        },
+        {
+          text: "whom",
+          value: "whom",
+        },
+        {
+          text: "associatedPerson",
+          value: "associatedPerson",
+        },
+      ],
+      places: [
+        {
+          text: "atPlace",
+          value: "atPlace",
+        },
+        {
+          text: "fromPlace",
+          value: "fromPlace",
+        },
+        {
+          text: "toPlace",
+          value: "toPlace",
+        },
+        {
+          text: "nearPlace",
+          value: "nearPlace",
+        },
+      ],
+      concepts: [
+        {
+          text: "associatedConcept",
+          value: "associatedConcept",
+        },
+        {
+          text: "associatedPhysicalObject",
+          value: "associatedPhysicalObject",
+        },
+      ],
+      lemmas: [
+        {
+          text: "hasPredicate",
+          value: "hasPredicate",
+        },
+        {
+          text: "hasProperty",
+          value: "hasProperty",
+        },
+      ],
     };
   },
   computed: {
@@ -356,6 +459,38 @@ export default {
           {
             label: "Geography",
             items: this.geography,
+          },
+        ];
+      },
+    },
+    attributeSetterOptions: {
+      get() {
+        return [
+          {
+            label: "Person/Community",
+            model: "personAttribute",
+            click: this.putPersonAttribute,
+            input: "personAttributeValue",
+            items: this.subjects,
+          },
+          {
+            label: "Place",
+            model: "placeAttribute",
+            click: this.putPlaceAttribute,
+            input: "placeAttributeValue",
+            items: this.places,
+          },
+          {
+            label: "Concepts/Physical objects",
+            model: "objectAttribute",
+            click: this.putObjectAttribute,
+            items: this.concepts,
+          },
+          {
+            label: "Predicate/Property",
+            model: "lemmaAttribute",
+            click: this.putLemmaAttribute,
+            items: this.lemmas,
           },
         ];
       },
@@ -507,7 +642,8 @@ export default {
       //this.selectedEntity = selected;
       const xmlData = this.xmlData;
       const selectedAttribute = this.personAttribute;
-      const selectedAttributeValue = this.personAttributeValue;
+      //const selectedAttributeValue = this.personAttributeValue;
+      const selectedAttributeValue = this.attributeValue;
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples;
       const ex_text = this.ex_text;
@@ -644,7 +780,8 @@ export default {
       //this.selectedEntity = selected;
       const xmlData = this.xmlData;
       const selectedAttribute = this.placeAttribute;
-      const selectedAttributeValue = this.placeAttributeValue;
+      //const selectedAttributeValue = this.placeAttributeValue;
+      const selectedAttributeValue = this.attributeValue;
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples;
       const ex_text = this.ex_text;
@@ -845,17 +982,18 @@ export default {
     },
     async uploadJsonTriples() {
       const jsonTriples = this.jsonTriples;
-      console.log(jsonTriples.id);
+      console.log(jsonTriples);
 
       const db = getFirestore();
 
+/*
       //更新
 
       const docRef = doc(db, "lod", jsonTriples.id);
       await setDoc(docRef, {
         jsonTriples,
       });
-
+*/
       // 省略
       // (Cloud Firestoreのインスタンスを初期化してdbにセット)
 

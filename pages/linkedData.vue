@@ -1,76 +1,94 @@
 <template>
   <div>
-    <p>{{ ex_text }}</p>
-    <p>
-      selected words: {{ selected_word_start_id }} - {{ selected_word_end_id }}
-    </p>
-    <div fluid>
-      <div style="display:flex;">
-      <div style="width:70%">
-        <div id="textDiv" :style="`height: 600px; overflow-y: auto`">
-          <TEI v-if="element" :element="element" @parent-func="getWId" />
+    <v-container fluid>
+      <p>{{ ex_text }}</p>
+      <p>
+        selected words: {{ selected_word_start_id }} -
+        {{ selected_word_end_id }}
+      </p>
+      <div fluid>
+        <div style="display: flex">
+          <div style="width: 70%">
+            <div id="textDiv" :style="`height: 600px; overflow-y: auto`">
+              <TEI v-if="element" :element="element" @parent-func="getWId" />
+            </div>
+          </div>
+          <div v-show="show" id="attributeSetter" style="width: 30%">
+            <div>
+              subject/whom/associatedPerson
+              <br />
+              <select id="attributeOptions" v-model="personAttribute">
+                <option value="subject">subject</option>
+                <option value="whom">whom</option>
+                <option value="associatedPerson">associatedPerson</option>
+              </select>
+              <input
+                type="text"
+                class="form-control"
+                aria-label="リンク先"
+                v-model="personAttributeValue"
+              />
+              <button @click="putPersonAttribute">追加</button>
+            </div>
+            <br />
+            <div>
+              atPlace/fromPlace/toPlace/nearPlace
+              <br />
+              <select id="attributeOptions" v-model="placeAttribute">
+                <option value="atPlace">atPlace</option>
+                <option value="fromPlace">fromPlace</option>
+                <option value="toPlace">toPlace</option>
+                <option value="nearPlace">nearPlace</option>
+              </select>
+              <input
+                type="text"
+                class="form-control"
+                aria-label="リンク先"
+                v-model="placeAttributeValue"
+              />
+              <button @click="putPlaceAttribute">追加</button>
+            </div>
+            <br />
+            <div>
+              associatedConcept/associatedPhysicalObject
+              <br />
+              <select id="attributeOptions" v-model="objectAttribute">
+                <option value="associatedConcept">associatedConcept</option>
+                <option value="associatedPhysicalObject">
+                  associatedPhysicalObject
+                </option>
+              </select>
+              <button @click="putObjectAttribute">追加</button>
+            </div>
+            <br />
+            <div>
+              hasPredicate/hasProperty
+              <br />
+              <select id="attributeOptions" v-model="lemmaAttribute">
+                <option value="hasPredicate">hasPredicate</option>
+                <option value="hasProperty">hasProperty</option>
+              </select>
+              <button @click="putLemmaAttribute">追加</button>
+            </div>
+            <br />
+            <div>
+              Description
+              <input
+                type="text"
+                class="form-control"
+                aria-label="リンク先"
+                v-model="descriptionAttributeValue"
+              />
+              <button @click="putDescription">追加</button>
+            </div>
+            <br /><br />
+            <button @click="uploadJsonTriples">登録</button>
+            <br />
+            <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
+          </div>
         </div>
       </div>
-      <div v-show="show" id="attributeSetter" style="width:30%">
-        <div>
-        subject/whom/associatedPerson
-        <br/>
-        <select id="attributeOptions" v-model="personAttribute">
-          <option value="subject">subject</option>
-          <option value="whom">whom</option>
-          <option value="associatedPerson">associatedPerson</option>
-        </select>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="personAttributeValue">
-        <button @click="putPersonAttribute">追加</button>
-        </div>
-        <br/>
-        <div>
-        atPlace/fromPlace/toPlace/nearPlace
-        <br/>
-        <select id="attributeOptions" v-model="placeAttribute">
-          <option value="atPlace">atPlace</option>
-          <option value="fromPlace">fromPlace</option>
-          <option value="toPlace">toPlace</option>
-          <option value="nearPlace">nearPlace</option>
-        </select>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="placeAttributeValue">
-        <button @click="putPlaceAttribute">追加</button>
-        </div>
-        <br/>
-        <div>
-        associatedConcept/associatedPhysicalObject
-        <br/>
-        <select id="attributeOptions" v-model="objectAttribute">
-          <option value="associatedConcept">associatedConcept</option>
-          <option value="associatedPhysicalObject">associatedPhysicalObject</option>
-        </select>
-        <button @click="putObjectAttribute">追加</button>
-        </div>
-        <br/>
-        <div>
-        hasPredicate/hasProperty
-        <br/>
-        <select id="attributeOptions" v-model="lemmaAttribute">
-          <option value="hasPredicate">hasPredicate</option>
-          <option value="hasProperty">hasProperty</option>
-        </select>
-        <button @click="putLemmaAttribute">追加</button>
-        </div>
-        <br/>
-        <div>
-          Description
-          <input type="text" class="form-control" aria-label="リンク先" v-model="descriptionAttributeValue">
-          <button @click="putDescription">追加</button>
-        </div>
-        <br/><br/>
-        <button @click="uploadJsonTriples">登録</button>
-        <br/>
-        <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
-        
-      </div>
-      </div>
-    </div>
-    <!--<v-container fluid>
+      <!--<v-container fluid>
       <v-row>
         <v-col id="textDiv" :style="`height: ${height}px; overflow-y: auto`">
           <TEI v-if="element" :element="element" />
@@ -80,49 +98,47 @@
     <template>
       <div v-for="item in w_id_list" :key="item.id">{{item.text}}</div>
     </template> -->
-    <v-container fluid v-if="false">
-      <v-row>
-        <v-col
-          v-for="item in w_id_list"
-          :key="item.id"
-          @click="clickText(item.id)"
-        >
-          {{ item.text }}
-        </v-col>
-      </v-row>
-    </v-container>
-    {{ WId }}
-    Relationship
-    <select id="listbox" v-model="selected">
-      <option value="FamilialRelationshipFactoid">Familial Relationship</option>
-      <option value="SocialRelationshipFactoid">Social Relationship</option>
-    </select>
-    <br/>
-    Event
-    <select id="listbox" v-model="selected">
-      <option value="ContactFactoid">Contact</option>
-      <option value="ActionFactoid">Action</option>
-    </select>
-    <br/>
-    State of Affair
-    <select id="listbox" v-model="selected">
-      <option value="OfficeFactoid">Office</option>
-      <option value="TitleFactoid">Title</option>
-      <option value="SituationFactoid">Situation</option>
-    </select>
-    <!--<div>selected: {{selected}}</div>-->
-    <br/>
-    Geography
-    <select id="listbox" v-model="selected">
-      <option value="GeoFactoid">Geography</option>
-    </select>
-    <!--<div>selected: {{selected}}</div>-->
-    <br/>
-    <button @click="showAttributeSetter">Add</button>
-    <br/>
-    <!--{{jsonTriples}}-->
+      <v-container fluid v-if="false">
+        <v-row>
+          <v-col
+            v-for="item in w_id_list"
+            :key="item.id"
+            @click="clickText(item.id)"
+          >
+            {{ item.text }}
+          </v-col>
+        </v-row>
+      </v-container>
+      {{ WId }}
 
-    <!--
+      <v-container>
+        <v-row dense>
+          <v-col v-for="(option, key) in options" :key="key" cols="6">
+            <v-select
+              rounded
+              outlined
+              :label="option.label"
+              id="listbox"
+              v-model="selected"
+              :items="option.items"
+              hide-details
+            ></v-select>
+          </v-col>
+        </v-row>
+
+        <!-- <v-select rounded outlined label="Event" id="listbox" v-model="selected" :items="events"></v-select> -->
+        <v-btn
+          class="mt-2"
+          color="primary"
+          rounded
+          depressed
+          @click="showAttributeSetter"
+          >Add</v-btn
+        >
+      </v-container>
+      <!--{{jsonTriples}}-->
+
+      <!--
     <modal name="attributeSetter">
         <select id="attributeOptions" v-model="selectedAttribute">
           <option value="target">referencesEntity</option>
@@ -134,8 +150,8 @@
         {{selectedAttributeValue}}
     </modal>
     -->
-    
-    <!--
+
+      <!--
     <button @click="deleteEntity">Delete</button>
     <button @click="showTextModifier">Modify</button>
     <modal name="textModifier" :resizable="true" :scrollable="true">
@@ -151,14 +167,15 @@
         <button @click="hideTextModifier">モーダルを閉じる</button>
     </modal>
     -->
-    {{ ids }}
-    <p>{{ updateAnnounce }}</p>
+      {{ ids }}
+      <p>{{ updateAnnounce }}</p>
+    </v-container>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import {
   doc,
   getDoc,
@@ -226,6 +243,66 @@ export default {
         
       ]
       */
+      /*
+      <option value="FamilialRelationshipFactoid">
+          Familial Relationship
+        </option>
+        <option value="SocialRelationshipFactoid">Social Relationship</option>
+      */
+      relationships: [
+        {
+          text: "Familial Relationship",
+          value: "FamilialRelationshipFactoid",
+        },
+        {
+          text: "Social Relationship",
+          value: "SocialRelationshipFactoid",
+        },
+      ],
+      events: [
+        {
+          text: "Contact",
+          value: "ContactFactoid",
+        },
+        {
+          text: "Action",
+          value: "ActionFactoid",
+        },
+      ],
+      /*
+      State of Affair
+    <select id="listbox" v-model="selected">
+      <option value="OfficeFactoid">Office</option>
+      <option value="TitleFactoid">Title</option>
+      <option value="SituationFactoid">Situation</option>
+    </select>
+    <!--<div>selected: {{selected}}</div>-->
+    <br />
+    Geography
+    <select id="listbox" v-model="selected">
+      <option value="GeoFactoid">Geography</option>
+    </select>
+    */
+      states: [
+        {
+          text: "Office",
+          value: "OfficeFactoid",
+        },
+        {
+          text: "Title",
+          value: "TitleFactoid",
+        },
+        {
+          text: "Situation",
+          value: "SituationFactoid",
+        },
+      ],
+      geography: [
+        {
+          text: "Geography",
+          value: "GeoFactoid",
+        },
+      ],
     };
   },
   computed: {
@@ -261,6 +338,28 @@ export default {
         this.$store.commit("setStoredLods", value);
       },
     },
+    options: {
+      get() {
+        return [
+          {
+            label: "Relationship",
+            items: this.relationships,
+          },
+          {
+            label: "Event",
+            items: this.events,
+          },
+          {
+            label: "State of Affair",
+            items: this.states,
+          },
+          {
+            label: "Geography",
+            items: this.geography,
+          },
+        ];
+      },
+    },
   },
   /*
   watch: {
@@ -273,25 +372,23 @@ export default {
     const db = getFirestore();
 
     const lods = [];
-    
+
     const querySnapshot = await getDocs(collection(db, "lod"));
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       const lod = {};
-      const data = doc.data().jsonTriples
+      const data = doc.data().jsonTriples;
       console.log(data.id);
-      for (const key in data){
-        lod[key] = data[key]
+      for (const key in data) {
+        lod[key] = data[key];
       }
-      lods.push(lod)
+      lods.push(lod);
     });
 
-    console.log(lods)
-    
+    console.log(lods);
 
     //this.stored_lods = this.lods
-    this.stored_lods = lods
-
+    this.stored_lods = lods;
 
     const documentId = "one";
     //const documentId = "two";
@@ -308,7 +405,7 @@ export default {
       const res = await axios.get("/TEI/BG_1_TEI_final.xml");
       //const res = await axios.get("/TEI/BG_1_TEI.xml");
       xmlStr = res.data;
-      console.log(xmlStr)
+      console.log(xmlStr);
 
       //const docData = {xml:xmlStr};
       //await setDoc(doc(db, "tasks", "one"), docData);
@@ -330,15 +427,15 @@ export default {
     */
   },
   watch: {
-    xmlData: function(){
+    xmlData: function () {
       console.log("xmlData changed!!");
-      this.updateXml()
+      this.updateXml();
     },
   },
   methods: {
-    updateXml(){
+    updateXml() {
       //function () {
-      
+
       const xmlData = this.xmlData;
       const df = JSON.parse(
         convert.xml2json(xmlData.querySelector("text").outerHTML, {
@@ -408,71 +505,67 @@ export default {
     async putPersonAttribute() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
-      const xmlData = this.xmlData
-      const selectedAttribute = this.personAttribute
-      const selectedAttributeValue = this.personAttributeValue
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.personAttribute;
+      const selectedAttributeValue = this.personAttributeValue;
       //const selectedAttributeValue = this.selectedAttributeValue
-      const jsonTriples = this.jsonTriples
-      const ex_text = this.ex_text
+      const jsonTriples = this.jsonTriples;
+      const ex_text = this.ex_text;
       this.selectedEntity = ex_text;
       const selectedEntity = this.selectedEntity;
-      const uuid = this.uuid
+      const uuid = this.uuid;
 
-      console.log(selectedAttribute)
+      console.log(selectedAttribute);
       //console.log(selectedAttributeValue)
-      console.log(selectedEntity)
+      console.log(selectedEntity);
 
       const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
-      console.log(wordText)
+      console.log(wordText);
 
-      const getEntity = function(wordText){
-        try{
-          const entity = wordText.getAttribute("target")
+      const getEntity = function (wordText) {
+        try {
+          const entity = wordText.getAttribute("target");
           return entity;
-        }catch{
+        } catch {
           return false;
         }
-      }
+      };
 
-      const entity = getEntity(wordText)
-      console.log(entity)
-      
-      
-      if (!jsonTriples[selectedAttribute]){
-        const list = []
-        const person = {}
+      const entity = getEntity(wordText);
+      console.log(entity);
+
+      if (!jsonTriples[selectedAttribute]) {
+        const list = [];
+        const person = {};
         person.idInText = selectedEntity;
         person.entityReference = selectedEntity + "_" + uuid;
-        if (entity !== false){
+        if (entity !== false) {
           person.entity = entity;
-        }else{
-          ;
+        } else {
         }
         //list.push(selectedEntity + "_" + uuid)
-        if(selectedAttributeValue !== ""){
+        if (selectedAttributeValue !== "") {
           person.entityInContext = selectedAttributeValue;
         }
-        list.push(person)
+        list.push(person);
         jsonTriples[selectedAttribute] = list;
-      }else{
-        const person = {}
+      } else {
+        const person = {};
         person.idInText = selectedEntity;
-        person.entityReference = selectedEntity + "_" + uuid
-        if (entity !== false){
+        person.entityReference = selectedEntity + "_" + uuid;
+        if (entity !== false) {
           person.entity = entity;
-        }else{
-          ;
+        } else {
         }
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
-        if(selectedAttributeValue !== ""){
+        if (selectedAttributeValue !== "") {
           person.entityInContext = selectedAttributeValue;
         }
         jsonTriples[selectedAttribute].push(person);
-      }       
-      
+      }
 
-      console.log(jsonTriples)
-      this.jsonTriples = jsonTriples
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
 
       //this.selectedAttributeValue = "";
       this.selectedEntity = "";
@@ -483,7 +576,7 @@ export default {
       //let xmlData = this.copyDeep(this.xmlData);
 
       //let xmlData = this.xmlData;
-/*
+      /*
       const wids = this.wids;
       console.log(wids);
 
@@ -516,7 +609,6 @@ export default {
       console.log(ids)
 */
 
-
       //this.ids = ids;
 
       /*
@@ -546,250 +638,231 @@ export default {
       this.updateAnnounce = updateAnnounce
 
       */
-
     },
     async putPlaceAttribute() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
-      const xmlData = this.xmlData
-      const selectedAttribute = this.placeAttribute
-      const selectedAttributeValue = this.placeAttributeValue
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.placeAttribute;
+      const selectedAttributeValue = this.placeAttributeValue;
       //const selectedAttributeValue = this.selectedAttributeValue
-      const jsonTriples = this.jsonTriples
-      const ex_text = this.ex_text
+      const jsonTriples = this.jsonTriples;
+      const ex_text = this.ex_text;
       this.selectedEntity = ex_text;
       const selectedEntity = this.selectedEntity;
-      const uuid = this.uuid
+      const uuid = this.uuid;
 
-      console.log(selectedAttribute)
+      console.log(selectedAttribute);
       //console.log(selectedAttributeValue)
-      console.log(selectedEntity)
+      console.log(selectedEntity);
 
       const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
-      console.log(wordText)
+      console.log(wordText);
 
-      const getEntity = function(wordText){
-        try{
-          const entity = wordText.getAttribute("target")
+      const getEntity = function (wordText) {
+        try {
+          const entity = wordText.getAttribute("target");
           return entity;
-        }catch{
+        } catch {
           return false;
         }
-      }
+      };
 
-      const entity = getEntity(wordText)
-      console.log(entity)
-      
-      
-      if (!jsonTriples[selectedAttribute]){
-        const list = []
-        const place = {}
+      const entity = getEntity(wordText);
+      console.log(entity);
+
+      if (!jsonTriples[selectedAttribute]) {
+        const list = [];
+        const place = {};
         place.idInText = selectedEntity;
         place.entityReference = selectedEntity + "_" + uuid;
-        if (entity !== false){
+        if (entity !== false) {
           place.entity = entity;
-        }else{
-          ;
+        } else {
         }
         //list.push(selectedEntity + "_" + uuid)
-        if(selectedAttributeValue !== ""){
+        if (selectedAttributeValue !== "") {
           place.entityInContext = selectedAttributeValue;
         }
-        list.push(place)
+        list.push(place);
         jsonTriples[selectedAttribute] = list;
-      }else{
-        const place = {}
+      } else {
+        const place = {};
         place.idInText = selectedEntity;
-        place.entityReference = selectedEntity + "_" + uuid
-        if (entity !== false){
+        place.entityReference = selectedEntity + "_" + uuid;
+        if (entity !== false) {
           place.entity = entity;
-        }else{
-          ;
+        } else {
         }
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
-        if(selectedAttributeValue !== ""){
+        if (selectedAttributeValue !== "") {
           place.entityInContext = selectedAttributeValue;
         }
         jsonTriples[selectedAttribute].push(place);
-      }       
-      
+      }
 
-      console.log(jsonTriples)
-      this.jsonTriples = jsonTriples
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
 
       //this.selectedAttributeValue = "";
       this.selectedEntity = "";
       this.placeAttribute = "";
-
     },
-    async putObjectAttribute(){
-      const xmlData = this.xmlData
-      const selectedAttribute = this.objectAttribute
+    async putObjectAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.objectAttribute;
       //const selectedAttributeValue = this.selectedAttributeValue
-      const jsonTriples = this.jsonTriples
-      const ex_text = this.ex_text
+      const jsonTriples = this.jsonTriples;
+      const ex_text = this.ex_text;
       this.selectedEntity = ex_text;
       const selectedEntity = this.selectedEntity;
-      const uuid = this.uuid
-      
+      const uuid = this.uuid;
 
-      console.log(selectedAttribute)
+      console.log(selectedAttribute);
       //console.log(selectedAttributeValue)
-      console.log(selectedEntity)
+      console.log(selectedEntity);
 
       const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
-      const word_elements = wordText.childNodes
-      const lemma_ids = []
+      const word_elements = wordText.childNodes;
+      const lemma_ids = [];
 
-      const getLemma = function(element){
-        try{
-          const lemma_id = element.getAttribute("lemmaRef")
+      const getLemma = function (element) {
+        try {
+          const lemma_id = element.getAttribute("lemmaRef");
           return lemma_id;
-        }catch{
+        } catch {
           return false;
         }
-      }
+      };
 
-      for (const lemma_element of word_elements){
-        const lemma_id = getLemma(lemma_element)
-        if (lemma_id !== false){
+      for (const lemma_element of word_elements) {
+        const lemma_id = getLemma(lemma_element);
+        if (lemma_id !== false) {
           //const lemma_id = lemma_element.getAttribute("lemmaRef")
-          lemma_ids.push(lemma_id)
-        }else{
-          ;
+          lemma_ids.push(lemma_id);
+        } else {
         }
-
       }
-      console.log(lemma_ids)
-      
-      if (!jsonTriples[selectedAttribute]){
-        const list = []
-        const object = {}
+      console.log(lemma_ids);
+
+      if (!jsonTriples[selectedAttribute]) {
+        const list = [];
+        const object = {};
         object.idInText = selectedEntity;
-        object.item = selectedEntity + "_" + uuid
-        object.lemma = lemma_ids
+        object.item = selectedEntity + "_" + uuid;
+        object.lemma = lemma_ids;
         //list.push(selectedEntity + "_" + uuid)
-        list.push(object)
+        list.push(object);
         jsonTriples[selectedAttribute] = list;
-      }else{
-        const object = {}
+      } else {
+        const object = {};
         object.idInText = selectedEntity;
-        object.item = selectedEntity + "_" + uuid
-        object.lemma = lemma_ids
+        object.item = selectedEntity + "_" + uuid;
+        object.lemma = lemma_ids;
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
         jsonTriples[selectedAttribute].push(object);
-      }       
-      
+      }
 
-      console.log(jsonTriples)
-      this.jsonTriples = jsonTriples
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
 
       //this.selectedAttributeValue = "";
       this.selectedEntity = "";
       this.objectAttribute = "";
     },
-    async putLemmaAttribute(){
-      const xmlData = this.xmlData
-      const selectedAttribute = this.lemmaAttribute
+    async putLemmaAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.lemmaAttribute;
       //const selectedAttributeValue = this.selectedAttributeValue
-      const jsonTriples = this.jsonTriples
-      const ex_text = this.ex_text
+      const jsonTriples = this.jsonTriples;
+      const ex_text = this.ex_text;
       this.selectedEntity = ex_text;
       const selectedEntity = this.selectedEntity;
 
-      console.log(selectedAttribute)
+      console.log(selectedAttribute);
       //console.log(selectedAttributeValue)
-      console.log(selectedEntity)
+      console.log(selectedEntity);
 
       const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
-      const lemma_ids = []
+      const lemma_ids = [];
 
-      const getLemma = function(element){
-        try{
-          const lemma_id = element.getAttribute("lemmaRef")
+      const getLemma = function (element) {
+        try {
+          const lemma_id = element.getAttribute("lemmaRef");
           return lemma_id;
-        }catch{
+        } catch {
           return false;
         }
-      }
+      };
 
-      const lemma_id = getLemma(wordText)
-      if(lemma_id !== false){
-        lemma_ids.push(lemma_id)
-      }else{
-        ;
+      const lemma_id = getLemma(wordText);
+      if (lemma_id !== false) {
+        lemma_ids.push(lemma_id);
+      } else {
       }
-      console.log(lemma_ids)
-      
-      
-      if (!jsonTriples[selectedAttribute]){
-        const list = []
-        const lemma = {}
-        lemma.wid = selectedEntity
-        lemma.lemmaRef = lemma_ids
-        list.push(lemma)
+      console.log(lemma_ids);
+
+      if (!jsonTriples[selectedAttribute]) {
+        const list = [];
+        const lemma = {};
+        lemma.wid = selectedEntity;
+        lemma.lemmaRef = lemma_ids;
+        list.push(lemma);
         jsonTriples[selectedAttribute] = list;
-      }else{
-        const lemma = {}
-        lemma.wid = selectedEntity
-        lemma.lemmaRef = lemma_ids
+      } else {
+        const lemma = {};
+        lemma.wid = selectedEntity;
+        lemma.lemmaRef = lemma_ids;
         jsonTriples[selectedAttribute].push(lemma);
-      }       
-      
+      }
 
-      console.log(jsonTriples)
-      this.jsonTriples = jsonTriples
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
 
       //this.selectedAttributeValue = "";
       this.selectedEntity = "";
       this.lemmaAttribute = "";
     },
-    async putDescription(){
+    async putDescription() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
-      const description = this.descriptionAttributeValue
+      const description = this.descriptionAttributeValue;
 
-      const jsonTriples = this.jsonTriples
-      
+      const jsonTriples = this.jsonTriples;
 
-      console.log(description)
-      
-      
-      if (!jsonTriples["description"]){
+      console.log(description);
+
+      if (!jsonTriples["description"]) {
         jsonTriples["description"] = description;
-      }else{
-        ;
-      }       
+      } else {
+      }
 
-      console.log(jsonTriples)
-      this.jsonTriples = jsonTriples
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
 
       //this.selectedAttributeValue = "";
       this.descriptionAttributeValue = "";
     },
-    async uploadJsonTriples(){
-      const jsonTriples = this.jsonTriples
+    async uploadJsonTriples() {
+      const jsonTriples = this.jsonTriples;
       console.log(jsonTriples.id);
 
       const db = getFirestore();
 
       //更新
-      
 
       const docRef = doc(db, "lod", jsonTriples.id);
       await setDoc(docRef, {
-        jsonTriples
+        jsonTriples,
       });
 
-
-      // 省略 
+      // 省略
       // (Cloud Firestoreのインスタンスを初期化してdbにセット)
 
-      const updateAnnounce = "Document written with ID: " + jsonTriples.id
+      const updateAnnounce = "Document written with ID: " + jsonTriples.id;
       //console.log("Document written with ID: ", docRef.id);
-      console.log(updateAnnounce)
-      this.updateAnnounce = updateAnnounce
-
+      console.log(updateAnnounce);
+      this.updateAnnounce = updateAnnounce;
 
       this.jsonTriples = {};
       this.uuid = "";
@@ -838,20 +911,20 @@ export default {
       return xmlData;
     },
     */
-    copyDeep(xmlData){
+    copyDeep(xmlData) {
       //文字列に変換して、それをxml要素に再変換（deep copy）
       var xmlSerializer = new XMLSerializer();
       var xmlString = xmlSerializer.serializeToString(xmlData);
       const parser = new window.DOMParser();
       return parser.parseFromString(xmlString, "text/xml");
     },
-    async deleteEntity(){
+    async deleteEntity() {
       let copiedXmlData = this.copyDeep(this.xmlData);
       copiedXmlData = this.deleteTest(copiedXmlData);
-      this.xmlData = copiedXmlData
+      this.xmlData = copiedXmlData;
 
       const xmlData = copiedXmlData;
-      
+
       /*
       // 文字列に変換して、firestoreに保存
       var xmlSerializer = new XMLSerializer();
@@ -860,7 +933,7 @@ export default {
 
       
       */
-     
+
       //return
 
       const db = getFirestore();
@@ -876,37 +949,37 @@ export default {
         xml: xmlString,
       });
 
-      const updateAnnounce = "Document written with ID: " + docRef.id
+      const updateAnnounce = "Document written with ID: " + docRef.id;
       //console.log("Document written with ID: ", docRef.id);
-      console.log(updateAnnounce)
-      this.updateAnnounce = updateAnnounce
+      console.log(updateAnnounce);
+      this.updateAnnounce = updateAnnounce;
 
       //const deleteElement = this.deleteTest(xmlData, idOfEntity);
     },
-    deleteTest(xmlData){
-      let idOfEntity = this.ex_text
-      console.log({idOfEntity})
+    deleteTest(xmlData) {
+      let idOfEntity = this.ex_text;
+      console.log({ idOfEntity });
 
       const wordElement = xmlData.querySelector(`[*|id="${idOfEntity}"]`);
-      console.log("wordElement", wordElement)
+      console.log("wordElement", wordElement);
       //console.log(wordElement.length)
 
-      const childNodes = wordElement.childNodes
-      
+      const childNodes = wordElement.childNodes;
+
       //deep copy
-      const copiedChildNodes = []
-      for(let childNode of childNodes){
-        copiedChildNodes.push(childNode)
+      const copiedChildNodes = [];
+      for (let childNode of childNodes) {
+        copiedChildNodes.push(childNode);
       }
 
-      for (let i = 0; i < copiedChildNodes.length; i++){
-        const copiedChildNode = copiedChildNodes[i]
-      //for (let childNode of childNodes){
+      for (let i = 0; i < copiedChildNodes.length; i++) {
+        const copiedChildNode = copiedChildNodes[i];
+        //for (let childNode of childNodes){
         wordElement.parentNode.insertBefore(copiedChildNode, wordElement);
         //wordElement.parentNode.insertBefore(childNode, wordElement);
       }
 
-      console.log(wordElement.parentNode)
+      console.log(wordElement.parentNode);
       wordElement.parentNode.removeChild(wordElement);
 
       return xmlData;
@@ -1040,14 +1113,14 @@ export default {
       const idEnd = this.$store.getters.getSelectedWordEndId;
       const indexEnd = wids.indexOf(idEnd);
 
-      const widStart = wids[indexStart]
+      const widStart = wids[indexStart];
       console.log(widStart);
-      const widEnd = wids[indexEnd]
+      const widEnd = wids[indexEnd];
       console.log(widEnd);
       //console.log(xmlData);
 
       const uuid = uuidv4();
-      console.log(uuid)
+      console.log(uuid);
       this.uuid = uuid;
 
       const ids = [];
@@ -1062,18 +1135,17 @@ export default {
         ids.push(wids[index]);
       }
 
-      console.log(ids)
+      console.log(ids);
 
-      const jsonTriples = this.jsonTriples
+      const jsonTriples = this.jsonTriples;
 
       jsonTriples.id = uuid;
       jsonTriples.from = widStart;
       jsonTriples.to = widEnd;
-      jsonTriples.wids = ids
+      jsonTriples.wids = ids;
       jsonTriples.type = selected;
 
       this.jsonTriples = jsonTriples;
-
     },
     /*
     hideAttributeSetter() {

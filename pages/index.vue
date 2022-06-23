@@ -1,41 +1,38 @@
 <template>
   <div>
-    <nuxt-link to="/markup" style="font-size: 20pt">Do markup</nuxt-link>
-    <br />
-    <nuxt-link to="/linkedData" style="font-size: 20pt"
-      >Create linked data</nuxt-link
-    >
-    <br />
-    <br />
-    <button @click="getTTL">download TTL file</button>
+    <v-container fluid>
+      <nuxt-link to="/markup" style="font-size: 20pt">Do markup</nuxt-link>
+      <br />
+      <nuxt-link to="/linkedData" style="font-size: 20pt"
+        >Create linked data</nuxt-link
+      >
+      <br />
+      <br />
+      <v-btn rounded depressed color="primary" @click="getTTL"
+        >download TTL file</v-btn
+      >
+    </v-container>
   </div>
 </template>
 <script>
-
 const N3 = require("n3");
 
 const { DataFactory } = N3;
 const { namedNode } = DataFactory;
 
-import {
-  getFirestore,
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 export default {
   layout: "noFooter",
   data() {
-    return {}
+    return {};
   },
   computed: {},
-  async mounted() {
-  },
+  async mounted() {},
   watch: {},
   methods: {
     async getTTL() {
-
-      const c = "http://example.org/cartoons#"
+      const c = "http://example.org/cartoons#";
 
       const writer = new N3.Writer({
         prefixes: { c },
@@ -52,7 +49,7 @@ export default {
       const lodRef = collection(db, "lod");
       const querySnapshot = await getDocs(lodRef);
       querySnapshot.forEach((doc) => {
-        const jsonTriples = doc.data().jsonTriples
+        const jsonTriples = doc.data().jsonTriples;
 
         writer.addQuad(
           namedNode(`${c}${jsonTriples.id}`),
@@ -61,16 +58,19 @@ export default {
         );
       });
 
-      download(writer, "test.ttl")
+      download(writer, "test.ttl");
     },
   },
 };
 
-function download(writer, filename){
+function download(writer, filename) {
   writer.end((error, result) => {
-    var element = document.createElement('a');
-    element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(result));
-    element.setAttribute('download', filename);
+    var element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8, " + encodeURIComponent(result)
+    );
+    element.setAttribute("download", filename);
     document.body.appendChild(element);
     element.click();
   });

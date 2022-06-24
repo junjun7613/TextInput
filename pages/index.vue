@@ -36,7 +36,7 @@ export default {
       const roman = "http://www.example.com/roman-ontology/resource/";
 
       const writer = new N3.Writer({
-        prefixes: { c },
+        prefixes: {ex,roman},
       });
 
       const db = getFirestore();
@@ -53,10 +53,39 @@ export default {
         const jsonTriples = doc.data().jsonTriples;
 
         writer.addQuad(
-          namedNode(`${ex}${jsonTriples.id}`),
-          namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-          namedNode(`${ex}${jsonTriples.type}`)
-        );
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+              namedNode(`${ex}${jsonTriples.type}`)
+            );
+
+        for (const key in jsonTriples){
+          if (key === "subject" || key === "whom" || key === "associatedPerson"){
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode(`${ex}${key}`),
+              namedNode(`${roman}${jsonTriples[key][0].entityReference}`)
+            );
+            //console.log(jsonTriples[key])
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${ex}referencesEntity`),
+              namedNode(`${jsonTriples[key][0].entity}`)
+            );
+            if (jsonTriples[key][0].entityInContext){
+              writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${ex}referencesEntityInContext`),
+              namedNode(`${jsonTriples[key][0].entityInContext}`)
+              );
+            }else{
+              ;
+            }
+          }else{
+            ;
+          }
+          //console.log(jsonTriples.id,key)
+        }
+
       });
 
       download(writer, "test.ttl");

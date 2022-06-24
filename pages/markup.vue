@@ -34,47 +34,89 @@
       </v-row>
     </v-container>
     {{ WId }}
-    <select id="listbox" v-model="selected">
+
+    <v-container fluid>
+    <v-select rounded outlined label="Type of Entity" id="listbox" v-model="selected" :items="entityTypes" hide-details>
+      <!--
       <option value="persName">Person</option>
       <option value="placeName">Place</option>
       <option value="orgName">Organization</option>
-      <!--<option value="objectName">Object</option>-->
       <option value="concept">Concept</option>
       <option value="physicalObject">PhysicalObject</option>
       <option value="date">Date</option>
-    </select>
+      -->
+    </v-select fluid>
     <!--<div>selected: {{selected}}</div>-->
-    <button @click="showAttributeSetter">Add</button>
-    <button @click="deleteEntity">Delete</button>
-    <button @click="showTextModifier">Modify</button>
+    <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed 
+            @click="showAttributeSetter">Add</v-btn>
+    <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="deleteEntity">Delete</v-btn>
+    <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="showTextModifier">Modify</v-btn>
+    </v-container>
+
+    <v-container fluid>
     <modal name="attributeSetter">
-        <select id="attributeOptions" v-model="selectedAttribute">
-          <option value="target">referencesEntity</option>
-        </select>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="selectedAttributeValue">
+        <v-select rounded outlined label="select ReferenceEntity" id="attributeOptions" v-model="selectedAttribute" :items="entityReferences" hide-details>
+          <!--<option value="target">referencesEntity</option>-->
+        </v-select>
+        <v-text-field label="input Entity URI" v-model="selectedAttributeValue"/>
         <!--
         <select id="attributeOptions" v-model="referenceEiT">
           <option value="corresp">referencesEntityInContext</option>
         </select>
         <input type="text" class="form-control" aria-label="リンク先" v-model="referenceEiTValue">
         -->
-        <button @click="selectEntity">追加</button>
-        <button @click="hideAttributeSetter">モーダルを閉じる</button>
-        {{selectedAttribute}}
-        {{selectedAttributeValue}}
+        <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="selectEntity">追加</v-btn>
+        <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="hideAttributeSetter">モーダルを閉じる</v-btn>
+        <p>{{selectedAttribute}}</p>
+        <p>{{selectedAttributeValue}}</p>
     </modal>
+    </v-container>
+
+    <v-container>
     <modal name="textModifier" :resizable="true" :scrollable="true">
         <p>Value: {{textContent}}</p>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="modifiedText">
-        <button @click="modifyText">変更</button>
+        <v-text-field label="Modify Text" v-model="modifiedText"/>
+        <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="modifyText">変更</v-btn>
+        <br />
+        <br />
         <p>Word Lemma: {{wordLemma}}</p>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="modifiedWordLemma">
-        <button @click="modifyWordLemma">変更</button>
+        <v-text-field label="Modify Lemma" v-model="modifiedWordLemma"/>
+        <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="modifyWordLemma">変更</v-btn>
+        <br />
+        <br />
         Word URI: <p v-for="wordUri of wordUriList"><a v-bind:href="`${wordUri}`">{{wordUri}}</a></p>
-        <input type="text" class="form-control" aria-label="リンク先" v-model="modifiedWordUri">
-        <button @click="modifyWordUri">変更</button>
-        <button @click="hideTextModifier">モーダルを閉じる</button>
+        <v-text-field label="Modify Word URI" v-model="modifiedWordUri"/>
+        <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="modifyWordUri">変更</v-btn>
+        <v-btn class="mt-2"
+            color="primary"
+            rounded
+            depressed @click="hideTextModifier">モーダルを閉じる</v-btn>
     </modal>
+    </v-container>
     {{ ids }}
     <p>{{ updateAnnounce }}</p>
   </div>
@@ -124,6 +166,38 @@ export default {
       firestoreName: "test",
       updateAnnounce: "",
       //height: window.innerHeight - 64,
+      entityTypes: [
+        {
+          text: "Person",
+          value: "persName",
+        },
+        {
+          text: "Place",
+          value: "placeName",
+        },
+        {
+          text: "Organization",
+          value: "orgName",
+        },
+        {
+          text: "Concept",
+          value: "concept",
+        },
+        {
+          text: "PhysicalObject",
+          value: "physicalObject",
+        },
+        {
+          text: "Date",
+          value: "date",
+        },
+      ],
+      entityReferences: [
+        {
+          text: "EntityReference",
+          value: "target",
+        }
+      ],
     };
   },
   computed: {

@@ -2,6 +2,7 @@
   <div>
     <v-container fluid>
       <p>{{ ex_text }}</p>
+      <p>{{ personAttributeValue }}</p>
       <p>
         selected words: {{ selected_word_start_id }} -
         {{ selected_word_end_id }}
@@ -16,29 +17,74 @@
           <div v-show="show" id="attributeSetter" style="width: 30%">
             
             <v-row dense>
-              <v-col v-for="(option, key) in attributeSetterOptions" :key="key" cols="6">
+              <v-col cols="6">
                 <v-select
                   rounded
                   outlined
-                  :label="option.label"
+                  label="Person/Community"
                   id="attributeOptions"
-                  v-model="option.model"
-                  :items="option.items"
+                  v-model="personAttribute"
+                  :items="subjects"
                   hide-details
                 ></v-select>
-                <div v-if="option.input">
-                  <input
-                    type="text"
-                    class="form-control"
-                    aria-label="リンク先"
-                    v-model="option.input"
-                  />
-                </div>
-                <div v-else/>
+                <v-text-field
+                  label="input EntityInContext"
+                  v-model="personAttributeValue"
+                />
                 <v-btn class="mt-2"
                 color="primary"
                 rounded
-                depressed @click="option.click">追加</v-btn>
+                depressed @click="putPersonAttribute">追加</v-btn>
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="Concept/Physical Object"
+                  id="attributeOptions"
+                  v-model="objectAttribute"
+                  :items="concepts"
+                  hide-details
+                ></v-select>
+                <v-btn class="mt-2"
+                color="primary"
+                rounded
+                depressed @click="putObjectAttribute">追加</v-btn>
+
+              </v-col>
+              <v-col>
+                <v-select
+                  rounded
+                  outlined
+                  label="Place"
+                  id="attributeOptions"
+                  v-model="placeAttribute"
+                  :items="places"
+                  hide-details
+                ></v-select>
+                <v-text-field
+                  label="input EntityInContext"
+                  v-model="placeAttributeValue"
+                />
+                <v-btn class="mt-2"
+                color="primary"
+                rounded
+                depressed @click="putPlaceAttribute">追加</v-btn>
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="Predicate/Property"
+                  id="attributeOptions"
+                  v-model="lemmaAttribute"
+                  :items="lemmas"
+                  hide-details
+                ></v-select>
+                <v-btn class="mt-2"
+                color="primary"
+                rounded
+                depressed @click="putLemmaAttribute">追加</v-btn>
               </v-col>
             </v-row>
 
@@ -114,17 +160,14 @@
 -->
             <br />
             <div>
-              Description
-              <input
-                type="text"
-                class="form-control"
-                aria-label="リンク先"
+              <v-text-field
+                label="Description"
                 v-model="descriptionAttributeValue"
               />
               <v-btn class="mt-2"
-          color="primary"
-          rounded
-          depressed @click="putDescription">追加</v-btn>
+              color="primary"
+              rounded
+              depressed @click="putDescription">追加</v-btn>
             </div>
 
 
@@ -463,6 +506,7 @@ export default {
         ];
       },
     },
+/*
     attributeSetterOptions: {
       get() {
         return [
@@ -495,6 +539,7 @@ export default {
         ];
       },
     },
+    */
   },
   /*
   watch: {
@@ -643,7 +688,7 @@ export default {
       const xmlData = this.xmlData;
       const selectedAttribute = this.personAttribute;
       //const selectedAttributeValue = this.personAttributeValue;
-      const selectedAttributeValue = this.attributeValue;
+      const selectedAttributeValue = this.personAttributeValue;
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples;
       const ex_text = this.ex_text;
@@ -781,7 +826,7 @@ export default {
       const xmlData = this.xmlData;
       const selectedAttribute = this.placeAttribute;
       //const selectedAttributeValue = this.placeAttributeValue;
-      const selectedAttributeValue = this.attributeValue;
+      const selectedAttributeValue = this.placeAttributeValue;
       //const selectedAttributeValue = this.selectedAttributeValue
       const jsonTriples = this.jsonTriples;
       const ex_text = this.ex_text;

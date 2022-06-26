@@ -2,7 +2,6 @@
   <div>
     <v-container fluid>
       <p>{{ ex_text }}</p>
-      <p>{{ personAttributeValue }}</p>
       <p>
         selected words: {{ selected_word_start_id }} -
         {{ selected_word_end_id }}
@@ -713,6 +712,7 @@ export default {
       };
 
       const entity = getEntity(wordText);
+      const type = wordText.getAttribute("type")
       console.log(entity);
 
       if (!jsonTriples[selectedAttribute]) {
@@ -720,9 +720,11 @@ export default {
         const person = {};
         person.idInText = selectedEntity;
         person.entityReference = selectedEntity + "_" + uuid;
+        person.entityReferenceType = type;
         if (entity !== false) {
           person.entity = entity;
         } else {
+          ;
         }
         //list.push(selectedEntity + "_" + uuid)
         if (selectedAttributeValue !== "") {
@@ -734,6 +736,7 @@ export default {
         const person = {};
         person.idInText = selectedEntity;
         person.entityReference = selectedEntity + "_" + uuid;
+        person.entityReferenceType = type;
         if (entity !== false) {
           person.entity = entity;
         } else {
@@ -851,6 +854,7 @@ export default {
       };
 
       const entity = getEntity(wordText);
+      const type = wordText.getAttribute("type")
       console.log(entity);
 
       if (!jsonTriples[selectedAttribute]) {
@@ -858,6 +862,7 @@ export default {
         const place = {};
         place.idInText = selectedEntity;
         place.entityReference = selectedEntity + "_" + uuid;
+        place.entityReferenceType = type;
         if (entity !== false) {
           place.entity = entity;
         } else {
@@ -872,6 +877,7 @@ export default {
         const place = {};
         place.idInText = selectedEntity;
         place.entityReference = selectedEntity + "_" + uuid;
+        place.entityReferenceType = type;
         if (entity !== false) {
           place.entity = entity;
         } else {
@@ -905,6 +911,8 @@ export default {
       console.log(selectedEntity);
 
       const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      const type = wordText.getAttribute("type")
+
       const word_elements = wordText.childNodes;
       const lemma_ids = [];
 
@@ -933,6 +941,7 @@ export default {
         object.idInText = selectedEntity;
         object.item = selectedEntity + "_" + uuid;
         object.lemma = lemma_ids;
+        object.entityType = type;
         //list.push(selectedEntity + "_" + uuid)
         list.push(object);
         jsonTriples[selectedAttribute] = list;
@@ -941,6 +950,7 @@ export default {
         object.idInText = selectedEntity;
         object.item = selectedEntity + "_" + uuid;
         object.lemma = lemma_ids;
+        object.entityType = type;
         //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
         jsonTriples[selectedAttribute].push(object);
       }

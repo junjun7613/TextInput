@@ -169,23 +169,23 @@ export default {
       entityTypes: [
         {
           text: "Person",
-          value: "persName",
+          value: "PersonReference",
         },
         {
           text: "Place",
-          value: "placeName",
+          value: "PlaceReference",
         },
         {
-          text: "Organization",
-          value: "orgName",
+          text: "Community",
+          value: "CommunityReference",
         },
         {
           text: "Concept",
-          value: "concept",
+          value: "ConceptualObjectReference",
         },
         {
           text: "PhysicalObject",
-          value: "physicalObject",
+          value: "PhysicalObjectReference",
         },
         {
           text: "Date",
@@ -423,7 +423,7 @@ export default {
       //const ids = ["w_1_1_2_12", "w_1_1_2_13"];
       //const ids = this.ids
 
-      if(selected === "concept" || selected === "physicalObject"){
+      if(selected === "ConceptualObjectReference" || selected === "PhysicalObjectReference"){
 
         let element_prefix = "objectName"; //"pers";
         let attributeName = selected;
@@ -472,6 +472,147 @@ export default {
 
         console.log({elementAdded})
 
+      }else if(selected === "PersonReference"){
+        let element_prefix = "persName"; //"pers";
+        let attributeName = selected;
+
+        //let element_name = `${element_prefix}Name`;
+        let element_name = element_prefix
+        let element_id = ids[0].replace("w_", `${element_prefix}_`);
+        if (ids.length > 1) {
+          const last_id = ids[ids.length - 1];
+          const last_id_spl = last_id.split("_");
+          element_id += "-" + last_id_spl[last_id_spl.length - 1];
+        }
+
+        let elementAdded = null;
+        for (let i = 0; i < ids.length; i++) {
+          console.log({i})
+          const id = ids[i];
+          const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
+
+          if (i == 0) {
+            elementAdded = xmlData.createElement(element_name);
+            elementAdded.setAttribute("xml:id", element_id);
+            elementAdded.setAttribute("type", attributeName);
+
+            if (selectedAttributeValue !== ""){
+              elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
+            }else{
+              ;
+            }
+
+            /*
+            if (referenceEiTValue !== ""){
+              elementAdded.setAttribute(referenceEiT, referenceEiTValue);
+            }else{
+              ;
+            }
+            */
+
+            //対象のw要素の前に挿入
+            wordElement.parentNode.insertBefore(elementAdded, wordElement);
+          }
+
+          //対象のw要素をpersNameの子要素として挿入
+          elementAdded.appendChild(wordElement);
+        }
+
+        console.log({elementAdded})
+      }else if(selected === "CommunityReference"){
+        let element_prefix = "orgName"; //"pers";
+        let attributeName = selected;
+
+        //let element_name = `${element_prefix}Name`;
+        let element_name = element_prefix
+        let element_id = ids[0].replace("w_", `${element_prefix}_`);
+        if (ids.length > 1) {
+          const last_id = ids[ids.length - 1];
+          const last_id_spl = last_id.split("_");
+          element_id += "-" + last_id_spl[last_id_spl.length - 1];
+        }
+
+        let elementAdded = null;
+        for (let i = 0; i < ids.length; i++) {
+          console.log({i})
+          const id = ids[i];
+          const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
+
+          if (i == 0) {
+            elementAdded = xmlData.createElement(element_name);
+            elementAdded.setAttribute("xml:id", element_id);
+            elementAdded.setAttribute("type", attributeName);
+
+            if (selectedAttributeValue !== ""){
+              elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
+            }else{
+              ;
+            }
+
+            /*
+            if (referenceEiTValue !== ""){
+              elementAdded.setAttribute(referenceEiT, referenceEiTValue);
+            }else{
+              ;
+            }
+            */
+
+            //対象のw要素の前に挿入
+            wordElement.parentNode.insertBefore(elementAdded, wordElement);
+          }
+
+          //対象のw要素をpersNameの子要素として挿入
+          elementAdded.appendChild(wordElement);
+        }
+
+        console.log({elementAdded})
+      }else if (selected === "PlaceReference"){
+        let element_prefix = "placeName"; //"pers";
+        let attributeName = selected;
+
+        //let element_name = `${element_prefix}Name`;
+        let element_name = element_prefix
+        let element_id = ids[0].replace("w_", `${element_prefix}_`);
+        if (ids.length > 1) {
+          const last_id = ids[ids.length - 1];
+          const last_id_spl = last_id.split("_");
+          element_id += "-" + last_id_spl[last_id_spl.length - 1];
+        }
+
+        let elementAdded = null;
+        for (let i = 0; i < ids.length; i++) {
+          console.log({i})
+          const id = ids[i];
+          const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
+
+          if (i == 0) {
+            elementAdded = xmlData.createElement(element_name);
+            elementAdded.setAttribute("xml:id", element_id);
+            elementAdded.setAttribute("type", attributeName);
+
+            if (selectedAttributeValue !== ""){
+              elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
+            }else{
+              ;
+            }
+
+            /*
+            if (referenceEiTValue !== ""){
+              elementAdded.setAttribute(referenceEiT, referenceEiTValue);
+            }else{
+              ;
+            }
+            */
+
+            //対象のw要素の前に挿入
+            wordElement.parentNode.insertBefore(elementAdded, wordElement);
+          }
+
+          //対象のw要素をpersNameの子要素として挿入
+          elementAdded.appendChild(wordElement);
+        }
+
+        console.log({elementAdded})
       }else{
 
       //let element_name = "persName";

@@ -32,6 +32,11 @@ export default {
   watch: {},
   methods: {
     async getTTL() {
+
+      const entities = ["subject","whom","associatedPerson","atWhere","fromWhere","toWhere","nearWhere"]
+      const objects = ["associatedConcept","associatedPhysicalObject"]
+      const predicates = ["hasPredicate","hasProperty"]
+
       const ex = "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
       const roman = "http://www.example.com/roman-ontology/resource/";
 
@@ -59,7 +64,11 @@ export default {
             );
 
         for (const key in jsonTriples){
-          if (key === "subject" || key === "whom" || key === "associatedPerson"){
+          /*
+          if (key === "subject" || key === "whom" || key === "associatedPerson" || key === "atWhere" || key === "fromWhere" || key === "toWhere" || key === "nearWhere")
+          */
+          if (entities.includes(key))
+          {
             writer.addQuad(
               namedNode(`${roman}${jsonTriples.id}`),
               namedNode(`${ex}${key}`),
@@ -71,6 +80,16 @@ export default {
               namedNode(`${ex}referencesEntity`),
               namedNode(`${jsonTriples[key][0].entity}`)
             );
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+              namedNode(`${ex}${jsonTriples[key][0].entityReferenceType}`)
+            );
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${ex}sourceDescription`),
+              namedNode(`${roman}${jsonTriples[key][0].idInText}`)
+            );
             if (jsonTriples[key][0].entityInContext){
               writer.addQuad(
               namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
@@ -80,7 +99,50 @@ export default {
             }else{
               ;
             }
-          }else{
+          }else if (objects.includes(key))
+          {
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode(`${ex}${key}`),
+              namedNode(`${roman}${jsonTriples[key][0].item}`)
+            );
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].item}`),
+              namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+              namedNode(`${ex}${jsonTriples[key][0].entityType}`)
+            );
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].item}`),
+              namedNode(`${ex}sourceDescription`),
+              namedNode(`${roman}${jsonTriples[key][0].idInText}`)
+            );
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].item}`),
+              namedNode(`${ex}hasLemma`),
+              namedNode(`${jsonTriples[key][0].lemma[0]}`)
+            );
+          }else if (predicates.includes(key)){
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode(`${ex}${key}`),
+              namedNode(`${roman}${jsonTriples[key][0].wid}`)
+            );
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples[key][0].wid}`),
+              namedNode(`${ex}hasLemma`),
+              namedNode(`${roman}${jsonTriples[key][0].lemmaRef[0]}`)
+            );
+          }
+          /*
+          else if (key === "description"){
+            writer.addQuad(
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode(`${ex}${key}`),
+              literal(`${jsonTriples[key]}`)
+            );
+          }
+          */
+          else{
             ;
           }
           //console.log(jsonTriples.id,key)

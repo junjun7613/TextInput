@@ -107,7 +107,7 @@
   -->
     <template
       v-else-if="
-        element.name === 'objectName' && element.attributes.type === 'concept'
+        element.name === 'objectName' && element.attributes.type === 'ConceptualObjectReference'
       "
     >
       <span
@@ -122,7 +122,7 @@
     <template
       v-else-if="
         element.name === 'objectName' &&
-        element.attributes.type === 'physicalObject'
+        element.attributes.type === 'PhysicalObjectReference'
       "
     >
       <span

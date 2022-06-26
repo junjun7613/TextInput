@@ -413,19 +413,19 @@ export default {
       places: [
         {
           text: "atPlace",
-          value: "atPlace",
+          value: "atWhere",
         },
         {
           text: "fromPlace",
-          value: "fromPlace",
+          value: "fromWhere",
         },
         {
           text: "toPlace",
-          value: "toPlace",
+          value: "toWhere",
         },
         {
           text: "nearPlace",
-          value: "nearPlace",
+          value: "nearWhere",
         },
       ],
       concepts: [

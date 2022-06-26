@@ -1041,14 +1041,14 @@ export default {
 
       const db = getFirestore();
 
-/*
+
       //更新
 
       const docRef = doc(db, "lod", jsonTriples.id);
       await setDoc(docRef, {
         jsonTriples,
       });
-*/
+
       // 省略
       // (Cloud Firestoreのインスタンスを初期化してdbにセット)
 

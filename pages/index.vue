@@ -18,7 +18,7 @@
 const N3 = require("n3");
 
 const { DataFactory } = N3;
-const { namedNode } = DataFactory;
+const { namedNode, literal, defaultGraph, quad  } = DataFactory;
 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 
@@ -133,7 +133,7 @@ export default {
               namedNode(`${roman}${jsonTriples[key][0].lemmaRef[0]}`)
             );
           }
-          /*
+          
           else if (key === "description"){
             writer.addQuad(
               namedNode(`${roman}${jsonTriples.id}`),
@@ -141,7 +141,7 @@ export default {
               literal(`${jsonTriples[key]}`)
             );
           }
-          */
+          
           else{
             ;
           }

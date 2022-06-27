@@ -2,6 +2,7 @@
   <div>
     <v-container fluid>
       <p>{{ ex_text }}</p>
+      <p>{{ selected_factoid_id }}</p>
       <p>
         selected words: {{ selected_word_start_id }} -
         {{ selected_word_end_id }}
@@ -49,6 +50,21 @@
                 color="primary"
                 rounded
                 depressed @click="putObjectAttribute">追加</v-btn>
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="related factoids"
+                  id="attributeOptions"
+                  v-model="factoidAttribute"
+                  :items="factoids"
+                  hide-details
+                ></v-select>
+                <v-btn class="mt-2"
+                color="primary"
+                rounded
+                depressed @click="putFactoidAttribute">追加</v-btn>
 
               </v-col>
               <v-col>
@@ -301,6 +317,7 @@ export default {
       placeAttribute: "",
       placeAttributeValue: "",
       objectAttribute: "",
+      factoidAttribute: "",
       lemmaAttribute: "",
       descriptionAttributeValue: "",
       selectedEntity: "",
@@ -438,6 +455,20 @@ export default {
           value: "associatedPhysicalObject",
         },
       ],
+      factoids: [
+        {
+          text: "mentionedAsPrecedent",
+          value: "mentionedAsPrecedent",
+        },
+        {
+          text: "mentionedAsSubsequent",
+          value: "mentionedAsSubsequent",
+        },
+        {
+          text: "mentionedAsParallel",
+          value: "mentionedAsParallel",
+        },
+      ],
       lemmas: [
         {
           text: "hasPredicate",
@@ -457,6 +488,14 @@ export default {
       },
       set(value) {
         this.$store.commit("setExText", value);
+      },
+    },
+    selected_factoid_id: {
+      get() {
+        return this.$store.getters.getSelectedFactoidId;
+      },
+      set(value) {
+        this.$store.commit("setSelectedFactoidId", value);
       },
     },
     selected_word_start_id: {
@@ -961,6 +1000,38 @@ export default {
       //this.selectedAttributeValue = "";
       this.selectedEntity = "";
       this.objectAttribute = "";
+    },
+    async putFactoidAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.factoidAttribute;
+      //const selectedAttributeValue = this.selectedAttributeValue
+      const jsonTriples = this.jsonTriples;
+      const selected_factoid_id = this.selected_factoid_id;
+      this.selectedEntity = selected_factoid_id;
+      const selectedEntity = this.selectedEntity;
+
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      if (!jsonTriples[selectedAttribute]) {
+        const list = [];
+        const factoid = {};
+        factoid.relatedFactoid = selectedEntity;
+        list.push(factoid);
+        jsonTriples[selectedAttribute] = list;
+      } else {
+        const factoid = {};
+        factoid.relatedFactoid = selectedEntity;
+        jsonTriples[selectedAttribute].push(factoid);
+      }
+
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.factoidAttribute = "";
     },
     async putLemmaAttribute() {
       const xmlData = this.xmlData;

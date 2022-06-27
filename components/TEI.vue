@@ -187,6 +187,12 @@ export default {
     clickW(id) {
       console.log("w", { id });
 
+      if(this.stored_lod){
+        const factoidId = this.stored_lod.id
+        console.log(factoidId);
+        this.selected_factoid_id = factoidId;
+      }
+
       this.$emit("parent-func", id);
 
       //選択したIDを変数に格納
@@ -209,6 +215,14 @@ export default {
       },
       set(value) {
         this.$store.commit("setExText", value);
+      },
+    },
+    selected_factoid_id: {
+      get() {
+        return this.$store.getters.getSelectedFactoidId;
+      },
+      set(value) {
+        this.$store.commit("setSelectedFactoidId", value);
       },
     },
     selected_word_start_id: {

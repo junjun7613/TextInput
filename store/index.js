@@ -1,5 +1,6 @@
 export const state = () => ({
   ex_text: '',
+  selected_factoid_id: "",
   selected_word_start_id: "",
   selected_word_end_id: "",
   storedLods: []
@@ -8,6 +9,9 @@ export const state = () => ({
 export const mutations = {
   setExText(state, data) {
     state.ex_text = data
+  },
+  setSelectedFactoidId(state, data) {
+    state.selected_factoid_id = data
   },
   setSelectedWordStartId(state, data) {
     state.selected_word_start_id = data
@@ -23,6 +27,9 @@ export const mutations = {
 export const getters = {
   getExText(state) {
     return state.ex_text
+  },
+  getSelectedFactoidId(state) {
+    return state.selected_factoid_id
   },
   getSelectedWordStartId(state) {
     return state.selected_word_start_id

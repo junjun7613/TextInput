@@ -613,6 +613,53 @@ export default {
         }
 
         console.log({elementAdded})
+      }else if (selected === "date"){
+        let element_prefix = "date"; //"pers";
+        let attributeName = selected;
+
+        //let element_name = `${element_prefix}Name`;
+        let element_name = element_prefix
+        let element_id = ids[0].replace("w_", `${element_prefix}_`);
+        if (ids.length > 1) {
+          const last_id = ids[ids.length - 1];
+          const last_id_spl = last_id.split("_");
+          element_id += "-" + last_id_spl[last_id_spl.length - 1];
+        }
+
+        let elementAdded = null;
+        for (let i = 0; i < ids.length; i++) {
+          console.log({i})
+          const id = ids[i];
+          const wordElement = xmlData.querySelector(`[*|id="${id}"]`);
+
+          if (i == 0) {
+            elementAdded = xmlData.createElement(element_name);
+            elementAdded.setAttribute("xml:id", element_id);
+            elementAdded.setAttribute("type", attributeName);
+
+            if (selectedAttributeValue !== ""){
+              elementAdded.setAttribute(selectedAttribute, selectedAttributeValue);
+            }else{
+              ;
+            }
+
+            /*
+            if (referenceEiTValue !== ""){
+              elementAdded.setAttribute(referenceEiT, referenceEiTValue);
+            }else{
+              ;
+            }
+            */
+
+            //対象のw要素の前に挿入
+            wordElement.parentNode.insertBefore(elementAdded, wordElement);
+          }
+
+          //対象のw要素をpersNameの子要素として挿入
+          elementAdded.appendChild(wordElement);
+        }
+
+        console.log({elementAdded})
       }else{
 
       //let element_name = "persName";

@@ -100,6 +100,21 @@
                 color="primary"
                 rounded
                 depressed @click="putLemmaAttribute">追加</v-btn>
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="date"
+                  id="attributeOptions"
+                  v-model="dateAttribute"
+                  :items="dates"
+                  hide-details
+                ></v-select>
+                <v-btn class="mt-2"
+                color="primary"
+                rounded
+                depressed @click="putDateAttribute">追加</v-btn>
               </v-col>
             </v-row>
 
@@ -318,6 +333,7 @@ export default {
       placeAttributeValue: "",
       objectAttribute: "",
       factoidAttribute: "",
+      dateAttribute: "",
       lemmaAttribute: "",
       descriptionAttributeValue: "",
       selectedEntity: "",
@@ -467,6 +483,12 @@ export default {
         {
           text: "mentionedAsParallel",
           value: "mentionedAsParallel",
+        },
+      ],
+      dates: [
+        {
+          text: "date",
+          value: "when",
         },
       ],
       lemmas: [
@@ -1033,6 +1055,68 @@ export default {
       this.selectedEntity = "";
       this.factoidAttribute = "";
     },
+    async putDateAttribute(){
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.dateAttribute;
+      const jsonTriples = this.jsonTriples;
+      const ex_text = this.ex_text;
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+      const uuid = this.uuid;
+
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      console.log(wordText);
+
+      const getEntity = function (wordText) {
+        try {
+          const entity = wordText.getAttribute("target");
+          return entity;
+        } catch {
+          return false;
+        }
+      };
+
+      const entity = getEntity(wordText);
+      const type = wordText.getAttribute("type")
+      console.log(entity);
+
+      if (!jsonTriples[selectedAttribute]) {
+        const list = [];
+        const date = {};
+        date.idInText = selectedEntity;
+        date.entityReference = selectedEntity + "_" + uuid;
+        date.entityReferenceType = type;
+        if (entity !== false) {
+          date.entity = entity;
+        } else {
+        }
+        //list.push(selectedEntity + "_" + uuid)
+        list.push(date);
+        jsonTriples[selectedAttribute] = list;
+      } else {
+        const date = {};
+        date.idInText = selectedEntity;
+        date.entityReference = selectedEntity + "_" + uuid;
+        date.entityReferenceType = type;
+        if (entity !== false) {
+          date.entity = entity;
+        } else {
+        }
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        jsonTriples[selectedAttribute].push(date);
+      }
+
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.dateAttribute = "";
+    },
     async putLemmaAttribute() {
       const xmlData = this.xmlData;
       const selectedAttribute = this.lemmaAttribute;
@@ -1111,7 +1195,6 @@ export default {
       console.log(jsonTriples);
 
       const db = getFirestore();
-
 
       //更新
 

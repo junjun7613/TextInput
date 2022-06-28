@@ -66,7 +66,8 @@
         </v-tooltip>
       </span>
     </template>
-    <template v-else-if="element.name === 'persName'">
+
+    <template v-else-if="element.name === 'persName'">      
       <span
         style="color: blue; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
@@ -76,6 +77,7 @@
         </template>
       </span>
     </template>
+
     <template v-else-if="element.name === 'orgName'">
       <span
         style="color: red; font-weight: bold"

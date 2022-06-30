@@ -161,7 +161,7 @@ export default {
             writer.addQuad(quad(
               namedNode(`${roman}${jsonTriples.id}`),
               namedNode(`${ex}${key}`),
-              literal(`${jsonTriples[key]}`)
+              namedNode(`${jsonTriples[key]}`)
             )
             );
           }

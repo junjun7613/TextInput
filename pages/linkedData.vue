@@ -199,6 +199,17 @@
               rounded
               depressed @click="putDescription">追加</v-btn>
             </div>
+            <br />
+            <div>
+              <v-text-field
+                label="referencesEvent"
+                v-model="eventAttributeValue"
+              />
+              <v-btn class="mt-2"
+              color="primary"
+              rounded
+              depressed @click="putEvent">追加</v-btn>
+            </div>
 
 
             <br /><br />
@@ -336,6 +347,7 @@ export default {
       dateAttribute: "",
       lemmaAttribute: "",
       descriptionAttributeValue: "",
+      eventAttributeValue: "",
       selectedEntity: "",
       modifiedText: "",
       modifiedWordLemma: "",
@@ -483,6 +495,10 @@ export default {
         {
           text: "mentionedAsParallel",
           value: "mentionedAsParallel",
+        },
+        {
+          text: "hasContent",
+          value: "hasContent",
         },
       ],
       dates: [
@@ -1189,6 +1205,26 @@ export default {
 
       //this.selectedAttributeValue = "";
       this.descriptionAttributeValue = "";
+    },
+    async putEvent() {
+      //const selected = this.selected;
+      //this.selectedEntity = selected;
+      const event = this.eventAttributeValue;
+
+      const jsonTriples = this.jsonTriples;
+
+      console.log(event);
+
+      if (!jsonTriples["referencesEvent"]) {
+        jsonTriples["referencesEvent"] = event;
+      } else {
+      }
+
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.eventAttributeValue = "";
     },
     async uploadJsonTriples() {
       const jsonTriples = this.jsonTriples;

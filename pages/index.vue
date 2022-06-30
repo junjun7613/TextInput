@@ -36,7 +36,7 @@ export default {
       const entities = ["subject","whom","associatedPerson","atWhere","fromWhere","toWhere","nearWhere"]
       const objects = ["associatedConcept","associatedPhysicalObject"]
       const predicates = ["hasPredicate","hasProperty"]
-      const factoids = ["mentionedAsPrecedent","mentionedAsSubsequent","mentionedAsParallel"]
+      const factoids = ["mentionedAsPrecedent","mentionedAsSubsequent","mentionedAsParallel","hasContent"]
 
       const ex = "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
       const roman = "http://www.example.com/roman-ontology/resource/";

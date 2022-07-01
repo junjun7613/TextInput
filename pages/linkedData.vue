@@ -269,6 +269,14 @@
           @click="showAttributeSetter"
           >Add</v-btn
         >
+        <v-btn
+          class="mt-2"
+          color="primary"
+          rounded
+          depressed
+          @click="deleteFactoid"
+          >Delete</v-btn
+        >
       </v-container>
       <!--{{jsonTriples}}-->
 
@@ -315,6 +323,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  deleteDoc,
   getFirestore,
   collection,
   addDoc,
@@ -349,6 +358,7 @@ export default {
       descriptionAttributeValue: "",
       eventAttributeValue: "",
       selectedEntity: "",
+      selectedFactoidId:"",
       modifiedText: "",
       modifiedWordLemma: "",
       modifiedWordUri: "",
@@ -1529,6 +1539,18 @@ export default {
       jsonTriples.type = selected;
 
       this.jsonTriples = jsonTriples;
+    },
+    async deleteFactoid(){
+      const selectedFactoidId = this.selected_factoid_id;
+      this.selectedFactoidId = selectedFactoidId;
+      const factoidId = this.selectedFactoidId;
+
+      const db = getFirestore();
+
+      const docRef = doc(db, "lod", factoidId);
+      await deleteDoc(docRef);
+
+      this.selectedFactoidId = ""
     },
     /*
     hideAttributeSetter() {

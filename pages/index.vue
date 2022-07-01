@@ -36,7 +36,7 @@ export default {
       const entities = ["subject","whom","associatedPerson","atWhere","fromWhere","toWhere","nearWhere"]
       const objects = ["associatedConcept","associatedPhysicalObject"]
       const predicates = ["hasPredicate","hasProperty"]
-      const factoids = ["mentionedAsPrecedent","mentionedAsSubsequent","mentionedAsParallel","hasContent"]
+      const factoids = ["mentionedAsPrecedent","mentionedAsSubsequent","mentionedAsParallel","hasContent","therefore","because"]
 
       const ex = "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
       const roman = "http://www.example.com/roman-ontology/resource/";
@@ -142,12 +142,15 @@ export default {
               namedNode(`${jsonTriples[key][0].lemmaRef[0]}`)
             );
           }else if(factoids.includes(key)){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              namedNode(`${roman}${jsonTriples[key][0].relatedFactoid}`)
-            )
-            );
+            for (const i of jsonTriples[key]){
+              writer.addQuad(quad(
+                namedNode(`${roman}${jsonTriples.id}`),
+                namedNode(`${ex}${key}`),
+                //namedNode(`${roman}${jsonTriples[key][i].relatedFactoid}`)
+                namedNode(`${roman}${i.relatedFactoid}`)
+                )
+              );
+            }
           }
           else if (key === "description"){
             writer.addQuad(quad(

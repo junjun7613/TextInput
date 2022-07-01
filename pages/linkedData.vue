@@ -510,6 +510,14 @@ export default {
           text: "hasContent",
           value: "hasContent",
         },
+        {
+          text: "therefore",
+          value: "therefore",
+        },
+        {
+          text: "because",
+          value: "because",
+        },
       ],
       dates: [
         {

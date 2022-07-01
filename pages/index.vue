@@ -70,77 +70,83 @@ export default {
           */
           if (entities.includes(key))
           {
+            for (const i of jsonTriples[key]){
             writer.addQuad(quad(
               namedNode(`${roman}${jsonTriples.id}`),
               namedNode(`${ex}${key}`),
-              namedNode(`${roman}${jsonTriples[key][0].entityReference}`)
+              namedNode(`${roman}${i.entityReference}`)
             )
             );
             //console.log(jsonTriples[key])
             writer.addQuad(
-              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${roman}${i.entityReference}`),
               namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-              namedNode(`${ex}${jsonTriples[key][0].entityReferenceType}`)
+              namedNode(`${ex}${i.entityReferenceType}`)
             );
             writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${roman}${i.entityReference}`),
               namedNode(`${ex}referencesEntity`),
-              namedNode(`${jsonTriples[key][0].entity}`)
+              namedNode(`${i.entity}`)
             )
             );
             writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${roman}${i.entityReference}`),
               namedNode(`${ex}sourceDescription`),
-              namedNode(`${roman}${jsonTriples[key][0].idInText}`)
+              namedNode(`${roman}${i.idInText}`)
             )
             );
-            if (jsonTriples[key][0].entityInContext){
+            if (i.entityInContext){
               writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples[key][0].entityReference}`),
+              namedNode(`${roman}${i.entityReference}`),
               namedNode(`${ex}referencesEntityInContext`),
-              namedNode(`${jsonTriples[key][0].entityInContext}`)
+              namedNode(`${i.entityInContext}`)
               )
               );
             }else{
               ;
             }
+            }
           }else if (objects.includes(key))
           {
+            for (const i of jsonTriples[key]){
             writer.addQuad(quad(
               namedNode(`${roman}${jsonTriples.id}`),
               namedNode(`${ex}${key}`),
-              namedNode(`${roman}${jsonTriples[key][0].item}`)
+              namedNode(`${roman}${i.item}`)
             )
             );
             writer.addQuad(
-              namedNode(`${roman}${jsonTriples[key][0].item}`),
+              namedNode(`${roman}${i.item}`),
               namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-              namedNode(`${ex}${jsonTriples[key][0].entityType}`)
+              namedNode(`${ex}${i.entityType}`)
             );
             writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples[key][0].item}`),
+              namedNode(`${roman}${i.item}`),
               namedNode(`${ex}sourceDescription`),
-              namedNode(`${roman}${jsonTriples[key][0].idInText}`)
+              namedNode(`${roman}${i.idInText}`)
             )
             );
             writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples[key][0].item}`),
+              namedNode(`${roman}${i.item}`),
               namedNode(`${ex}hasLemma`),
-              namedNode(`${jsonTriples[key][0].lemma[0]}`)
+              namedNode(`${i.lemma[0]}`)
             )
             );
+            }
           }else if (predicates.includes(key)){
+            for (const i of jsonTriples[key]){
             writer.addQuad(quad(
               namedNode(`${roman}${jsonTriples.id}`),
               namedNode(`${ex}${key}`),
-              namedNode(`${roman}${jsonTriples[key][0].wid}`)
+              namedNode(`${roman}${i.wid}`)
             )
             );
             writer.addQuad(
-              namedNode(`${roman}${jsonTriples[key][0].wid}`),
+              namedNode(`${roman}${i.wid}`),
               namedNode(`${ex}hasLemma`),
-              namedNode(`${jsonTriples[key][0].lemmaRef[0]}`)
+              namedNode(`${i.lemmaRef[0]}`)
             );
+            }
           }else if(factoids.includes(key)){
             for (const i of jsonTriples[key]){
               writer.addQuad(quad(

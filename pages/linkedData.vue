@@ -15,7 +15,6 @@
             </div>
           </div>
           <div v-show="show" id="attributeSetter" style="width: 30%">
-            
             <v-row dense>
               <v-col cols="6">
                 <v-select
@@ -31,10 +30,14 @@
                   label="input EntityInContext"
                   v-model="personAttributeValue"
                 />
-                <v-btn class="mt-2"
-                color="primary"
-                rounded
-                depressed @click="putPersonAttribute">追加</v-btn>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putPersonAttribute"
+                  >追加</v-btn
+                >
                 <br />
                 <br />
                 <v-select
@@ -46,10 +49,14 @@
                   :items="concepts"
                   hide-details
                 ></v-select>
-                <v-btn class="mt-2"
-                color="primary"
-                rounded
-                depressed @click="putObjectAttribute">追加</v-btn>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putObjectAttribute"
+                  >追加</v-btn
+                >
                 <br />
                 <br />
                 <v-select
@@ -61,11 +68,14 @@
                   :items="factoids"
                   hide-details
                 ></v-select>
-                <v-btn class="mt-2"
-                color="primary"
-                rounded
-                depressed @click="putFactoidAttribute">追加</v-btn>
-
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putFactoidAttribute"
+                  >追加</v-btn
+                >
               </v-col>
               <v-col>
                 <v-select
@@ -81,10 +91,14 @@
                   label="input EntityInContext"
                   v-model="placeAttributeValue"
                 />
-                <v-btn class="mt-2"
-                color="primary"
-                rounded
-                depressed @click="putPlaceAttribute">追加</v-btn>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putPlaceAttribute"
+                  >追加</v-btn
+                >
                 <br />
                 <br />
                 <v-select
@@ -96,10 +110,14 @@
                   :items="lemmas"
                   hide-details
                 ></v-select>
-                <v-btn class="mt-2"
-                color="primary"
-                rounded
-                depressed @click="putLemmaAttribute">追加</v-btn>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putLemmaAttribute"
+                  >追加</v-btn
+                >
                 <br />
                 <br />
                 <v-select
@@ -111,14 +129,18 @@
                   :items="dates"
                   hide-details
                 ></v-select>
-                <v-btn class="mt-2"
-                color="primary"
-                rounded
-                depressed @click="putDateAttribute">追加</v-btn>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putDateAttribute"
+                  >追加</v-btn
+                >
               </v-col>
             </v-row>
 
-<!--
+            <!--
             <div>
               subject/whom/associatedPerson
               <br />
@@ -194,10 +216,14 @@
                 label="Description"
                 v-model="descriptionAttributeValue"
               />
-              <v-btn class="mt-2"
-              color="primary"
-              rounded
-              depressed @click="putDescription">追加</v-btn>
+              <v-btn
+                class="mt-2"
+                color="primary"
+                rounded
+                depressed
+                @click="putDescription"
+                >追加</v-btn
+              >
             </div>
             <br />
             <div>
@@ -205,18 +231,25 @@
                 label="referencesEvent"
                 v-model="eventAttributeValue"
               />
-              <v-btn class="mt-2"
-              color="primary"
-              rounded
-              depressed @click="putEvent">追加</v-btn>
+              <v-btn
+                class="mt-2"
+                color="primary"
+                rounded
+                depressed
+                @click="putEvent"
+                >追加</v-btn
+              >
             </div>
 
-
             <br /><br />
-            <v-btn class="mt-2"
-            color="primary"
-            rounded
-            depressed @click="uploadJsonTriples">登録</v-btn>
+            <v-btn
+              class="mt-2"
+              color="primary"
+              rounded
+              depressed
+              @click="uploadJsonTriples"
+              >登録</v-btn
+            >
             <br />
             <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
           </div>
@@ -358,7 +391,7 @@ export default {
       descriptionAttributeValue: "",
       eventAttributeValue: "",
       selectedEntity: "",
-      selectedFactoidId:"",
+      selectedFactoidId: "",
       modifiedText: "",
       modifiedWordLemma: "",
       modifiedWordUri: "",
@@ -600,7 +633,7 @@ export default {
         ];
       },
     },
-/*
+    /*
     attributeSetterOptions: {
       get() {
         return [
@@ -643,9 +676,12 @@ export default {
   },
   */
   async mounted() {
-    const db = getFirestore();
+    const development = false;
 
-    const lods = [];
+    let lods = [];
+    let xmlStr = "";
+
+    const db = getFirestore();
 
     const querySnapshot = await getDocs(collection(db, "lod"));
     querySnapshot.forEach((doc) => {
@@ -659,7 +695,7 @@ export default {
       lods.push(lod);
     });
 
-    console.log(lods);
+    //console.log({ lods });
 
     //this.stored_lods = this.lods
     this.stored_lods = lods;
@@ -669,21 +705,29 @@ export default {
     //const documentId = "aaa";
     this.documentId = documentId;
 
-    const docRef = doc(db, "tasks", documentId);
-    const docSnap = await getDoc(docRef);
-
-    let xmlStr = "";
-    if (docSnap.exists()) {
-      xmlStr = docSnap.data().xml;
+    if (development) {
+      xmlStr = xmlStr_dev;
     } else {
-      const res = await axios.get("/TEI/BG_1_TEI_final.xml");
-      //const res = await axios.get("/TEI/BG_1_TEI.xml");
-      xmlStr = res.data;
-      console.log(xmlStr);
+      const docRef = doc(db, "tasks", documentId);
+      const docSnap = await getDoc(docRef);
 
-      //const docData = {xml:xmlStr};
-      //await setDoc(doc(db, "tasks", "one"), docData);
+      if (docSnap.exists()) {
+        xmlStr = docSnap.data().xml;
+      } else {
+        const res = await axios.get("/TEI/BG_1_TEI_final.xml");
+        //const res = await axios.get("/TEI/BG_1_TEI.xml");
+        xmlStr = res.data;
+        console.log(xmlStr);
+
+        //const docData = {xml:xmlStr};
+        //await setDoc(doc(db, "tasks", "one"), docData);
+      }
+
+      //console.log({ xmlStr });
+      //console.log(xmlStr)
     }
+
+    console.log(xmlStr);
 
     const parser = new window.DOMParser();
     const xmlData = parser.parseFromString(xmlStr, "text/xml");
@@ -807,7 +851,7 @@ export default {
       };
 
       const entity = getEntity(wordText);
-      const type = wordText.getAttribute("type")
+      const type = wordText.getAttribute("type");
       console.log(entity);
 
       if (!jsonTriples[selectedAttribute]) {
@@ -819,7 +863,6 @@ export default {
         if (entity !== false) {
           person.entity = entity;
         } else {
-          ;
         }
         //list.push(selectedEntity + "_" + uuid)
         if (selectedAttributeValue !== "") {
@@ -949,7 +992,7 @@ export default {
       };
 
       const entity = getEntity(wordText);
-      const type = wordText.getAttribute("type")
+      const type = wordText.getAttribute("type");
       console.log(entity);
 
       if (!jsonTriples[selectedAttribute]) {
@@ -1006,7 +1049,7 @@ export default {
       console.log(selectedEntity);
 
       const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
-      const type = wordText.getAttribute("type")
+      const type = wordText.getAttribute("type");
 
       const word_elements = wordText.childNodes;
       const lemma_ids = [];
@@ -1089,7 +1132,7 @@ export default {
       this.selectedEntity = "";
       this.factoidAttribute = "";
     },
-    async putDateAttribute(){
+    async putDateAttribute() {
       const xmlData = this.xmlData;
       const selectedAttribute = this.dateAttribute;
       const jsonTriples = this.jsonTriples;
@@ -1115,7 +1158,7 @@ export default {
       };
 
       const entity = getEntity(wordText);
-      const type = wordText.getAttribute("type")
+      const type = wordText.getAttribute("type");
       console.log(entity);
 
       if (!jsonTriples[selectedAttribute]) {
@@ -1548,7 +1591,7 @@ export default {
 
       this.jsonTriples = jsonTriples;
     },
-    async deleteFactoid(){
+    async deleteFactoid() {
       const selectedFactoidId = this.selected_factoid_id;
       this.selectedFactoidId = selectedFactoidId;
       const factoidId = this.selectedFactoidId;
@@ -1558,7 +1601,7 @@ export default {
       const docRef = doc(db, "lod", factoidId);
       await deleteDoc(docRef);
 
-      this.selectedFactoidId = ""
+      this.selectedFactoidId = "";
     },
     /*
     hideAttributeSetter() {
@@ -1604,4 +1647,1008 @@ export default {
     */
   },
 };
+
+const xmlStr_dev = `<?xml version="1.0" encoding="UTF-8"?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+schematypens="http://purl.oclc.org/dsdl/schematron"?><TEI
+  xmlns="http://www.tei-c.org/ns/1.0"
+>
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Title</title>
+      </titleStmt>
+      <publicationStmt>
+        <p>Publication Information</p>
+      </publicationStmt>
+      <sourceDesc>
+        <p>Information about the source</p>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <div1 type="book" n="1">
+        <p>
+          <!--ここまで完了-->
+          <milestone unit="chapter" n="2" /><milestone unit="section" n="1" /><w
+            xml:id="w_1_2_1_1"
+            lemma="apud"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/89686"
+            >Apud </w
+          ><orgName
+            xmlns=""
+            xml:id="orgName_1_2_1_2"
+            type="CommunityReference"
+            target="https://www.wikidata.org/wiki/Q48616"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_2"
+              lemma="heluetio"
+              >Heluetios
+            </w></orgName
+          ><w
+            xml:id="w_1_2_1_3"
+            lemma="longe"
+            lemmaRef="http://lila-erc.eu/data/id/hypolemma/25967"
+            >longe </w
+          ><w
+            xmlns="http://www.tei-c.org/ns/1.0"
+            xml:id="w_1_2_1_4"
+            lemma="nobilis"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/113751"
+            >nobilissimus </w
+          ><w
+            xml:id="w_1_2_1_5"
+            lemma="sum"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/126689"
+            >fuit </w
+          ><w
+            xml:id="w_1_2_1_6"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><w
+            xmlns="http://www.tei-c.org/ns/1.0"
+            xml:id="w_1_2_1_7"
+            lemma="ditussus"
+            >ditissimus </w
+          ><persName
+            xmlns=""
+            xml:id="persName_1_2_1_8"
+            type="PersonReference"
+            target="http://www.example.com/roman-ontology/resource/pers/pers_1"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_8"
+              lemma="orgetorix"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/16863"
+              >Orgetorix
+            </w></persName
+          ><w xml:id="w_1_2_1_9" lemma=".">. </w
+          ><w
+            xml:id="w_1_2_1_10"
+            lemma="is"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/109083"
+            >Is </w
+          ><date
+            xmlns=""
+            xml:id="date_1_2_1_11-21"
+            type="date"
+            target="http://datetime.hutime.org/calendar/102/year/1699142.5"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_11"
+              lemma="m"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/111165 http://lila-erc.eu/data/id/lemma/12707 http://lila-erc.eu/data/id/lemma/62971"
+              >M </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_12"
+              lemma="."
+              >. </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_13"
+              lemma="messalum"
+              >Messala </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_14"
+              lemma=","
+              >, </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_15"
+              lemma="et"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+              >et </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_16"
+              lemma="p"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/115565 http://lila-erc.eu/data/id/lemma/17160"
+              >P </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_17"
+              lemma="."
+              >. </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_18"
+              lemma="m"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/111165 http://lila-erc.eu/data/id/lemma/12707 http://lila-erc.eu/data/id/lemma/62971"
+              >M </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_19"
+              lemma="."
+              >. </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_20"
+              lemma="pison"
+              >Pisone </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_21"
+              lemma="consulus"
+              >consulibus
+            </w></date
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_1_22"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_22"
+              lemma="regnum"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/121683"
+              >regni
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_1_23"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_23"
+              lemma="cupiditas"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/97279"
+              >cupiditate
+            </w></objectName
+          ><w
+            xml:id="w_1_2_1_24"
+            lemma="induco"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/107435"
+            >inductus </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_1_25"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_25"
+              lemma="coniuratio"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/95954"
+              >coniurationem
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_1_26"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_26"
+              lemma="nobilitas"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/113752"
+              >nobilitatis
+            </w></objectName
+          ><w
+            xml:id="w_1_2_1_27"
+            lemma="facio"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/102758 http://lila-erc.eu/data/id/lemma/51124"
+            >fecit </w
+          ><w
+            xml:id="w_1_2_1_28"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><orgName
+            xmlns=""
+            xml:id="orgName_1_2_1_29"
+            type="CommunityReference"
+            target="https://www.wikidata.org/wiki/Q48616"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_29"
+              lemma="ciuitas"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/3309 http://lila-erc.eu/data/id/lemma/94400"
+              >ciuitati
+            </w></orgName
+          ><w xml:id="w_1_2_1_30" lemma="persuatio">persuasit </w
+          ><w
+            xml:id="w_1_2_1_31"
+            lemma="ut"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/130906 http://lila-erc.eu/data/id/lemma/130905"
+            >ut </w
+          ><w
+            xml:id="w_1_2_1_32"
+            lemma="de"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/97932"
+            >de </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_1_33-34"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/177534"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_33"
+              lemma="finis"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/103321 http://lila-erc.eu/data/id/lemma/52244"
+              >finibus </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_34"
+              lemma="suus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/127165"
+              >suis
+            </w></placeName
+          ><w
+            xml:id="w_1_2_1_35"
+            lemma="cum"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/97207 http://lila-erc.eu/data/id/lemma/97202 http://lila-erc.eu/data/id/lemma/97201"
+            >cum </w
+          ><w
+            xml:id="w_1_2_1_36"
+            lemma="omnis"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/114954"
+            >omnibus </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_1_37"
+            type="PhysicalObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_1_37"
+              lemma="copua"
+              >copiis
+            </w></objectName
+          ><w
+            xml:id="w_1_2_1_38"
+            lemma="exeo"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101980"
+            >exirent </w
+          ><w xml:id="w_1_2_1_39" lemma=":">: </w
+          ><milestone unit="section" n="2" /><w
+            xml:id="w_1_2_2_1"
+            lemma="perfacilis"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/116805"
+            >Perfacile</w
+          ><w
+            xml:id="w_1_2_2_2"
+            lemma="esse"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/50040"
+            >esse </w
+          ><w xml:id="w_1_2_2_3" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_2_4"
+            lemma="cum"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/97207 http://lila-erc.eu/data/id/lemma/97202 http://lila-erc.eu/data/id/lemma/97201"
+            >cum </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_2_5"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_2_5"
+              lemma="uirtus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/130356 http://lila-erc.eu/data/id/lemma/25179"
+              >uirtute
+            </w></objectName
+          ><w
+            xml:id="w_1_2_2_6"
+            lemma="omnis"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/114954"
+            >omnibus </w
+          ><w
+            xml:id="w_1_2_2_7"
+            lemma="praesto"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/119246 http://lila-erc.eu/data/id/lemma/119245"
+            >praestarent </w
+          ><w xml:id="w_1_2_2_8" lemma=",">, </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_2_9-10"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_2_9"
+              lemma="totus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/128484 http://lila-erc.eu/data/id/lemma/129429"
+              >totius </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_2_10"
+              lemma="gallia"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/54447 http://lila-erc.eu/data/id/lemma/7760"
+              >Galliae</w
+            ></objectName
+          ><objectName xmlns="" xml:id="objectName_1_2_2_11"
+            ><objectName
+              xml:id="objectName_1_2_2_11"
+              type="ConceptualObjectReference"
+              ><w
+                xmlns="http://www.tei-c.org/ns/1.0"
+                xml:id="w_1_2_2_11"
+                lemma="imperium"
+                lemmaRef="http://lila-erc.eu/data/id/lemma/106532"
+                >imperio
+              </w></objectName
+            ></objectName
+          ><w
+            xml:id="w_1_2_2_12"
+            lemma="potior"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/72857 http://lila-erc.eu/data/id/lemma/118660 http://lila-erc.eu/data/id/lemma/118663"
+            >potiri </w
+          ><w xml:id="w_1_2_2_13" lemma=".">. </w
+          ><milestone unit="section" n="3" /><w
+            xml:id="w_1_2_3_1"
+            lemma="is"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/109083"
+            >Id</w
+          ><w
+            xml:id="w_1_2_3_2"
+            lemma="hic"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/105455"
+            >hoc </w
+          ><w
+            xml:id="w_1_2_3_3"
+            lemma="faciliter"
+            lemmaRef="http://lila-erc.eu/data/id/hypolemma/16090"
+            >facilius </w
+          ><w
+            xml:id="w_1_2_3_4"
+            lemma="is"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/109083"
+            >iis </w
+          ><w xml:id="w_1_2_3_5" lemma="persuatio">persuasit </w
+          ><w xml:id="w_1_2_3_6" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_3_7"
+            lemma="qui"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
+            >quod </w
+          ><w
+            xml:id="w_1_2_3_8"
+            lemma="undique"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/130636"
+            >undique </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_3_9"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_9"
+              lemma="locus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/12215 http://lila-erc.eu/data/id/lemma/110019"
+              >loci
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_3_10"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_10"
+              lemma="natura"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/15422 http://lila-erc.eu/data/id/lemma/113421"
+              >natura
+            </w></objectName
+          ><orgName
+            xmlns=""
+            xml:id="orgName_1_2_3_11"
+            type="CommunityReference"
+            target="https://www.wikidata.org/wiki/Q48616"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_11"
+              lemma="heluetium"
+              >Heluetii</w
+            ></orgName
+          ><w
+            xml:id="w_1_2_3_12"
+            lemma="contineo"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/96292"
+            >continentur </w
+          ><w xml:id="w_1_2_3_13" lemma=":">: </w
+          ><w
+            xml:id="w_1_2_3_14"
+            lemma="unus"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/85636"
+            >una </w
+          ><w
+            xml:id="w_1_2_3_15"
+            lemma="ex"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101716"
+            >ex </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_16-18"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/109277"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_16"
+              lemma="pars"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/116084"
+              >parte </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_17"
+              lemma="flumen"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
+              >flumine </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_18"
+              lemma="rhenum"
+              >Rheno</w
+            ></placeName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_3_19"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_19"
+              lemma="latissimus"
+              >latissimo
+            </w></objectName
+          ><w
+            xml:id="w_1_2_3_20"
+            lemma="atque"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/90490"
+            >atque </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_3_21"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_21"
+              lemma="altus"
+              >altissimo
+            </w></objectName
+          ><w xml:id="w_1_2_3_22" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_3_23"
+            lemma="qui"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
+            >qui </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_3_24"
+            type="PhysicalObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_24"
+              lemma="ager"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/7628 http://lila-erc.eu/data/id/lemma/88060"
+              >agrum
+            </w></objectName
+          ><orgName
+            xmlns=""
+            xml:id="orgName_1_2_3_25"
+            type="CommunityReference"
+            target="https://www.wikidata.org/wiki/Q48616"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_25"
+              lemma="heluetium"
+              >Heluetium</w
+            ></orgName
+          ><w xml:id="w_1_2_3_26" lemma="ab">a </w
+          ><orgName
+            xmlns=""
+            xml:id="orgName_1_2_3_27"
+            type="CommunityReference"
+            target="https://www.wikidata.org/wiki/Q22633"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_27"
+              lemma="germanus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/104526 http://lila-erc.eu/data/id/lemma/104528"
+              >Germanis</w
+            ></orgName
+          ><w
+            xml:id="w_1_2_3_28"
+            lemma="diuido"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/99932"
+            >diuidit </w
+          ><w xml:id="w_1_2_3_29" lemma=";">; </w
+          ><w
+            xml:id="w_1_2_3_30"
+            lemma="alter"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/88457"
+            >altera </w
+          ><w
+            xml:id="w_1_2_3_31"
+            lemma="ex"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101716"
+            >ex </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_32-34"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/177544"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_32"
+              lemma="pars"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/116084"
+              >parte </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_33"
+              lemma="mons"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/112727 http://lila-erc.eu/data/id/lemma/14879"
+              >monte </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_34"
+              lemma="iura"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/60526 http://lila-erc.eu/data/id/lemma/10965"
+              >Iura</w
+            ></placeName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_3_35"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_35"
+              lemma="altus"
+              >altissimo
+            </w></objectName
+          ><w xml:id="w_1_2_3_36" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_3_37"
+            lemma="qui"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
+            >qui </w
+          ><w
+            xml:id="w_1_2_3_38"
+            lemma="sum"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/126689"
+            >est </w
+          ><w
+            xml:id="w_1_2_3_39"
+            lemma="inter"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/108393 http://lila-erc.eu/data/id/lemma/108392"
+            >inter </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_40"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/167922"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_40"
+              lemma="sequanus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/21387 http://lila-erc.eu/data/id/lemma/21386"
+              >Sequanos</w
+            ></placeName
+          ><w
+            xml:id="w_1_2_3_41"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_42"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/177534"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_42"
+              lemma="heluetio"
+              >Heluetios</w
+            ></placeName
+          ><w xml:id="w_1_2_3_43" lemma=";">; </w
+          ><w
+            xml:id="w_1_2_3_44"
+            lemma="tertius"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/127957"
+            >tertia </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_45-46"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/177555"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_45"
+              lemma="lacus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/11105 http://lila-erc.eu/data/id/lemma/110374 http://lila-erc.eu/data/id/lemma/110370"
+              >lacu </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_46"
+              lemma="lemannum"
+              >Lemanno</w
+            ></placeName
+          ><w
+            xml:id="w_1_2_3_47"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_48-49"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/148168"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_48"
+              lemma="flumen"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
+              >flumine </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_49"
+              lemma="rhodanus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/20178"
+              >Rhodano</w
+            ></placeName
+          ><w xml:id="w_1_2_3_50" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_3_51"
+            lemma="qui"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
+            >qui </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_52-53"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/981537"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_52"
+              lemma="prouincia"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/120189"
+              >prouinciam </w
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_53"
+              lemma="noster"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/113882 http://lila-erc.eu/data/id/lemma/15995"
+              >nostram
+            </w></placeName
+          ><w xml:id="w_1_2_3_54" lemma="ab">ab </w
+          ><placeName
+            xmlns=""
+            xml:id="placeName_1_2_3_55"
+            type="PlaceReference"
+            target="https://pleiades.stoa.org/places/177534"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_3_55"
+              lemma="heluetia"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/8924"
+              >Heluetiis</w
+            ></placeName
+          ><w
+            xml:id="w_1_2_3_56"
+            lemma="diuido"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/99932"
+            >diuidit </w
+          ><w xml:id="w_1_2_3_57" lemma=".">. </w
+          ><milestone unit="section" n="4" /><w
+            xml:id="w_1_2_4_1"
+            lemma="hic"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/105455"
+            >His</w
+          ><w
+            xml:id="w_1_2_4_2"
+            lemma="res"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121868"
+            >rebus </w
+          ><w
+            xml:id="w_1_2_4_3"
+            lemma="facio"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/102758 http://lila-erc.eu/data/id/lemma/51124"
+            >fiebat </w
+          ><w
+            xml:id="w_1_2_4_4"
+            lemma="ut"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/130906 http://lila-erc.eu/data/id/lemma/130905"
+            >ut </w
+          ><w
+            xml:id="w_1_2_4_5"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><w
+            xml:id="w_1_2_4_6"
+            lemma="paruus"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/116136"
+            >minus </w
+          ><w xml:id="w_1_2_4_7" lemma="lates">late </w
+          ><w
+            xml:id="w_1_2_4_8"
+            lemma="uago"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/129497"
+            >uagarentur </w
+          ><w
+            xml:id="w_1_2_4_9"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><w
+            xml:id="w_1_2_4_10"
+            lemma="paruus"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/116136"
+            >minus </w
+          ><w
+            xml:id="w_1_2_4_11"
+            lemma="facilis"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/102754 http://lila-erc.eu/data/id/lemma/7005"
+            >facile </w
+          ><w
+            xml:id="w_1_2_4_12"
+            lemma="finitima"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/104014"
+            >finitimis </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_4_13"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_4_13"
+              lemma="bellum"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/91461 http://lila-erc.eu/data/id/lemma/872"
+              >bellum
+            </w></objectName
+          ><w
+            xml:id="w_1_2_4_14"
+            lemma="infero"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/107649"
+            >inferre </w
+          ><w
+            xml:id="w_1_2_4_15"
+            lemma="possum"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/118569"
+            >possent </w
+          ><w xml:id="w_1_2_4_16" lemma=";">; </w
+          ><w
+            xml:id="w_1_2_4_17"
+            lemma="qui"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
+            >qua </w
+          ><w
+            xml:id="w_1_2_4_18"
+            lemma="ex"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101716"
+            >ex </w
+          ><w
+            xml:id="w_1_2_4_19"
+            lemma="pars"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/116084"
+            >parte </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_4_20"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_4_20"
+              lemma="homo"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/9484 http://lila-erc.eu/data/id/lemma/105624"
+              >homines
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_4_21"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_4_21"
+              lemma="bello"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/91458"
+              >bellandi
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_4_22"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_4_22"
+              lemma="cupidus"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/97281"
+              >cupidi
+            </w></objectName
+          ><w
+            xml:id="w_1_2_4_23"
+            lemma="magnus"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/111319 http://lila-erc.eu/data/id/lemma/63184"
+            >magno </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_4_24"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_4_24"
+              lemma="dolor"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/5215 http://lila-erc.eu/data/id/lemma/100034"
+              >dolore
+            </w></objectName
+          ><w xml:id="w_1_2_4_25" lemma="adficio">adficiebantur </w
+          ><w xml:id="w_1_2_4_26" lemma=".">. </w
+          ><milestone unit="section" n="5" /><w
+            xml:id="w_1_2_5_1"
+            lemma="pro"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/119533 http://lila-erc.eu/data/id/lemma/118468"
+            >Pro</w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_5_2"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_5_2"
+              lemma="multitudo"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/112987"
+              >multitudine
+            </w></objectName
+          ><w
+            xml:id="w_1_2_5_3"
+            lemma="autem"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/90828"
+            >autem </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_5_4"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_5_4"
+              lemma="homo"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/9484 http://lila-erc.eu/data/id/lemma/105624"
+              >hominum
+            </w></objectName
+          ><w
+            xml:id="w_1_2_5_5"
+            lemma="et"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
+            >et </w
+          ><w
+            xml:id="w_1_2_5_6"
+            lemma="pro"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/119533 http://lila-erc.eu/data/id/lemma/118468"
+            >pro </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_5_7"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_5_7"
+              lemma="gloria"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/104703 http://lila-erc.eu/data/id/lemma/8182"
+              >gloria
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_5_8"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_5_8"
+              lemma="bellum"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/91461 http://lila-erc.eu/data/id/lemma/872"
+              >belli
+            </w></objectName
+          ><w
+            xml:id="w_1_2_5_9"
+            lemma="atque"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/90490"
+            >atque </w
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_5_10"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_5_10"
+              lemma="fortitudo"
+              lemmaRef="http://lila-erc.eu/data/id/lemma/103692"
+              >fortitudinis
+            </w></objectName
+          ><objectName
+            xmlns=""
+            xml:id="objectName_1_2_5_11"
+            type="ConceptualObjectReference"
+            ><w
+              xmlns="http://www.tei-c.org/ns/1.0"
+              xml:id="w_1_2_5_11"
+              lemma="angustos"
+              >angustos
+            </w></objectName
+          ><w
+            xml:id="w_1_2_5_12"
+            lemma="se"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/123932 http://lila-erc.eu/data/id/hypolemma/43031 http://lila-erc.eu/data/id/hypolemma/43567"
+            >se </w
+          ><w
+            xml:id="w_1_2_5_13"
+            lemma="finis"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/103321 http://lila-erc.eu/data/id/lemma/52244"
+            >fines </w
+          ><w
+            xml:id="w_1_2_5_14"
+            lemma="habeo"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/105044"
+            >habere </w
+          ><w
+            xml:id="w_1_2_5_15"
+            lemma="arbitror"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/89778"
+            >arbitrabantur </w
+          ><w xml:id="w_1_2_5_16" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_5_17"
+            lemma="qui"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
+            >qui </w
+          ><w
+            xml:id="w_1_2_5_18"
+            lemma="in"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/106748"
+            >in </w
+          ><w
+            xml:id="w_1_2_5_19"
+            lemma="longitudo"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/110786"
+            >longitudinem </w
+          ><w
+            xml:id="w_1_2_5_20"
+            lemma="mile"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/14556"
+            >milia </w
+          ><w
+            xml:id="w_1_2_5_21"
+            lemma="passus"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/120855 http://lila-erc.eu/data/id/hypolemma/31215"
+            >passuum </w
+          ><w xml:id="w_1_2_5_22" lemma="ccxl">CCXL</w
+          ><w xml:id="w_1_2_5_23" lemma=",">, </w
+          ><w
+            xml:id="w_1_2_5_24"
+            lemma="in"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/106748"
+            >in </w
+          ><w
+            xml:id="w_1_2_5_25"
+            lemma="latitudo"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/110033 http://lila-erc.eu/data/id/lemma/110058"
+            >latitudinem </w
+          ><w xml:id="w_1_2_5_26" lemma="clxxx">CLXXX</w
+          ><w
+            xml:id="w_1_2_5_27"
+            lemma="pateo"
+            lemmaRef="http://lila-erc.eu/data/id/lemma/116202"
+            >patebant </w
+          ><w xml:id="w_1_2_5_28" lemma=".">. </w>
+        </p>
+      </div1>
+    </body>
+  </text>
+</TEI>`;
 </script>

@@ -22,13 +22,14 @@
         @mousedown="mouseDown"
         :id="element.attributes['xml:id']"
         @click2="/*clickW(element.attributes['xml:id'])*/"
-        @click="clickW(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <!-- <WElement :key="key" :element="e"></WElement> -->
+        <span @click="clickW(element.attributes['xml:id'])">
+          <template v-for="(e, key) in element.elements">
+            <!-- <WElement :key="key" :element="e"></WElement> -->
 
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+            <TEI :key="key" :element="e"></TEI>
+          </template>
+        </span>
         &nbsp;
         <!--
         <div
@@ -37,44 +38,41 @@
           :style="`background-color: ${/*getTypeColor(factoid.type)*/ color}`"
         ></div>
         -->
-        <v-tooltip bottom v-if="stored_lod">
+        <v-tooltip
+          bottom
+          v-for="(active_stored_lod, key) in active_stored_lods"
+          :key="`t-${key}`"
+        >
           <template #activator="{ on, attrs }">
             <div
+              @click="selectFactoidId(active_stored_lod.id)"
               v-bind="attrs"
               style="margin-bottom: 4px; height: 8px; cursor: pointer"
-              :style="`background-color: ${/*getTypeColor(factoid.type)*/ color}`"
+              :style="`background-color: ${getTypeColor(active_stored_lod)}`"
               v-on="on"
             ></div>
           </template>
-          <span>{{stored_lod}}</span>
-        </v-tooltip>
-        <v-tooltip v-if="false" :key="`l-${key2}`" bottom>
-          <!-- v-for="(factoid, key2) in /*getSpanId(element)*/['aaa']" -->
-          <template #activator="{ on, attrs }">
-            <div
-              :id="factoid.id"
-              v-bind="attrs"
-              style="margin-bottom: 4px; height: 8px; cursor: pointer"
-              :style="`background-color: ${
-                /*getTypeColor(factoid.type)*/ color
-              }`"
-              v-on="on"
-            ></div>
-            <!-- @click="clickFactoid(factoid.id)" -->
-          </template>
-          <span>{{ factoid.note }}</span>
+          <span>{{ active_stored_lod }}</span>
         </v-tooltip>
       </span>
     </template>
 
-    <template v-else-if="element.name === 'persName'">      
+    <template v-else-if="element.name === 'persName'">
       <span
         style="color: blue; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+        <!-- 2022.07.07 追加 -->
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">
+              <template v-for="(e, key) in element.elements">
+                <TEI :key="key" :element="e"></TEI>
+              </template>
+            </span>
+          </template>
+          <span>あいう</span>
+        </v-tooltip>
       </span>
     </template>
 
@@ -109,7 +107,8 @@
   -->
     <template
       v-else-if="
-        element.name === 'objectName' && element.attributes.type === 'ConceptualObjectReference'
+        element.name === 'objectName' &&
+        element.attributes.type === 'ConceptualObjectReference'
       "
     >
       <span
@@ -180,21 +179,14 @@ export default {
   },
   methods: {
     mouseUp(event) {
-      console.log(event.target.parentNode);
+      //console.log(event.target.parentNode);
       this.selected_word_end_id = event.target.parentNode.id;
     },
     mouseDown(event) {
       this.selected_word_start_id = event.target.parentNode.id;
     },
     clickW(id) {
-      console.log("w", { id });
-
-      if(this.stored_lod){
-        const factoidId = this.stored_lod.id
-        console.log(factoidId);
-        this.selected_factoid_id = factoidId;
-      }
-
+      //console.log("w", { id });
       this.$emit("parent-func", id);
 
       //選択したIDを変数に格納
@@ -208,6 +200,36 @@ export default {
 
       //this.ex_text = "click e:" + id
       this.ex_text = id;
+    },
+    getTypeColor(active_stored_lod) {
+      const type = active_stored_lod.type;
+
+      let color = null;
+      if (type === "ActionFactoid") {
+        color = "#FFEE58"; // yellow lighten-1
+      } else if (type === "ContactFactoid") {
+        color = "#FFA726"; // orange lighten-1
+      } else if (type === "SituationFactoid") {
+        color = "#42A5F5"; // blue lighten-1
+      } else if (type === "OfficeFactoid") {
+        color = "#5C6BC0"; // blue lighten-1
+      } else if (type === "TitleFactoid") {
+        color = "#7E57C2"; // blue lighten-1
+      } else if (type === "SocialRelationshipFactoid") {
+        color = "#26A69A"; // blue lighten-1
+      } else if (type === "FamilialRelationshipFactoid") {
+        color = "#66BB6A"; // blue lighten-1
+      } else if (type === "GeoFactoid") {
+        color = "#8D6E63"; // green lighten-1
+      } else {
+        color = "#BDBDBD"; // grey lighten-1
+      }
+
+      return color;
+    },
+    selectFactoidId(factoidId) {
+      //console.log({ factoidId });
+      this.selected_factoid_id = factoidId;
     },
   },
   computed: {
@@ -251,51 +273,23 @@ export default {
         this.$store.commit("setStoredLods", value);
       },
     },
-    stored_lod: {
+    active_stored_lods: {
       get() {
-        const element = this.element
+        const element = this.element;
         const stored_lods = this.stored_lods;
+        const stored_lod_list = [];
         if (element.attributes && element.attributes["xml:id"]) {
           const wid = element.attributes["xml:id"];
           for (const stored_lod of stored_lods) {
             if (stored_lod.wids.includes(wid)) {
-              return stored_lod
+              //return stored_lod
+              stored_lod_list.push(stored_lod);
             }
           }
         }
-        return null
-      }
+        return stored_lod_list;
+      },
     },
-    color: {
-      get() {
-        const stored_lod = this.stored_lod
-
-        const type = stored_lod.type;
-
-        let color = null;
-        if (type === "ActionFactoid") {
-          color = "#FFEE58"; // yellow lighten-1
-        } else if (type === "ContactFactoid") {
-          color = "#FFA726"; // orange lighten-1
-        } else if (type === "SituationFactoid") {
-          color = "#42A5F5"; // blue lighten-1
-        } else if (type === "OfficeFactoid") {
-          color = "#5C6BC0"; // blue lighten-1
-        } else if (type === "TitleFactoid") {
-          color = "#7E57C2"; // blue lighten-1
-        } else if (type === "SocialRelationshipFactoid") {
-          color = "#26A69A"; // blue lighten-1
-        } else if (type === "FamilialRelationshipFactoid") {
-          color = "#66BB6A"; // blue lighten-1
-        } else if (type === "GeoFactoid") {
-          color = "#8D6E63"; // green lighten-1
-        } else {
-          color = "#BDBDBD"; // grey lighten-1
-        }
-        
-        return color
-      }
-    },
-  }
+  },
 };
 </script>

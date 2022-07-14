@@ -127,12 +127,19 @@ export default {
               namedNode(`${roman}${i.idInText}`)
             )
             );
-            writer.addQuad(quad(
-              namedNode(`${roman}${i.item}`),
-              namedNode(`${ex}hasLemma`),
-              namedNode(`${i.lemma[0]}`)
-            )
-            );
+            for (const l of i.lemma){
+              if(l !== null){
+              const lemma_list = l.split(" ")
+              for (const lemma of lemma_list){
+              writer.addQuad(
+                namedNode(`${roman}${i.item}`),
+                namedNode(`${ex}hasLemma`),
+                //namedNode(`${i.lemmaRef[0]}`)
+                namedNode(`${lemma}`)
+              );
+              }
+              }
+            }
             }
           }else if (predicates.includes(key)){
             for (const i of jsonTriples[key]){
@@ -142,11 +149,18 @@ export default {
               namedNode(`${roman}${i.wid}`)
             )
             );
+            const lemmas = i.lemmaRef[0]
+            if(lemmas !== null){
+            const lemma_list = lemmas.split(" ")
+            for (const lemma of lemma_list){
             writer.addQuad(
               namedNode(`${roman}${i.wid}`),
               namedNode(`${ex}hasLemma`),
-              namedNode(`${i.lemmaRef[0]}`)
+              //namedNode(`${i.lemmaRef[0]}`)
+              namedNode(`${lemma}`)
             );
+            }
+            }
             }
           }else if(factoids.includes(key)){
             for (const i of jsonTriples[key]){

@@ -37,6 +37,7 @@ export default {
       const objects = ["associatedConcept","associatedPhysicalObject"]
       const predicates = ["hasPredicate","hasProperty"]
       const factoids = ["mentionedAsPrecedent","mentionedAsSubsequent","mentionedAsParallel","hasContent","therefore","because"]
+      const text = ["from","to"]
 
       const ex = "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
       const roman = "http://www.example.com/roman-ontology/resource/";
@@ -173,6 +174,22 @@ export default {
               namedNode(`${jsonTriples[key]}`)
             )
             );
+          }else if (text.includes(key)){
+            writer.addQuad(quad(
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode(`${ex}${key}`),
+              namedNode(`${roman}${jsonTriples[key]}`)
+            )
+            );
+          }else if (key === "wids"){
+            for (const i of jsonTriples[key]){
+            writer.addQuad(quad(
+              namedNode(`${roman}${jsonTriples.id}`),
+              namedNode(`${ex}wid`),
+              namedNode(`${roman}${i}`)
+            )
+            );
+            }
           }
           else{
             ;

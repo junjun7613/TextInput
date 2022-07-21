@@ -17,6 +17,7 @@
     <template v-else-if="element.name === 'w'">
       <!-- @mouseup="mouseUp(element.attributes['xml:id'])" @mousemove="mouseMove(element.attributes['xml:id'])" @mousedown="mouseDown(element.attributes['xml:id'])"  -->
       <span
+        type="w"
         style="display: inline-block"
         @mouseup="mouseUp"
         @mousedown="mouseDown"
@@ -179,11 +180,24 @@ export default {
   },
   methods: {
     mouseUp(event) {
-      //console.log(event.target.parentNode);
-      this.selected_word_end_id = event.target.parentNode.id;
+      //console.log("mouseUp", event.target.parentNode);
+      //2階層上のspanのidを見に行く必要あり
+      if(event.target.parentNode.id){
+        this.selected_word_end_id = event.target.parentNode.id;
+      } else {
+        this.selected_word_end_id = event.target.parentNode.parentNode.id;
+      }
+      //this.selected_word_end_id = event.target.parentNode.id;
     },
     mouseDown(event) {
-      this.selected_word_start_id = event.target.parentNode.id;
+      //console.log("mouseDown", event.target.parentNode);
+      //2階層上のspanのidを見に行く必要あり
+      if(event.target.parentNode.id){
+        this.selected_word_start_id = event.target.parentNode.id;
+      } else {
+        this.selected_word_start_id = event.target.parentNode.parentNode.id;
+      }
+      
     },
     clickW(id) {
       //console.log("w", { id });

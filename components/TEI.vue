@@ -82,19 +82,34 @@
         style="color: red; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+        <v-tooltip bottom>
+          <template #activator="{ on,attrs }">
+            <span v-bind="attrs" v-on="on">
+              <template v-for="(e, key) in element.elements">
+                <TEI :key="key" :element="e"></TEI>
+              </template>
+            </span>
+          </template>
+          <span>いいい</span>
+        </v-tooltip>
       </span>
     </template>
+
     <template v-else-if="element.name === 'placeName'">
       <span
         style="color: green; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">
+              <template v-for="(e, key) in element.elements">
+                <TEI :key="key" :element="e"></TEI>
+              </template>
+            </span>
+          </template>
+          <span>ううう</span>
+        </v-tooltip>
       </span>
     </template>
     <!--
@@ -116,9 +131,16 @@
         style="color: purple; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">
+              <template v-for="(e, key) in element.elements">
+                <TEI :key="key" :element="e"></TEI>
+              </template>
+            </span>
+          </template>
+          <span>えええ</span>
+        </v-tooltip>
       </span>
     </template>
     <template
@@ -131,9 +153,16 @@
         style="color: #b388ff; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">
+              <template v-for="(e, key) in element.elements">
+                <TEI :key="key" :element="e"></TEI>
+              </template>
+            </span>
+          </template>
+          <span>おおお</span>
+        </v-tooltip>
       </span>
     </template>
     <template v-else-if="element.name === 'date'">
@@ -141,9 +170,16 @@
         style="color: #ffcc00; font-weight: bold"
         @click="clickEntity(element.attributes['xml:id'])"
       >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"></TEI>
-        </template>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">
+              <template v-for="(e, key) in element.elements">
+                <TEI :key="key" :element="e"></TEI>
+              </template>
+            </span>
+          </template>
+          <span>かかか</span>
+        </v-tooltip>
       </span>
     </template>
     <template v-else>

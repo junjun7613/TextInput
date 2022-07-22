@@ -72,7 +72,7 @@
               </template>
             </span>
           </template>
-          <span>あいう</span>
+          <span>{{element.attributes}}</span>
         </v-tooltip>
       </span>
     </template>
@@ -90,7 +90,7 @@
               </template>
             </span>
           </template>
-          <span>いいい</span>
+          <span>{{element.attributes}}</span>
         </v-tooltip>
       </span>
     </template>
@@ -108,7 +108,7 @@
               </template>
             </span>
           </template>
-          <span>ううう</span>
+          <span>{{element.attributes}}</span>
         </v-tooltip>
       </span>
     </template>
@@ -139,7 +139,7 @@
               </template>
             </span>
           </template>
-          <span>えええ</span>
+          <span>{{element.attributes}}</span>
         </v-tooltip>
       </span>
     </template>
@@ -161,7 +161,7 @@
               </template>
             </span>
           </template>
-          <span>おおお</span>
+          <span>{{element.attributes}}</span>
         </v-tooltip>
       </span>
     </template>
@@ -178,7 +178,7 @@
               </template>
             </span>
           </template>
-          <span>かかか</span>
+          <span>{{element.attributes}}</span>
         </v-tooltip>
       </span>
     </template>

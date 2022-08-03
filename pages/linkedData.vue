@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-container fluid>
+      <p>{{modifiedJsonTriples}}</p>
       <p>{{ ex_text }}</p>
       <p>{{ selected_factoid_id }}</p>
       <p>
@@ -14,7 +15,7 @@
               <TEI v-if="element" :element="element" @parent-func="getWId" />
             </div>
           </div>
-          <div v-show="show" id="attributeSetter" style="width: 30%">
+          <div v-show="show_attrSetter" id="attributeSetter" style="width: 30%">
             <v-row dense>
               <v-col cols="6">
                 <v-select
@@ -139,77 +140,6 @@
                 >
               </v-col>
             </v-row>
-
-            <!--
-            <div>
-              subject/whom/associatedPerson
-              <br />
-              <select id="attributeOptions" v-model="personAttribute">
-                <option value="subject">subject</option>
-                <option value="whom">whom</option>
-                <option value="associatedPerson">associatedPerson</option>
-              </select>
-              <input
-                type="text"
-                class="form-control"
-                aria-label="リンク先"
-                v-model="personAttributeValue"
-              />
-              <v-btn class="mt-2"
-          color="primary"
-          rounded
-          depressed @click="putPersonAttribute">追加</v-btn>
-            </div>
-            <br />
-            <div>
-              atPlace/fromPlace/toPlace/nearPlace
-              <br />
-              <select id="attributeOptions" v-model="placeAttribute">
-                <option value="atPlace">atPlace</option>
-                <option value="fromPlace">fromPlace</option>
-                <option value="toPlace">toPlace</option>
-                <option value="nearPlace">nearPlace</option>
-              </select>
-              <input
-                type="text"
-                class="form-control"
-                aria-label="リンク先"
-                v-model="placeAttributeValue"
-              />
-              <v-btn class="mt-2"
-          color="primary"
-          rounded
-          depressed @click="putPlaceAttribute">追加</v-btn>
-            </div>
-            <br />
-            <div>
-              associatedConcept/associatedPhysicalObject
-              <br />
-              <select id="attributeOptions" v-model="objectAttribute">
-                <option value="associatedConcept">associatedConcept</option>
-                <option value="associatedPhysicalObject">
-                  associatedPhysicalObject
-                </option>
-              </select>
-              <v-btn class="mt-2"
-          color="primary"
-          rounded
-          depressed @click="putObjectAttribute">追加</v-btn>
-            </div>
-            <br />
-            <div>
-              hasPredicate/hasProperty
-              <br />
-              <select id="attributeOptions" v-model="lemmaAttribute">
-                <option value="hasPredicate">hasPredicate</option>
-                <option value="hasProperty">hasProperty</option>
-              </select>
-              <v-btn class="mt-2"
-          color="primary"
-          rounded
-          depressed @click="putLemmaAttribute">追加</v-btn>
-            </div>
--->
             <br />
             <div>
               <v-text-field
@@ -248,6 +178,174 @@
               rounded
               depressed
               @click="uploadJsonTriples"
+              >登録</v-btn
+            >
+            <br />
+            <!--<button @click="hideAttributeSetter">モーダルを閉じる</button>-->
+          </div>
+          <div v-show="show_attrModifier" id="attributeModifier" style="width: 30%">
+            <v-row dense>
+              <v-col cols="6">
+                <v-select
+                  rounded
+                  outlined
+                  label="Person/Community"
+                  id="attributeOptions"
+                  v-model="personAttribute"
+                  :items="subjects"
+                  hide-details
+                ></v-select>
+                <v-text-field
+                  label="input EntityInContext"
+                  v-model="personAttributeValue"
+                />
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addPersonAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="Concept/Physical Object"
+                  id="attributeOptions"
+                  v-model="objectAttribute"
+                  :items="concepts"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addObjectAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="related factoids"
+                  id="attributeOptions"
+                  v-model="factoidAttribute"
+                  :items="factoids"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addFactoidAttribute"
+                  >追加</v-btn
+                >
+              </v-col>
+              <v-col>
+                <v-select
+                  rounded
+                  outlined
+                  label="Place"
+                  id="attributeOptions"
+                  v-model="placeAttribute"
+                  :items="places"
+                  hide-details
+                ></v-select>
+                <v-text-field
+                  label="input EntityInContext"
+                  v-model="placeAttributeValue"
+                />
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addPlaceAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="Predicate/Property"
+                  id="attributeOptions"
+                  v-model="lemmaAttribute"
+                  :items="lemmas"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addLemmaAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
+                <v-select
+                  rounded
+                  outlined
+                  label="date"
+                  id="attributeOptions"
+                  v-model="dateAttribute"
+                  :items="dates"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addDateAttribute"
+                  >追加</v-btn
+                >
+              </v-col>
+            </v-row>
+            <br />
+            <div>
+              <v-text-field
+                label="Description"
+                v-model="descriptionAttributeValue"
+              />
+              <v-btn
+                class="mt-2"
+                color="primary"
+                rounded
+                depressed
+                @click="addDescription"
+                >追加</v-btn
+              >
+            </div>
+            <br />
+            <div>
+              <v-text-field
+                label="referencesEvent"
+                v-model="eventAttributeValue"
+              />
+              <v-btn
+                class="mt-2"
+                color="primary"
+                rounded
+                depressed
+                @click="addEvent"
+                >追加</v-btn
+              >
+            </div>
+
+            <br /><br />
+            <v-btn
+              class="mt-2"
+              color="primary"
+              rounded
+              depressed
+              @click="modifyJsonTriples"
               >登録</v-btn
             >
             <br />
@@ -310,6 +408,14 @@
           @click="deleteFactoid"
           >Delete</v-btn
         >
+        <v-btn
+          class="mt-2"
+          color="primary"
+          rounded
+          depressed
+          @click="modifyFactoid"
+          >Modify</v-btn
+        >
       </v-container>
       <!--{{jsonTriples}}-->
 
@@ -370,7 +476,8 @@ export default {
   layout: "noFooter",
   data() {
     return {
-      show: false,
+      show_attrSetter: false,
+      show_attrModifier: false,
       documentId: "",
       element: null,
       text: "",
@@ -405,6 +512,7 @@ export default {
       firestoreName: "test",
       updateAnnounce: "",
       jsonTriples: {},
+      modifiedJsonTriples: {},
       uuid: "",
       //height: window.innerHeight - 64,
       /*
@@ -961,6 +1069,74 @@ export default {
 
       */
     },
+    async addPersonAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.personAttribute;
+      const selectedAttributeValue = this.personAttributeValue;
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+      const ex_text = this.ex_text;
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+    
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      console.log(wordText);
+
+      const getEntity = function (wordText) {
+        try {
+          const entity = wordText.getAttribute("target");
+          return entity;
+        } catch {
+          return false;
+        }
+      };
+
+      const entity = getEntity(wordText);
+      const type = wordText.getAttribute("type");
+      console.log(entity);
+
+      if (!modifiedJsonTriples[selectedAttribute]) {
+        const list = [];
+        const person = {};
+        person.idInText = selectedEntity;
+        person.entityReference = selectedEntity + "_" + modifiedJsonTriples.id;
+        person.entityReferenceType = type;
+        if (entity !== false) {
+          person.entity = entity;
+        } else {
+        }
+        //list.push(selectedEntity + "_" + uuid)
+        if (selectedAttributeValue !== "") {
+          person.entityInContext = selectedAttributeValue;
+        }
+        list.push(person);
+        modifiedJsonTriples[selectedAttribute] = list;
+      } else {
+        const person = {};
+        person.idInText = selectedEntity;
+        person.entityReference = selectedEntity + "_" + modifiedJsonTriples.id;
+        person.entityReferenceType = type;
+        if (entity !== false) {
+          person.entity = entity;
+        } else {
+        }
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        if (selectedAttributeValue !== "") {
+          person.entityInContext = selectedAttributeValue;
+        }
+        modifiedJsonTriples[selectedAttribute].push(person);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.personAttribute = "";
+    },
     async putPlaceAttribute() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
@@ -1034,6 +1210,74 @@ export default {
       this.selectedEntity = "";
       this.placeAttribute = "";
     },
+    async addPlaceAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.placeAttribute;
+      const selectedAttributeValue = this.placeAttributeValue;
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+      const ex_text = this.ex_text;
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      console.log(wordText);
+
+      const getEntity = function (wordText) {
+        try {
+          const entity = wordText.getAttribute("target");
+          return entity;
+        } catch {
+          return false;
+        }
+      };
+
+      const entity = getEntity(wordText);
+      const type = wordText.getAttribute("type");
+      console.log(entity);
+
+      if (!modifiedJsonTriples[selectedAttribute]) {
+        const list = [];
+        const place = {};
+        place.idInText = selectedEntity;
+        place.entityReference = selectedEntity + "_" + modifiedJsonTriples.id;
+        place.entityReferenceType = type;
+        if (entity !== false) {
+          place.entity = entity;
+        } else {
+        }
+        //list.push(selectedEntity + "_" + uuid)
+        if (selectedAttributeValue !== "") {
+          place.entityInContext = selectedAttributeValue;
+        }
+        list.push(place);
+        modifiedJsonTriples[selectedAttribute] = list;
+      } else {
+        const place = {};
+        place.idInText = selectedEntity;
+        place.entityReference = selectedEntity + "_" + modifiedJsonTriples.id;
+        place.entityReferenceType = type;
+        if (entity !== false) {
+          place.entity = entity;
+        } else {
+        }
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        if (selectedAttributeValue !== "") {
+          place.entityInContext = selectedAttributeValue;
+        }
+        modifiedJsonTriples[selectedAttribute].push(place);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.placeAttribute = "";
+    },
     async putObjectAttribute() {
       const xmlData = this.xmlData;
       const selectedAttribute = this.objectAttribute;
@@ -1100,6 +1344,71 @@ export default {
       this.selectedEntity = "";
       this.objectAttribute = "";
     },
+    async addObjectAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.objectAttribute;
+      //const selectedAttributeValue = this.selectedAttributeValue
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+      const ex_text = this.ex_text;
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      const type = wordText.getAttribute("type");
+
+      const word_elements = wordText.childNodes;
+      const lemma_ids = [];
+
+      const getLemma = function (element) {
+        try {
+          const lemma_id = element.getAttribute("lemmaRef");
+          return lemma_id;
+        } catch {
+          return false;
+        }
+      };
+
+      for (const lemma_element of word_elements) {
+        const lemma_id = getLemma(lemma_element);
+        if (lemma_id !== false) {
+          //const lemma_id = lemma_element.getAttribute("lemmaRef")
+          lemma_ids.push(lemma_id);
+        } else {
+        }
+      }
+      console.log(lemma_ids);
+
+      if (!modifiedJsonTriples[selectedAttribute]) {
+        const list = [];
+        const object = {};
+        object.idInText = selectedEntity;
+        object.item = selectedEntity + "_" + modifiedJsonTriples.id;
+        object.lemma = lemma_ids;
+        object.entityType = type;
+        //list.push(selectedEntity + "_" + uuid)
+        list.push(object);
+        modifiedJsonTriples[selectedAttribute] = list;
+      } else {
+        const object = {};
+        object.idInText = selectedEntity;
+        object.item = selectedEntity + "_" + modifiedJsonTriples.id;
+        object.lemma = lemma_ids;
+        object.entityType = type;
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        modifiedJsonTriples[selectedAttribute].push(object);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.objectAttribute = "";
+    },
     async putFactoidAttribute() {
       const xmlData = this.xmlData;
       const selectedAttribute = this.factoidAttribute;
@@ -1127,6 +1436,38 @@ export default {
 
       console.log(jsonTriples);
       this.jsonTriples = jsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.factoidAttribute = "";
+    },
+    async addFactoidAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.factoidAttribute;
+      //const selectedAttributeValue = this.selectedAttributeValue
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+      const selected_factoid_id = this.selected_factoid_id;
+      this.selectedEntity = selected_factoid_id;
+      const selectedEntity = this.selectedEntity;
+
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      if (!modifiedJsonTriples[selectedAttribute]) {
+        const list = [];
+        const factoid = {};
+        factoid.relatedFactoid = selectedEntity;
+        list.push(factoid);
+        modifiedJsonTriples[selectedAttribute] = list;
+      } else {
+        const factoid = {};
+        factoid.relatedFactoid = selectedEntity;
+        modifiedJsonTriples[selectedAttribute].push(factoid);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
 
       //this.selectedAttributeValue = "";
       this.selectedEntity = "";
@@ -1194,6 +1535,67 @@ export default {
       this.selectedEntity = "";
       this.dateAttribute = "";
     },
+    async addDateAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.dateAttribute;
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+      const ex_text = this.ex_text;
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+  
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      console.log(wordText);
+
+      const getEntity = function (wordText) {
+        try {
+          const entity = wordText.getAttribute("target");
+          return entity;
+        } catch {
+          return false;
+        }
+      };
+
+      const entity = getEntity(wordText);
+      const type = wordText.getAttribute("type");
+      console.log(entity);
+
+      if (!modifiedJsonTriples[selectedAttribute]) {
+        const list = [];
+        const date = {};
+        date.idInText = selectedEntity;
+        date.entityReference = selectedEntity + "_" + modifiedJsonTriples.id;
+        date.entityReferenceType = type;
+        if (entity !== false) {
+          date.entity = entity;
+        } else {
+        }
+        //list.push(selectedEntity + "_" + uuid)
+        list.push(date);
+        modifiedJsonTriples[selectedAttribute] = list;
+      } else {
+        const date = {};
+        date.idInText = selectedEntity;
+        date.entityReference = selectedEntity + "_" + modifiedJsonTriples.id;
+        date.entityReferenceType = type;
+        if (entity !== false) {
+          date.entity = entity;
+        } else {
+        }
+        //jsonTriples[selectedAttribute].push(selectedEntity + "_" + uuid);
+        modifiedJsonTriples[selectedAttribute].push(date);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.dateAttribute = "";
+    },
     async putLemmaAttribute() {
       const xmlData = this.xmlData;
       const selectedAttribute = this.lemmaAttribute;
@@ -1247,6 +1649,58 @@ export default {
       this.selectedEntity = "";
       this.lemmaAttribute = "";
     },
+    async addLemmaAttribute() {
+      const xmlData = this.xmlData;
+      const selectedAttribute = this.lemmaAttribute;
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+      const ex_text = this.ex_text;
+      this.selectedEntity = ex_text;
+      const selectedEntity = this.selectedEntity;
+
+      console.log(selectedAttribute);
+      //console.log(selectedAttributeValue)
+      console.log(selectedEntity);
+
+      const wordText = xmlData.querySelector(`[*|id='${selectedEntity}']`);
+      const lemma_ids = [];
+
+      const getLemma = function (element) {
+        try {
+          const lemma_id = element.getAttribute("lemmaRef");
+          return lemma_id;
+        } catch {
+          return false;
+        }
+      };
+
+      const lemma_id = getLemma(wordText);
+      if (lemma_id !== false) {
+        lemma_ids.push(lemma_id);
+      } else {
+      }
+      console.log(lemma_ids);
+
+      if (!modifiedJsonTriples[selectedAttribute]) {
+        const list = [];
+        const lemma = {};
+        lemma.wid = selectedEntity;
+        lemma.lemmaRef = lemma_ids;
+        list.push(lemma);
+        modifiedJsonTriples[selectedAttribute] = list;
+      } else {
+        const lemma = {};
+        lemma.wid = selectedEntity;
+        lemma.lemmaRef = lemma_ids;
+        modifiedJsonTriples[selectedAttribute].push(lemma);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.selectedEntity = "";
+      this.lemmaAttribute = "";
+    },
     async putDescription() {
       //const selected = this.selected;
       //this.selectedEntity = selected;
@@ -1263,6 +1717,24 @@ export default {
 
       console.log(jsonTriples);
       this.jsonTriples = jsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.descriptionAttributeValue = "";
+    },
+    async addDescription() {
+      const description = this.descriptionAttributeValue;
+
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+
+      console.log(description);
+
+      if (!modifiedJsonTriples["description"]) {
+        modifiedJsonTriples["description"] = description;
+      } else {
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
 
       //this.selectedAttributeValue = "";
       this.descriptionAttributeValue = "";
@@ -1287,9 +1759,53 @@ export default {
       //this.selectedAttributeValue = "";
       this.eventAttributeValue = "";
     },
+    async addEvent() {
+      const event = this.eventAttributeValue;
+
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+
+      console.log(event);
+
+      if (!modifiedJsonTriples["referencesEvent"]) {
+        modifiedJsonTriples["referencesEvent"] = event;
+      } else {
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.eventAttributeValue = "";
+    },
     async uploadJsonTriples() {
       const jsonTriples = this.jsonTriples;
       console.log(jsonTriples);
+
+      const db = getFirestore();
+
+      //更新
+
+      const docRef = doc(db, "lod", jsonTriples.id);
+      await setDoc(docRef, {
+        jsonTriples,
+      });
+
+
+      // 省略
+      // (Cloud Firestoreのインスタンスを初期化してdbにセット)
+
+      const updateAnnounce = "Document written with ID: " + jsonTriples.id;
+      //console.log("Document written with ID: ", docRef.id);
+      console.log(updateAnnounce);
+      this.updateAnnounce = updateAnnounce;
+
+      this.jsonTriples = {};
+      this.uuid = "";
+
+      this.show_attrSetter = !this.show_attrSetter;
+    },
+    async modifyJsonTriples() {
+      const jsonTriples = this.modifiedJsonTriples
 
       const db = getFirestore();
 
@@ -1308,10 +1824,9 @@ export default {
       console.log(updateAnnounce);
       this.updateAnnounce = updateAnnounce;
 
-      this.jsonTriples = {};
-      this.uuid = "";
+      this.modifiedJsonTriples = {};
 
-      this.show = !this.show;
+      this.show_attrModifier = !this.show_attrModifier;
     },
 
     /*
@@ -1543,7 +2058,7 @@ export default {
     */
     showAttributeSetter() {
       //this.$modal.show("attributeSetter");
-      this.show = !this.show;
+      this.show_attrSetter = !this.show_attrSetter;
 
       const selected = this.selected;
       console.log(selected);
@@ -1602,6 +2117,23 @@ export default {
       await deleteDoc(docRef);
 
       this.selectedFactoidId = "";
+    },
+    async modifyFactoid() {
+      this.show_attrModifier = !this.show_attrModifier
+      const selectedFactoidId = this.selected_factoid_id;
+      this.selectedFactoidId = selectedFactoidId;
+      const factoidId = this.selectedFactoidId;
+
+      console.log(factoidId)
+
+      const db = getFirestore();
+
+      const docRef = doc(db, "lod", factoidId);
+      const docSnap = await getDoc(docRef);
+
+      const data = docSnap.data().jsonTriples
+      console.log(data)
+      this.modifiedJsonTriples = data
     },
     /*
     hideAttributeSetter() {

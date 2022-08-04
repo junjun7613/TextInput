@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <p>{{modifiedJsonTriples}}</p>
+      <p>{{selected}}</p>
       <p>{{ ex_text }}</p>
       <p>{{ selected_factoid_id }}</p>
       <p>
@@ -18,6 +18,58 @@
           <div v-show="show_attrSetter" id="attributeSetter" style="width: 30%">
             <v-row dense>
               <v-col cols="6">
+            
+                <v-select
+                  v-if="selected==='ContactFactoid' || selected==='ActionFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesEvent"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else-if="selected==='FamilialRelationshipFactoid' || selected==='SocialRelationshipFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesRelationship"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else-if="selected==='OfficeFactoid' || selected==='TitleFactoid' || selected==='SituationFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesAffair"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesGeography"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putTypeAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
+
                 <v-select
                   rounded
                   outlined
@@ -186,6 +238,58 @@
           <div v-show="show_attrModifier" id="attributeModifier" style="width: 30%">
             <v-row dense>
               <v-col cols="6">
+              
+                <v-select
+                  v-if="modifiedJsonTriples.type==='ContactFactoid' || modifiedJsonTriples.type==='ActionFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesEvent"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else-if="modifiedJsonTriples.type==='FamilialRelationshipFactoid' || modifiedJsonTriples.type==='SocialRelationshipFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesRelationship"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else-if="modifiedJsonTriples.type==='OfficeFactoid' || modifiedJsonTriples.type==='TitleFactoid' || modifiedJsonTriples.type==='SituationFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesAffair"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesGeography"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="addTypeAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
+              
                 <v-select
                   rounded
                   outlined
@@ -487,6 +591,7 @@ export default {
       WId: "",
       selected: "",
       //attributeValue: "",
+      typeAttribute: "",
       personAttribute: "",
       personAttributeValue: "",
       placeAttribute: "",
@@ -590,6 +695,38 @@ export default {
         {
           text: "Geography",
           value: "GeoFactoid",
+        },
+      ],
+      typesEvent: [
+        {
+          text: "Moving",
+          value: "Moving",
+        },
+        {
+          text: "Command",
+          value: "Command",
+        },
+      ],
+      typesRelationship: [
+        {
+          text: "Parent-child",
+          value: "ParentChild",
+        },
+        {
+          text: "Sibling",
+          value: "Sibling",
+        },
+      ],
+      typesAffair: [
+        {
+          text: "Status",
+          value: "Status",
+        },
+      ],
+      typesGeography: [
+        {
+          text: "next-to",
+          value: "NextTo",
         },
       ],
       subjects: [
@@ -927,6 +1064,58 @@ export default {
     getWId(value) {
       console.log(value);
       this.WId = value;
+    },
+    async putTypeAttribute() {
+      const typeAttribute = this.typeAttribute;
+
+      const jsonTriples = this.jsonTriples;
+
+      console.log(typeAttribute);
+
+      if (!jsonTriples["typeDetail"]) {
+        //jsonTriples["typeDetail"] = typeAttribute;
+        const list = [];
+        const typeDetail = {};
+        typeDetail.type = typeAttribute;
+        list.push(typeDetail);
+        jsonTriples["typeDetail"] = list;
+      } else {
+        const typeDetail = {};
+        typeDetail.type = typeAttribute;
+        jsonTriples["typeDetail"].push(typeDetail);
+      }
+
+      console.log(jsonTriples);
+      this.jsonTriples = jsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.typeAttributeValue = "";
+    },
+    async addTypeAttribute() {
+      const typeAttribute = this.typeAttribute;
+
+      const modifiedJsonTriples = this.modifiedJsonTriples;
+
+      console.log(typeAttribute);
+
+      if (!modifiedJsonTriples["typeDetail"]) {
+        //jsonTriples["typeDetail"] = typeAttribute;
+        const list = [];
+        const typeDetail = {};
+        typeDetail.type = typeAttribute;
+        list.push(typeDetail);
+        modifiedJsonTriples["typeDetail"] = list;
+      } else {
+        const typeDetail = {};
+        typeDetail.type = typeAttribute;
+        modifiedJsonTriples["typeDetail"].push(typeDetail);
+      }
+
+      console.log(modifiedJsonTriples);
+      this.modifiedJsonTriples = modifiedJsonTriples;
+
+      //this.selectedAttributeValue = "";
+      this.typeAttributeValue = "";
     },
     async putPersonAttribute() {
       //const selected = this.selected;
@@ -1784,12 +1973,12 @@ export default {
       const db = getFirestore();
 
       //更新
-
+      
       const docRef = doc(db, "lod", jsonTriples.id);
       await setDoc(docRef, {
         jsonTriples,
       });
-
+      
 
       // 省略
       // (Cloud Firestoreのインスタンスを初期化してdbにセット)

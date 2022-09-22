@@ -1,24 +1,39 @@
 <template>
   <div>
-    <v-container fluid>
-      <nuxt-link to="/markup" style="font-size: 20pt">Do markup</nuxt-link>
-      <br />
-      <nuxt-link to="/linkedData" style="font-size: 20pt"
-        >Create linked data</nuxt-link
-      >
-      <br />
-      <br />
-      <v-btn rounded depressed color="primary" @click="getTTL"
-        >download TTL file</v-btn
-      >
-    </v-container>
+    <template v-if="uid">
+      <v-container fluid>
+        <v-alert color="success" class="my-5">
+          {{ uid }}
+        </v-alert>
+
+        <nuxt-link :to="localePath({ name: 'markup' })" style="font-size: 20pt"
+          >Do markup</nuxt-link
+        >
+        <br />
+        <nuxt-link
+          :to="localePath({ name: 'linkedData' })"
+          style="font-size: 20pt"
+          >Create linked data</nuxt-link
+        >
+        <br />
+        <br />
+        <v-btn rounded depressed color="primary" @click="getTTL"
+          >download TTL file</v-btn
+        >
+      </v-container>
+    </template>
+    <template v-else>
+      <v-container class="py-5">
+        <v-alert color="warning"> ログインしてください。 </v-alert>
+      </v-container>
+    </template>
   </div>
 </template>
 <script>
 const N3 = require("n3");
 
 const { DataFactory } = N3;
-const { namedNode, literal, defaultGraph, quad  } = DataFactory;
+const { namedNode, literal, defaultGraph, quad } = DataFactory;
 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 
@@ -27,23 +42,47 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    uid: {
+      get() {
+        return this.$store.getters.getUid;
+      },
+      set(value) {
+        this.$store.commit("setUid", value);
+      },
+    },
+  },
   async mounted() {},
   watch: {},
   methods: {
     async getTTL() {
+      const entities = [
+        "subject",
+        "whom",
+        "associatedPerson",
+        "atWhere",
+        "fromWhere",
+        "toWhere",
+        "nearWhere",
+      ];
+      const objects = ["associatedConcept", "associatedPhysicalObject"];
+      const predicates = ["hasPredicate", "hasProperty"];
+      const factoids = [
+        "mentionedAsPrecedent",
+        "mentionedAsSubsequent",
+        "mentionedAsParallel",
+        "hasContent",
+        "therefore",
+        "because",
+      ];
+      const text = ["from", "to"];
 
-      const entities = ["subject","whom","associatedPerson","atWhere","fromWhere","toWhere","nearWhere"]
-      const objects = ["associatedConcept","associatedPhysicalObject"]
-      const predicates = ["hasPredicate","hasProperty"]
-      const factoids = ["mentionedAsPrecedent","mentionedAsSubsequent","mentionedAsParallel","hasContent","therefore","because"]
-      const text = ["from","to"]
-
-      const ex = "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
+      const ex =
+        "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#";
       const roman = "http://www.example.com/roman-ontology/resource/";
 
       const writer = new N3.Writer({
-        prefixes: {ex,roman},
+        prefixes: { ex, roman },
       });
 
       const db = getFirestore();
@@ -60,157 +99,161 @@ export default {
         const jsonTriples = doc.data().jsonTriples;
 
         writer.addQuad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-              namedNode(`${ex}${jsonTriples.type}`)
-            );
+          namedNode(`${roman}${jsonTriples.id}`),
+          namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+          namedNode(`${ex}${jsonTriples.type}`)
+        );
 
-        for (const key in jsonTriples){
+        for (const key in jsonTriples) {
           /*
           if (key === "subject" || key === "whom" || key === "associatedPerson" || key === "atWhere" || key === "fromWhere" || key === "toWhere" || key === "nearWhere")
           */
-          if (entities.includes(key))
-          {
-            for (const i of jsonTriples[key]){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              namedNode(`${roman}${i.entityReference}`)
-            )
-            );
-            //console.log(jsonTriples[key])
-            writer.addQuad(
-              namedNode(`${roman}${i.entityReference}`),
-              namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-              namedNode(`${ex}${i.entityReferenceType}`)
-            );
-            writer.addQuad(quad(
-              namedNode(`${roman}${i.entityReference}`),
-              namedNode(`${ex}referencesEntity`),
-              namedNode(`${i.entity}`)
-            )
-            );
-            writer.addQuad(quad(
-              namedNode(`${roman}${i.entityReference}`),
-              namedNode(`${ex}sourceDescription`),
-              namedNode(`${roman}${i.idInText}`)
-            )
-            );
-            if (i.entityInContext){
-              writer.addQuad(quad(
-              namedNode(`${roman}${i.entityReference}`),
-              namedNode(`${ex}referencesEntityInContext`),
-              namedNode(`${i.entityInContext}`)
-              )
+          if (entities.includes(key)) {
+            for (const i of jsonTriples[key]) {
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${jsonTriples.id}`),
+                  namedNode(`${ex}${key}`),
+                  namedNode(`${roman}${i.entityReference}`)
+                )
               );
-            }else{
-              ;
+              //console.log(jsonTriples[key])
+              writer.addQuad(
+                namedNode(`${roman}${i.entityReference}`),
+                namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                namedNode(`${ex}${i.entityReferenceType}`)
+              );
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${i.entityReference}`),
+                  namedNode(`${ex}referencesEntity`),
+                  namedNode(`${i.entity}`)
+                )
+              );
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${i.entityReference}`),
+                  namedNode(`${ex}sourceDescription`),
+                  namedNode(`${roman}${i.idInText}`)
+                )
+              );
+              if (i.entityInContext) {
+                writer.addQuad(
+                  quad(
+                    namedNode(`${roman}${i.entityReference}`),
+                    namedNode(`${ex}referencesEntityInContext`),
+                    namedNode(`${i.entityInContext}`)
+                  )
+                );
+              } else {
+              }
             }
-            }
-          }else if (objects.includes(key))
-          {
-            for (const i of jsonTriples[key]){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              namedNode(`${roman}${i.item}`)
-            )
-            );
-            writer.addQuad(
-              namedNode(`${roman}${i.item}`),
-              namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-              namedNode(`${ex}${i.entityType}`)
-            );
-            writer.addQuad(quad(
-              namedNode(`${roman}${i.item}`),
-              namedNode(`${ex}sourceDescription`),
-              namedNode(`${roman}${i.idInText}`)
-            )
-            );
-            for (const l of i.lemma){
-              if(l !== null){
-              const lemma_list = l.split(" ")
-              for (const lemma of lemma_list){
+          } else if (objects.includes(key)) {
+            for (const i of jsonTriples[key]) {
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${jsonTriples.id}`),
+                  namedNode(`${ex}${key}`),
+                  namedNode(`${roman}${i.item}`)
+                )
+              );
               writer.addQuad(
                 namedNode(`${roman}${i.item}`),
-                namedNode(`${ex}hasLemma`),
-                //namedNode(`${i.lemmaRef[0]}`)
-                namedNode(`${lemma}`)
+                namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                namedNode(`${ex}${i.entityType}`)
               );
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${i.item}`),
+                  namedNode(`${ex}sourceDescription`),
+                  namedNode(`${roman}${i.idInText}`)
+                )
+              );
+              for (const l of i.lemma) {
+                if (l !== null) {
+                  const lemma_list = l.split(" ");
+                  for (const lemma of lemma_list) {
+                    writer.addQuad(
+                      namedNode(`${roman}${i.item}`),
+                      namedNode(`${ex}hasLemma`),
+                      //namedNode(`${i.lemmaRef[0]}`)
+                      namedNode(`${lemma}`)
+                    );
+                  }
+                }
               }
+            }
+          } else if (predicates.includes(key)) {
+            for (const i of jsonTriples[key]) {
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${jsonTriples.id}`),
+                  namedNode(`${ex}${key}`),
+                  namedNode(`${roman}${i.wid}`)
+                )
+              );
+              const lemmas = i.lemmaRef[0];
+              if (lemmas !== null) {
+                const lemma_list = lemmas.split(" ");
+                for (const lemma of lemma_list) {
+                  writer.addQuad(
+                    namedNode(`${roman}${i.wid}`),
+                    namedNode(`${ex}hasLemma`),
+                    //namedNode(`${i.lemmaRef[0]}`)
+                    namedNode(`${lemma}`)
+                  );
+                }
               }
             }
-            }
-          }else if (predicates.includes(key)){
-            for (const i of jsonTriples[key]){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              namedNode(`${roman}${i.wid}`)
-            )
-            );
-            const lemmas = i.lemmaRef[0]
-            if(lemmas !== null){
-            const lemma_list = lemmas.split(" ")
-            for (const lemma of lemma_list){
-            writer.addQuad(
-              namedNode(`${roman}${i.wid}`),
-              namedNode(`${ex}hasLemma`),
-              //namedNode(`${i.lemmaRef[0]}`)
-              namedNode(`${lemma}`)
-            );
-            }
-            }
-            }
-          }else if(factoids.includes(key)){
-            for (const i of jsonTriples[key]){
-              writer.addQuad(quad(
-                namedNode(`${roman}${jsonTriples.id}`),
-                namedNode(`${ex}${key}`),
-                //namedNode(`${roman}${jsonTriples[key][i].relatedFactoid}`)
-                namedNode(`${roman}${i.relatedFactoid}`)
+          } else if (factoids.includes(key)) {
+            for (const i of jsonTriples[key]) {
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${jsonTriples.id}`),
+                  namedNode(`${ex}${key}`),
+                  //namedNode(`${roman}${jsonTriples[key][i].relatedFactoid}`)
+                  namedNode(`${roman}${i.relatedFactoid}`)
                 )
               );
             }
-          }
-          else if (key === "description"){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              literal(`${jsonTriples[key]}`)
-            )
+          } else if (key === "description") {
+            writer.addQuad(
+              quad(
+                namedNode(`${roman}${jsonTriples.id}`),
+                namedNode(`${ex}${key}`),
+                literal(`${jsonTriples[key]}`)
+              )
             );
-          }
-          else if (key === "referencesEvent"){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              namedNode(`${jsonTriples[key]}`)
-            )
+          } else if (key === "referencesEvent") {
+            writer.addQuad(
+              quad(
+                namedNode(`${roman}${jsonTriples.id}`),
+                namedNode(`${ex}${key}`),
+                namedNode(`${jsonTriples[key]}`)
+              )
             );
-          }else if (text.includes(key)){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}${key}`),
-              namedNode(`${roman}${jsonTriples[key]}`)
-            )
+          } else if (text.includes(key)) {
+            writer.addQuad(
+              quad(
+                namedNode(`${roman}${jsonTriples.id}`),
+                namedNode(`${ex}${key}`),
+                namedNode(`${roman}${jsonTriples[key]}`)
+              )
             );
-          }else if (key === "wids"){
-            for (const i of jsonTriples[key]){
-            writer.addQuad(quad(
-              namedNode(`${roman}${jsonTriples.id}`),
-              namedNode(`${ex}wid`),
-              namedNode(`${roman}${i}`)
-            )
-            );
+          } else if (key === "wids") {
+            for (const i of jsonTriples[key]) {
+              writer.addQuad(
+                quad(
+                  namedNode(`${roman}${jsonTriples.id}`),
+                  namedNode(`${ex}wid`),
+                  namedNode(`${roman}${i}`)
+                )
+              );
             }
-          }
-          else{
-            ;
+          } else {
           }
           //console.log(jsonTriples.id,key)
         }
-
       });
 
       download(writer, "test.ttl");

@@ -1,4 +1,7 @@
 export default {
+  server: {
+    port: 8001, // デフォルト: 3000
+  },
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -67,8 +70,21 @@ export default {
           storage: true
         }
       }
-    ]
+    ],
+    'nuxt-i18n',
   ],
+
+  i18n: {
+    locales: [
+      { code: 'en', iso: 'en_US', file: 'en.json' },
+      { code: 'ja', iso: 'ja_JP', file: 'ja.json' },
+    ],
+    defaultLocale: 'ja',
+    vueI18nLoader: true,
+    lazy: true,
+    langDir: 'lang/',
+    // strategy: 'no_prefix'
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

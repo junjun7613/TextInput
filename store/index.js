@@ -3,7 +3,8 @@ export const state = () => ({
   selected_factoid_id: "",
   selected_word_start_id: "",
   selected_word_end_id: "",
-  storedLods: []
+  storedLods: [],
+  uid: '',
 })
 
 export const mutations = {
@@ -21,6 +22,9 @@ export const mutations = {
   },
   setStoredLods(state, data) {
     state.storedLods = data
+  },
+  setUid(state, uid) {
+    state.uid = uid
   }
 }
 
@@ -39,5 +43,8 @@ export const getters = {
   },
   getStoredLods(state) {
     return state.storedLods
+  },
+  getUid(state) {
+    return state.uid
   }
 }

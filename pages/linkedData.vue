@@ -1,6 +1,9 @@
 <template>
   <div>
     <v-container fluid>
+      <v-alert v-if="uid" color="success" class="my-5">
+          {{ uid }}
+        </v-alert>
       <p>{{selected}}</p>
       <p>{{ ex_text }}</p>
       <p>{{ selected_factoid_id }}</p>
@@ -816,6 +819,14 @@ export default {
     };
   },
   computed: {
+    uid: {
+      get() {
+        return this.$store.getters.getUid;
+      },
+      set(value) {
+        this.$store.commit("setUid", value);
+      },
+    },
     ex_text: {
       get() {
         return this.$store.getters.getExText;
@@ -933,6 +944,7 @@ export default {
       // doc.data() is never undefined for query doc snapshots
       const lod = {};
       const data = doc.data().jsonTriples;
+      console.log(data)
       console.log(data.id);
       for (const key in data) {
         lod[key] = data[key];
@@ -1967,18 +1979,29 @@ export default {
       this.eventAttributeValue = "";
     },
     async uploadJsonTriples() {
+      const jsonTriples_interpret = this.jsonTriples;
+      const user = this.uid;
+      const time = new Date()
+
+      const interpretation = [{
+        "user":user,
+        "time":time
+      }];
+
+      jsonTriples_interpret["hasInterpretation"] = interpretation;
+
+      this.jsonTriples = jsonTriples_interpret;
+      
       const jsonTriples = this.jsonTriples;
       console.log(jsonTriples);
 
       const db = getFirestore();
 
       //更新
-      
       const docRef = doc(db, "lod", jsonTriples.id);
       await setDoc(docRef, {
         jsonTriples,
       });
-      
 
       // 省略
       // (Cloud Firestoreのインスタンスを初期化してdbにセット)
@@ -1994,6 +2017,22 @@ export default {
       this.show_attrSetter = !this.show_attrSetter;
     },
     async modifyJsonTriples() {
+      const jsonTriples_interpret = this.modifiedJsonTriples
+      console.log(jsonTriples_interpret)
+      const user = this.uid;
+      const time = new Date()
+
+      const interpretation = {
+        "user":user,
+        "time":time
+      };
+
+      console.log(interpretation)
+
+      jsonTriples_interpret["hasInterpretation"].push(interpretation)
+
+      this.modifiedJsonTriples = jsonTriples_interpret;
+
       const jsonTriples = this.modifiedJsonTriples
 
       const db = getFirestore();

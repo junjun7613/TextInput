@@ -20,6 +20,11 @@
         <v-btn rounded depressed color="primary" @click="getTTL"
           >download TTL file</v-btn
         >
+        <br />
+        <br />
+        <v-btn rounded depressed color="primary" @click="getXML"
+          >download XML file</v-btn
+        >
       </v-container>
     </template>
     <template v-else>
@@ -35,7 +40,7 @@ const N3 = require("n3");
 const { DataFactory } = N3;
 const { namedNode, literal, defaultGraph, quad } = DataFactory;
 
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, getDoc } from "firebase/firestore";
 
 export default {
   layout: "noFooter",
@@ -257,6 +262,19 @@ export default {
       });
 
       download(writer, "test.ttl");
+    },
+    async getXML(){
+      const db = getFirestore();
+
+      const taskRef = collection(db, "tasks");
+      const querySnapshot = await getDocs(taskRef);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data().xml)
+        const xml = doc.data().xml
+        download(xml, "test.xml")
+      });
+
+      //download(xml, "test.xml")
     },
   },
 };

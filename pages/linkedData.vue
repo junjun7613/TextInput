@@ -21,58 +21,6 @@
           <div v-show="show_attrSetter" id="attributeSetter" style="width: 30%">
             <v-row dense>
               <v-col cols="6">
-            
-                <v-select
-                  v-if="selected==='ContactFactoid' || selected==='ActionFactoid'"
-                  rounded
-                  outlined
-                  label="Type"
-                  id="attributeTypes"
-                  v-model="typeAttribute"
-                  :items="typesEvent"
-                  hide-details
-                ></v-select>
-                <v-select
-                  v-else-if="selected==='FamilialRelationshipFactoid' || selected==='SocialRelationshipFactoid'"
-                  rounded
-                  outlined
-                  label="Type"
-                  id="attributeTypes"
-                  v-model="typeAttribute"
-                  :items="typesRelationship"
-                  hide-details
-                ></v-select>
-                <v-select
-                  v-else-if="selected==='OfficeFactoid' || selected==='TitleFactoid' || selected==='SituationFactoid'"
-                  rounded
-                  outlined
-                  label="Type"
-                  id="attributeTypes"
-                  v-model="typeAttribute"
-                  :items="typesAffair"
-                  hide-details
-                ></v-select>
-                <v-select
-                  v-else
-                  rounded
-                  outlined
-                  label="Type"
-                  id="attributeTypes"
-                  v-model="typeAttribute"
-                  :items="typesGeography"
-                  hide-details
-                ></v-select>
-                <v-btn
-                  class="mt-2"
-                  color="primary"
-                  rounded
-                  depressed
-                  @click="putTypeAttribute"
-                  >追加</v-btn
-                >
-                <br />
-                <br />
-
                 <v-select
                   rounded
                   outlined
@@ -193,6 +141,58 @@
                   @click="putDateAttribute"
                   >追加</v-btn
                 >
+                <br />
+                <br />
+                <v-select
+                  v-if="selected==='ContactFactoid' || selected==='ActionFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesEvent"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else-if="selected==='FamilialRelationshipFactoid' || selected==='SocialRelationshipFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesRelationship"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else-if="selected==='OfficeFactoid' || selected==='TitleFactoid' || selected==='SituationFactoid'"
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesAffair"
+                  hide-details
+                ></v-select>
+                <v-select
+                  v-else
+                  rounded
+                  outlined
+                  label="Type"
+                  id="attributeTypes"
+                  v-model="typeAttribute"
+                  :items="typesGeography"
+                  hide-details
+                ></v-select>
+                <v-btn
+                  class="mt-2"
+                  color="primary"
+                  rounded
+                  depressed
+                  @click="putTypeAttribute"
+                  >追加</v-btn
+                >
+                <br />
+                <br />
               </v-col>
             </v-row>
             <br />

@@ -957,7 +957,7 @@ export default {
     //this.stored_lods = this.lods
     this.stored_lods = lods;
 
-    const documentId = "one_test";
+    const documentId = "one";
     //const documentId = "two";
     //const documentId = "aaa";
     this.documentId = documentId;

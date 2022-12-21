@@ -236,7 +236,7 @@ export default {
   async mounted() {
     const db = getFirestore();
 
-    const documentId = "one_test";
+    const documentId = "one";
     //const documentId = "aaa";
 
     //const documentId = "two";
